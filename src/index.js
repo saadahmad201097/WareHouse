@@ -26,14 +26,12 @@ import RTL from "layouts/RTL.js";
 
 import "assets/css/material-dashboard-react.css?v=1.8.0";
 
-import Check from './New.js'
-
+import Check from './New.js';
 
 import { ConnectedRouter } from 'connected-react-router'
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react'
 import configureStore, { history } from './store';
-
 import Login from './layouts/Login.js'
 
 import NotFound from './components/NotFound/NotFound'
@@ -47,8 +45,6 @@ const hist = createBrowserHistory();
 
 
 const MainApp = () => {
-
-
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>

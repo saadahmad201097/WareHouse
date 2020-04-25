@@ -1,16 +1,16 @@
-import React from 'react'
+import React from "react";
 
-import TextField from '@material-ui/core/TextField';
+import TextField from "@material-ui/core/TextField";
 
-import Button from '@material-ui/core/Button';
+import Button from "@material-ui/core/Button";
 
-import Snackbar from "components/Snackbar/Snackbar.js";
+import Snackbar from "components/Snackbar/Snackbar";
 
 import AddAlert from "@material-ui/icons/AddAlert";
 
 import { Redirect } from "react-router-dom";
-
-
+import axios from 'axios';
+import { loginUrl } from '../public/endpoins';
 
 class Login extends React.Component {
 
@@ -32,7 +32,7 @@ class Login extends React.Component {
     }
 
     handleInput(e, key) {
-        this.setState({ [key]: e.target.value })
+        this.setState({ [key]: e.target.value });
     }
 
 
@@ -40,30 +40,49 @@ class Login extends React.Component {
 
     handleLogin() {
 
-        if (this.state.userName === "" && this.state.password === "") {
-            this.setState({ null_userName: true, null_password: true })
+        const params = {
+            email: this.state.userName,
+            password: this.state.password
         }
+        
+        axios.post(loginUrl, params)
+        .then(res => {
+          if(res.data.success){
+            //   use cookies instead token
+            console.log('token: ', res.data.token);
+            // localStorage.setItem("token", JSON.stringify(res.data.token));
+          }
+          else if(!res.data.success){
+          }
+        })
+        .catch(e =>{
+            console.log(e);
+        });
 
-        else if (this.state.userName === "") {
-            this.setState({ null_userName: true })
-        }
+        // if (this.state.userName === "" && this.state.password === "") {
+        //     this.setState({ null_userName: true, null_password: true })
+        // }
 
-        else if (this.state.password === "") {
-            this.setState({ null_password: true })
-        }
+        // else if (this.state.userName === "") {
+        //     this.setState({ null_userName: true })
+        // }
 
-        else {
+        // else if (this.state.password === "") {
+        //     this.setState({ null_password: true })
+        // }
 
-            if (this.state.userName === 'admin' && this.state.password === '123') {
+        // else {
 
-                this.setState({ verifiedUser: true })
-            }
+        //     if (this.state.userName === 'admin' && this.state.password === '123') {
 
-            else {
+        //         this.setState({ verifiedUser: true })
+        //     }
 
-                this.setState({ tr: true, userName: "", password: "", null_password: false, null_userName: false })
-            }
-        }
+        //     else {
+
+        //         this.setState({ tr: true, userName: "", password: "", null_password: false, null_userName: false })
+        //     }
+        // }
 
     }
 

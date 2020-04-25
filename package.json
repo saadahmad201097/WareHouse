@@ -7,6 +7,7 @@
   "dependencies": {
     "@material-ui/core": "4.3.2",
     "@material-ui/icons": "4.2.1",
+    "axios": "^0.19.2",
     "chartist": "0.10.1",
     "classnames": "2.2.6",
     "connected-react-router": "^6.8.0",
@@ -54,11 +55,17 @@
     "typescript": "3.5.3"
   },
   "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb": "^18.1.0",
     "eslint-config-prettier": "6.0.0",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-prettier": "3.1.0",
+    "eslint-plugin-react": "^7.19.0",
+    "eslint-plugin-react-hooks": "^2.5.0",
     "gulp": "4.0.2",
     "gulp-append-prepend": "1.0.8",
-    "prettier": "1.18.2",
+    "prettier": "^1.18.2",
     "redux-devtools": "^3.5.0"
   },
   "browserslist": {
