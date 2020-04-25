@@ -1,18 +1,18 @@
 /*eslint-disable*/
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 // @material-ui/core components
-import { makeStyles } from "@material-ui/core/styles";
-import Hidden from "@material-ui/core/Hidden";
+import { makeStyles } from '@material-ui/core/styles';
+import Hidden from '@material-ui/core/Hidden';
 // core components
-import GridItem from "components/Grid/GridItem.js";
-import GridContainer from "components/Grid/GridContainer.js";
+import GridItem from 'components/Grid/GridItem.js';
+import GridContainer from 'components/Grid/GridContainer.js';
 // import Table from "components/Table/Table.js";
 // import Card from "components/Card/Card.js";
-import CardHeader from "components/Card/CardHeader.js";
-import CardBody from "components/Card/CardBody.js";
+import CardHeader from 'components/Card/CardHeader.js';
+import CardBody from 'components/Card/CardBody.js';
 
 // import styles from "assets/jss/material-dashboard-react/views/iconsStyle.js";
-import Button from "@material-ui/core/Button";
+import Button from '@material-ui/core/Button';
 
 // import Table from "@material-ui/core/Table";
 // import TableHead from "@material-ui/core/TableHead";
@@ -20,170 +20,170 @@ import Button from "@material-ui/core/Button";
 // import TableBody from "@material-ui/core/TableBody";
 // import TableCell from "@material-ui/core/TableCell";
 
-import Paper from "@material-ui/core/Paper";
+import Paper from '@material-ui/core/Paper';
 
-import Modal from "@material-ui/core/Modal";
+import Modal from '@material-ui/core/Modal';
 
-import Table from "../../components/Table/Table.js";
+import Table from '../../components/Table/Table.js';
 
 const useStyles = makeStyles(styles);
 
 const styles = {
   cardCategoryWhite: {
-    "&,& a,& a:hover,& a:focus": {
-      color: "rgba(255,255,255,.62)",
-      margin: "0",
-      fontSize: "14px",
-      marginTop: "0",
-      marginBottom: "0",
+    '&,& a,& a:hover,& a:focus': {
+      color: 'rgba(255,255,255,.62)',
+      margin: '0',
+      fontSize: '14px',
+      marginTop: '0',
+      marginBottom: '0'
     },
-    "& a,& a:hover,& a:focus": {
-      color: "#FFFFFF",
-    },
+    '& a,& a:hover,& a:focus': {
+      color: '#FFFFFF'
+    }
   },
   cardTitleWhite: {
-    color: "#FFFFFF",
-    marginTop: "0px",
-    minHeight: "auto",
-    fontWeight: "300",
+    color: '#FFFFFF',
+    marginTop: '0px',
+    minHeight: 'auto',
+    fontWeight: '300',
     fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
-    marginBottom: "3px",
-    textDecoration: "none",
-    "& small": {
-      color: "#777",
-      fontSize: "65%",
-      fontWeight: "400",
-      lineHeight: "1",
-    },
+    marginBottom: '3px',
+    textDecoration: 'none',
+    '& small': {
+      color: '#777',
+      fontSize: '65%',
+      fontWeight: '400',
+      lineHeight: '1'
+    }
   },
 
   tableData: {
-    fontSize: "0.8125rem",
-    fontWeight: "400",
-    fontFamily: "Ubuntu",
-  },
+    fontSize: '0.8125rem',
+    fontWeight: '400',
+    fontFamily: 'Ubuntu'
+  }
 };
 
 const tableHead = [
-  "Id",
-  "Name",
-  "Description",
-  "Sub Class",
-  "Unit",
-  "Vendor Id",
-  "Purchase Price",
-  "BU Price",
-  "Sale Price",
-  "Bar Code",
-  "Edit",
-  "Delete",
+  'Id',
+  'Name',
+  'Description',
+  'Sub Class',
+  'Unit',
+  'Vendor Id',
+  'Purchase Price',
+  'BU Price',
+  'Sale Price',
+  'Bar Code',
+  'Edit',
+  'Delete'
 ];
 
 const tableData = [
   {
-    id: "1",
-    name: "Cotton",
+    id: '1',
+    name: 'Cotton',
     desc:
-      "Cotton is of the best quality. We ensure it we will provide the quality at its best",
-    sub_class: "Garments",
-    unit: "Levis",
-    vendor_id: "23",
-    purchase_price: "100",
-    bu_price: "500",
-    sales_price: "250",
-    bar_code: "023333022",
+      'Cotton is of the best quality. We ensure it we will provide the quality at its best',
+    sub_class: 'Garments',
+    unit: 'Levis',
+    vendor_id: '23',
+    purchase_price: '100',
+    bu_price: '500',
+    sales_price: '250',
+    bar_code: '023333022'
   },
   {
-    id: "2",
-    name: "Wool",
+    id: '2',
+    name: 'Wool',
     desc:
-      "Cotton is of the best quality. We ensure it we will provide the quality at its best",
-    sub_class: "Garments",
-    unit: "Levis",
-    vendor_id: "23",
-    purchase_price: "100",
-    bu_price: "500",
-    sales_price: "250",
-    bar_code: "023333022",
+      'Cotton is of the best quality. We ensure it we will provide the quality at its best',
+    sub_class: 'Garments',
+    unit: 'Levis',
+    vendor_id: '23',
+    purchase_price: '100',
+    bu_price: '500',
+    sales_price: '250',
+    bar_code: '023333022'
   },
   {
-    id: "3",
-    name: "Silk",
+    id: '3',
+    name: 'Silk',
     desc:
-      "Cotton is of the best quality. We ensure it we will provide the quality at its best",
-    sub_class: "Garments",
-    unit: "Levis",
-    vendor_id: "23",
-    purchase_price: "100",
-    bu_price: "500",
-    sales_price: "250",
-    bar_code: "023333022",
+      'Cotton is of the best quality. We ensure it we will provide the quality at its best',
+    sub_class: 'Garments',
+    unit: 'Levis',
+    vendor_id: '23',
+    purchase_price: '100',
+    bu_price: '500',
+    sales_price: '250',
+    bar_code: '023333022'
   },
   {
-    id: "4",
-    name: "Jeans",
+    id: '4',
+    name: 'Jeans',
     desc:
-      "Cotton is of the best quality. We ensure it we will provide the quality at its best",
-    sub_class: "Garments",
-    unit: "Levis",
-    vendor_id: "23",
-    purchase_price: "100",
-    bu_price: "500",
-    sales_price: "250",
-    bar_code: "023333022",
+      'Cotton is of the best quality. We ensure it we will provide the quality at its best',
+    sub_class: 'Garments',
+    unit: 'Levis',
+    vendor_id: '23',
+    purchase_price: '100',
+    bu_price: '500',
+    sales_price: '250',
+    bar_code: '023333022'
   },
   {
-    id: "5",
-    name: "Leather",
+    id: '5',
+    name: 'Leather',
     desc:
-      "Cotton is of the best quality. We ensure it we will provide the quality at its best",
-    sub_class: "Garments",
-    unit: "Levis",
-    vendor_id: "23",
-    purchase_price: "100",
-    bu_price: "500",
-    sales_price: "250",
-    bar_code: "023333022",
+      'Cotton is of the best quality. We ensure it we will provide the quality at its best',
+    sub_class: 'Garments',
+    unit: 'Levis',
+    vendor_id: '23',
+    purchase_price: '100',
+    bu_price: '500',
+    sales_price: '250',
+    bar_code: '023333022'
   },
   {
-    id: "6",
-    name: "Cotton",
+    id: '6',
+    name: 'Cotton',
     desc:
-      "Cotton is of the best quality. We ensure it we will provide the quality at its best",
-    sub_class: "Garments",
-    unit: "Levis",
-    vendor_id: "23",
-    purchase_price: "100",
-    bu_price: "500",
-    sales_price: "250",
-    bar_code: "023333022",
+      'Cotton is of the best quality. We ensure it we will provide the quality at its best',
+    sub_class: 'Garments',
+    unit: 'Levis',
+    vendor_id: '23',
+    purchase_price: '100',
+    bu_price: '500',
+    sales_price: '250',
+    bar_code: '023333022'
   },
   {
-    id: "7",
-    name: "Cotton",
+    id: '7',
+    name: 'Cotton',
     desc:
-      "Cotton is of the best quality. We ensure it we will provide the quality at its best",
-    sub_class: "Garments",
-    unit: "Levis",
-    vendor_id: "23",
-    purchase_price: "100",
-    bu_price: "500",
-    sales_price: "250",
-    bar_code: "023333022",
+      'Cotton is of the best quality. We ensure it we will provide the quality at its best',
+    sub_class: 'Garments',
+    unit: 'Levis',
+    vendor_id: '23',
+    purchase_price: '100',
+    bu_price: '500',
+    sales_price: '250',
+    bar_code: '023333022'
   },
   {
-    id: "8",
-    name: "Cotton",
+    id: '8',
+    name: 'Cotton',
     desc:
-      "Cotton is of the best quality. We ensure it we will provide the quality at its best",
-    sub_class: "Garments",
-    unit: "Levis",
-    vendor_id: "23",
-    purchase_price: "100",
-    bu_price: "500",
-    sales_price: "250",
-    bar_code: "023333022",
-  },
+      'Cotton is of the best quality. We ensure it we will provide the quality at its best',
+    sub_class: 'Garments',
+    unit: 'Levis',
+    vendor_id: '23',
+    purchase_price: '100',
+    bu_price: '500',
+    sales_price: '250',
+    bar_code: '023333022'
+  }
 ];
 
 export default function Items(props) {
@@ -199,7 +199,7 @@ export default function Items(props) {
     let path = `items/next/add`;
     props.history.push({
       pathname: path,
-      state: { comingFor: "AddItems" },
+      state: { comingFor: 'AddItems' }
     });
   };
 
@@ -207,7 +207,7 @@ export default function Items(props) {
     let path = `items/next/edit`;
     props.history.push({
       pathname: path,
-      state: { comingFor: "EditItems", selectedItem: item },
+      state: { comingFor: 'EditItems', selectedItem: item }
     });
   }
 
@@ -215,10 +215,16 @@ export default function Items(props) {
     setModalVisible(true);
   }
 
+  const obj = {
+    name: '',
+    password: ''
+  };
+  console.log(Object.keys(obj).length);
+
   return (
     <div>
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <div style={{ display: "flex", alignItems: "center" }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
           <Button
             onClick={addNewItem}
             style={{ width: 65, height: 65, borderRadius: 65 / 2 }}
@@ -327,21 +333,21 @@ export default function Items(props) {
       >
         <div
           style={{
-            width: "100%",
-            height: "60%",
-            alignSelf: "center",
-            display: "flex",
-            justifyContent: "center",
+            width: '100%',
+            height: '60%',
+            alignSelf: 'center',
+            display: 'flex',
+            justifyContent: 'center',
             flex: 1,
-            flexDirection: "column",
+            flexDirection: 'column'
           }}
         >
           <span
             style={{
-              color: "white",
-              textAlign: "center",
-              fontWeight: "bold",
-              fontSize: 25,
+              color: 'white',
+              textAlign: 'center',
+              fontWeight: 'bold',
+              fontSize: 25
             }}
           >
             Are you sure want to delete the item?
@@ -349,9 +355,9 @@ export default function Items(props) {
 
           <div
             style={{
-              display: "flex",
-              marginTop: "4%",
-              justifyContent: "space-evenly",
+              display: 'flex',
+              marginTop: '4%',
+              justifyContent: 'space-evenly'
             }}
           >
             <Button onClick={() => setModalVisible(false)} variant="contained">
@@ -359,7 +365,7 @@ export default function Items(props) {
             </Button>
 
             <Button
-              style={{ marginRight: "3%" }}
+              style={{ marginRight: '3%' }}
               onClick={() => setModalVisible(false)}
               variant="contained"
               color="primary"

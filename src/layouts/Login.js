@@ -19,7 +19,6 @@ class Login extends React.Component {
   constructor(props) {
     super(props);
 
-
     this.state = {
       userName: '',
       null_userName: false,
@@ -48,8 +47,8 @@ class Login extends React.Component {
       .then(res => {
         if (res.data.success) {
           //   use cookies instead token
-        //   const { cookies } = this.props;
-        //   cookies.set('token', res.data.token);
+          //   const { cookies } = this.props;
+          //   cookies.set('token', res.data.token);
           console.log('token: ', res.data.token);
 
           // localStorage.setItem("token", JSON.stringify(res.data.token));
@@ -60,25 +59,25 @@ class Login extends React.Component {
         console.log(e);
       });
 
-    if (this.state.userName === '' && this.state.password === '') {
-      this.setState({ null_userName: true, null_password: true });
-    } else if (this.state.userName === '') {
-      this.setState({ null_userName: true });
-    } else if (this.state.password === '') {
-      this.setState({ null_password: true });
-    } else {
-      if (this.state.userName === 'admin' && this.state.password === '123') {
-        this.setState({ verifiedUser: true });
-      } else {
-        this.setState({
-          tr: true,
-          userName: '',
-          password: '',
-          null_password: false,
-          null_userName: false
-        });
-      }
-    }
+    // if (this.state.userName === '' && this.state.password === '') {
+    //   this.setState({ null_userName: true, null_password: true });
+    // } else if (this.state.userName === '') {
+    //   this.setState({ null_userName: true });
+    // } else if (this.state.password === '') {
+    //   this.setState({ null_password: true });
+    // } else {
+    //   if (this.state.userName === 'admin' && this.state.password === '123') {
+    //     this.setState({ verifiedUser: true });
+    //   } else {
+    //     this.setState({
+    //       tr: true,
+    //       userName: '',
+    //       password: '',
+    //       null_password: false,
+    //       null_userName: false
+    //     });
+    //   }
+    // }
   }
 
   handleNameChange(name) {
@@ -96,87 +95,105 @@ class Login extends React.Component {
 
     return (
       <div
-        className="container"
         style={{
-          mrginTop: 100,
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          flexDirection: 'column'
+          flexDirection: 'column',
+          position: 'fixed',
+          height: '100%',
+          width: '100%'
         }}
       >
-        {/* <Card style={{ width: "70%",paddingBottom:'5%', display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column" }}> */}
-        {/* <div style={{ width: '60%', }}> */}
-
-        <h1
+        <Card
           style={{
-            textAlign: 'center',
-            fontFamily: 'Ubuntu',
-            fontWeight: '500'
-          }}
-        >
-          Login
-        </h1>
-
-        <Snackbar
-          place="tr"
-          color="danger"
-          icon={AddAlert}
-          message="Please enter a valid user name and password"
-          open={this.state.tr}
-          closeNotification={() => this.setState({ tr: false })}
-          close
-        />
-        <div className="col-md-8">
-          <TextField
-            fullWidth
-            label="User Name"
-            variant="outlined"
-            value={this.state.userName}
-            onChange={e => this.handleInput(e, 'userName')}
-            error={!this.state.userName && this.state.null_userName}
-          />
-        </div>
-
-        <div className="col-md-8" style={{ marginTop: '15px' }}>
-          <TextField
-            type="password"
-            fullWidth
-            label="Password"
-            variant="outlined"
-            value={this.state.password}
-            onChange={e => this.handleInput(e, 'password')}
-            error={!this.state.password && this.state.null_password}
-          />
-        </div>
-
-        <div
-          style={{
-            marginTop: '15px',
-            width: '100%',
+            width: '70%',
+            paddingRight: '5%',
+            paddingLeft: '5%',
+            height: '65%',
+            borderRadius: 20,
             display: 'flex',
+            flexDirection: 'column',
             justifyContent: 'center'
           }}
         >
-          <Button
-            style={{
-              paddingLeft: '10%',
-              paddingRight: '10%',
-              paddingTop: '1%',
-              paddingBottom: '1%'
-            }}
-            onClick={() => this.handleLogin()}
-            variant="contained"
-            color="primary"
-          >
-            Login
-          </Button>
-        </div>
+          <div style={{}}>
+            <h1
+              style={{
+                textAlign: 'center',
+                fontFamily: 'Ubuntu',
+                fontWeight: '500'
+              }}
+            >
+              Login
+            </h1>
 
-        <span style={{ fontWeight: 'bold', cursor: 'pointer', width: '100%' }}>
-          Sign up here
-        </span>
-        {/* </Card> */}
+            <Snackbar
+              place="tr"
+              color="danger"
+              icon={AddAlert}
+              message="Please enter a valid user name and password"
+              open={this.state.tr}
+              closeNotification={() => this.setState({ tr: false })}
+              close
+            />
+
+            <TextField
+              fullWidth
+              label="User Name"
+              variant="outlined"
+              value={this.state.userName}
+              onChange={e => this.handleInput(e, 'userName')}
+              error={!this.state.userName && this.state.null_userName}
+            />
+
+            <div style={{ marginTop: '15px' }}>
+              <TextField
+                type="password"
+                fullWidth
+                label="Password"
+                variant="outlined"
+                value={this.state.password}
+                onChange={e => this.handleInput(e, 'password')}
+                error={!this.state.password && this.state.null_password}
+              />
+            </div>
+
+            <div
+              style={{
+                marginTop: '15px',
+                width: '100%',
+                display: 'flex',
+                justifyContent: 'center'
+              }}
+            >
+              <Button
+                style={{
+                  paddingLeft: '10%',
+                  paddingRight: '10%',
+                  paddingTop: '1%',
+                  paddingBottom: '1%'
+                }}
+                onClick={() => this.handleLogin()}
+                variant="contained"
+                color="primary"
+              >
+                Login
+              </Button>
+            </div>
+
+            <div style={{ float: 'right' }}>
+              <h4
+                style={{
+                  cursor: 'pointer',
+                  marginTop: 10
+                }}
+              >
+                Sign Up
+              </h4>
+            </div>
+          </div>
+        </Card>
       </div>
     );
   }

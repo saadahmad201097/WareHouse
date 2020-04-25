@@ -53,7 +53,7 @@ function SecuredRoute(props) {
           // console.log(document.cookie.split('=')[1]);
           // const token = cookies.get('token') || '';
 
-          if (token) {
+          if (true) {
             return <Component />;
           } else {
             return <Redirect to="/login" />;
@@ -65,7 +65,6 @@ function SecuredRoute(props) {
 }
 
 const MainApp = () => {
-  interceptor();
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
@@ -100,3 +99,29 @@ ReactDOM.render(<MainApp />, document.getElementById('root'));
 {
   /* <Redirect from="/" to="/admin" /> */
 }
+
+
+
+
+// function interceptor(){
+//   axios.interceptors.request.use(function (config) {
+//     console.log('requset interceptor');
+//     const token = '';
+//     // Do something before request is sent
+//     if(token){
+//       config.headers.Authorization = 'Bearer '+token;      
+//     }
+
+//     return config;    
+//   }, function (error) {
+//     // Do something with request error
+//     return Promise.reject(error);
+//   });
+
+//   axios.interceptors.response.use(function(response) {
+//     return response;
+//   }, function (error) {
+//     console.log("error: ", error.response.data);
+//     return error;
+//   });
+// }
