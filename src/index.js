@@ -26,17 +26,18 @@ import RTL from 'layouts/RTL.js';
 
 import 'assets/css/material-dashboard-react.css?v=1.8.0';
 
-import Check from './New.js';
 
 import { ConnectedRouter } from 'connected-react-router';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
+import axios from "axios";
+import cookie from 'react-cookies';
+import Check from './New';
+import Login from './layouts/Login';
 import configureStore, { history } from './store';
-import Login from './layouts/Login.js';
 
 import NotFound from './components/NotFound/NotFound';
 
-import { withCookies, Cookies } from 'react-cookie';
 
 export const { persistor, store } = configureStore();
 
@@ -51,7 +52,7 @@ function SecuredRoute(props) {
           // document.cookie = 'loggedInUser=';
 
           // console.log(document.cookie.split('=')[1]);
-          // const token = cookies.get('token') || '';
+          const token = cookie.load('token') || '';
 
           if (token) {
             return <Component />;
@@ -62,6 +63,28 @@ function SecuredRoute(props) {
       />
     </Router>
   );
+}
+
+function interceptor(){
+  axios.interceptors.request.use(function (config) {
+    console.log('requset interceptor');
+    const token = cookie.load('token') || '';
+    console.log("token: ", token);
+    // Do something before request is sent
+    if(token){
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  }, function (error) {
+    // Do something with request error
+    return Promise.reject(error);
+  });
+  axios.interceptors.response.use(function(response) {
+    return response;
+  }, function (error) {
+    console.log("error: ", error.response.data);
+    return error;
+  });
 }
 
 const MainApp = () => {
@@ -94,9 +117,7 @@ const MainApp = () => {
 
 ReactDOM.render(<MainApp />, document.getElementById('root'));
 
-{
+
   /* <Route path="/rtl" component={RTL} /> */
-}
-{
+
   /* <Redirect from="/" to="/admin" /> */
-}

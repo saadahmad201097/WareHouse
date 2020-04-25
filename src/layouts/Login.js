@@ -11,9 +11,9 @@ import AddAlert from '@material-ui/icons/AddAlert';
 
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
+import cookie from 'react-cookies';
 import { loginUrl } from '../public/endpoins';
 
-import { withCookies, Cookies } from 'react-cookie';
 
 class Login extends React.Component {
   constructor(props) {
@@ -47,14 +47,11 @@ class Login extends React.Component {
       .post(loginUrl, params)
       .then(res => {
         if (res.data.success) {
-          //   use cookies instead token
-        //   const { cookies } = this.props;
-        //   cookies.set('token', res.data.token);
-          console.log('token: ', res.data.token);
+            cookie.save('token', res.data.token, { path: '/' });
+        } 
+        // else if (!res.data.success) {
 
-          // localStorage.setItem("token", JSON.stringify(res.data.token));
-        } else if (!res.data.success) {
-        }
+        // }
       })
       .catch(e => {
         console.log(e);
