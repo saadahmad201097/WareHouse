@@ -1,156 +1,185 @@
-import React from "react";
+import React from 'react';
 
-import TextField from "@material-ui/core/TextField";
+import TextField from '@material-ui/core/TextField';
 
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 
+import Snackbar from 'components/Snackbar/Snackbar';
 
-import Snackbar from "components/Snackbar/Snackbar";
+import AddAlert from '@material-ui/icons/AddAlert';
 
-import AddAlert from "@material-ui/icons/AddAlert";
-
-import { Redirect } from "react-router-dom";
+import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 import { loginUrl } from '../public/endpoins';
 
+import { withCookies, Cookies } from 'react-cookie';
+
 class Login extends React.Component {
+  constructor(props) {
+    super(props);
 
-    constructor(props) {
-        super(props)
-        this.state = {
 
-            userName: "",
-            null_userName: false,
+    this.state = {
+      userName: '',
+      null_userName: false,
 
-            password: "",
-            null_password: "",
+      password: '',
+      null_password: '',
 
-            tr: false,
+      tr: false,
 
-            verifiedUser: false
+      verifiedUser: false
+    };
+  }
 
+  handleInput(e, key) {
+    this.setState({ [key]: e.target.value });
+  }
+
+  handleLogin() {
+    const params = {
+      email: this.state.userName,
+      password: this.state.password
+    };
+
+    axios
+      .post(loginUrl, params)
+      .then(res => {
+        if (res.data.success) {
+          //   use cookies instead token
+        //   const { cookies } = this.props;
+        //   cookies.set('token', res.data.token);
+          console.log('token: ', res.data.token);
+
+          // localStorage.setItem("token", JSON.stringify(res.data.token));
+        } else if (!res.data.success) {
         }
-    }
+      })
+      .catch(e => {
+        console.log(e);
+      });
 
-    handleInput(e, key) {
-        this.setState({ [key]: e.target.value });
-    }
-
-
-
-
-    handleLogin() {
-
-        const params = {
-            email: this.state.userName,
-            password: this.state.password
-        }
-        
-        axios.post(loginUrl, params)
-        .then(res => {
-          if(res.data.success){
-            //   use cookies instead token
-            console.log('token: ', res.data.token);
-            // localStorage.setItem("token", JSON.stringify(res.data.token));
-          }
-          else if(!res.data.success){
-          }
-        })
-        .catch(e =>{
-            console.log(e);
+    if (this.state.userName === '' && this.state.password === '') {
+      this.setState({ null_userName: true, null_password: true });
+    } else if (this.state.userName === '') {
+      this.setState({ null_userName: true });
+    } else if (this.state.password === '') {
+      this.setState({ null_password: true });
+    } else {
+      if (this.state.userName === 'admin' && this.state.password === '123') {
+        this.setState({ verifiedUser: true });
+      } else {
+        this.setState({
+          tr: true,
+          userName: '',
+          password: '',
+          null_password: false,
+          null_userName: false
         });
+      }
+    }
+  }
 
-        // if (this.state.userName === "" && this.state.password === "") {
-        //     this.setState({ null_userName: true, null_password: true })
-        // }
+  handleNameChange(name) {
+    this.setState({ name });
+  }
 
-        // else if (this.state.userName === "") {
-        //     this.setState({ null_userName: true })
-        // }
-
-        // else if (this.state.password === "") {
-        //     this.setState({ null_password: true })
-        // }
-
-        // else {
-
-        //     if (this.state.userName === 'admin' && this.state.password === '123') {
-
-        //         this.setState({ verifiedUser: true })
-        //     }
-
-        //     else {
-
-        //         this.setState({ tr: true, userName: "", password: "", null_password: false, null_userName: false })
-        //     }
-        // }
-
+  render() {
+    if (this.state.tr) {
+      setTimeout(() => {
+        this.setState({ tr: false });
+      }, 1000);
+    } else if (this.state.verifiedUser) {
+      return <Redirect to="/admin/dashboard" />;
     }
 
-    render() {
+    return (
+      <div
+        className="container"
+        style={{
+          mrginTop: 100,
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          flexDirection: 'column'
+        }}
+      >
+        {/* <Card style={{ width: "70%",paddingBottom:'5%', display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column" }}> */}
+        {/* <div style={{ width: '60%', }}> */}
 
+        <h1
+          style={{
+            textAlign: 'center',
+            fontFamily: 'Ubuntu',
+            fontWeight: '500'
+          }}
+        >
+          Login
+        </h1>
 
-        if (this.state.tr) {
-            setTimeout(() => { this.setState({ tr: false }) }, 1000)
-        }
+        <Snackbar
+          place="tr"
+          color="danger"
+          icon={AddAlert}
+          message="Please enter a valid user name and password"
+          open={this.state.tr}
+          closeNotification={() => this.setState({ tr: false })}
+          close
+        />
+        <div className="col-md-8">
+          <TextField
+            fullWidth
+            label="User Name"
+            variant="outlined"
+            value={this.state.userName}
+            onChange={e => this.handleInput(e, 'userName')}
+            error={!this.state.userName && this.state.null_userName}
+          />
+        </div>
 
-        else if (this.state.verifiedUser) {
-            return (<Redirect from="/" to="/admin/dashboard" />)
+        <div className="col-md-8" style={{ marginTop: '15px' }}>
+          <TextField
+            type="password"
+            fullWidth
+            label="Password"
+            variant="outlined"
+            value={this.state.password}
+            onChange={e => this.handleInput(e, 'password')}
+            error={!this.state.password && this.state.null_password}
+          />
+        </div>
 
-        }
+        <div
+          style={{
+            marginTop: '15px',
+            width: '100%',
+            display: 'flex',
+            justifyContent: 'center'
+          }}
+        >
+          <Button
+            style={{
+              paddingLeft: '10%',
+              paddingRight: '10%',
+              paddingTop: '1%',
+              paddingBottom: '1%'
+            }}
+            onClick={() => this.handleLogin()}
+            variant="contained"
+            color="primary"
+          >
+            Login
+          </Button>
+        </div>
 
-        return (
-           
-           
-           <div className='container' style={{ backgroundColor:'red', display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
-
-                <Card style={{ width: "70%",paddingBottom:'5%', display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
-                {/* <div style={{ width: '60%', }}> */}
-
-                    <h1 style={{ textAlign: "center", fontFamily:'Ubuntu', fontWeight:'500' }}>Login</h1>
-
-
-                    <Snackbar
-                        place="tr"
-                        color="danger"
-                        icon={AddAlert}
-                        message="Please enter a valid user name and password"
-                        open={this.state.tr}
-                        closeNotification={() => this.setState({ tr: false })}
-                        close
-                    />
-                    <div className='col-md-8'>
-                        <TextField fullWidth
-                            label="User Name"
-                            variant="outlined"
-                            value={this.state.userName}
-                            onChange={(e) => this.handleInput(e, "userName")}
-                            error={(!this.state.userName && this.state.null_userName)}
-                        />
-                    </div>
-
-                    <div className='col-md-8' style={{ marginTop: "15px" }}>
-                        <TextField type='password'
-                            fullWidth
-                            label="Password"
-                            variant="outlined"
-                            value={this.state.password}
-                            onChange={(e) => this.handleInput(e, "password")}
-                            error={(!this.state.password && this.state.null_password)}
-                        />
-                    </div>
-
-                    <div style={{ marginTop: '15px', width: '100%', display: "flex", justifyContent: "center" }}>
-                        <Button style={{ paddingLeft: '25%', paddingRight: '25%', paddingTop: '2%', paddingBottom: '2%' }} onClick={() => this.handleLogin()} variant="contained" color="primary">
-                            Login
-                 </Button>
-                    </div>
-                {/* </div> */}
-                </Card>
-            </div>
-        )
-    }
+        <span style={{ fontWeight: 'bold', cursor: 'pointer', width: '100%' }}>
+          Sign up here
+        </span>
+        {/* </Card> */}
+      </div>
+    );
+  }
 }
 
-export default Login
+export default Login;
