@@ -65,6 +65,7 @@ function SecuredRoute(props) {
 }
 
 const MainApp = () => {
+  interceptor();
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
