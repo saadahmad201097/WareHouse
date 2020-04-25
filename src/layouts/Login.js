@@ -3,6 +3,8 @@ import React from 'react'
 import TextField from '@material-ui/core/TextField';
 
 import Button from '@material-ui/core/Button';
+import Card from '@material-ui/core/Card';
+
 
 import Snackbar from "components/Snackbar/Snackbar.js";
 
@@ -80,13 +82,15 @@ class Login extends React.Component {
         }
 
         return (
-            <div style={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
+           
+           
+           <div className='container' style={{ backgroundColor:'red', display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
 
-                <div style={{ width: '60%', }}>
+                <Card style={{ width: "70%",paddingBottom:'5%', display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
+                {/* <div style={{ width: '60%', }}> */}
 
-                    <h1 style={{ textAlign: "center" }}>Login</h1>
+                    <h1 style={{ textAlign: "center", fontFamily:'Ubuntu', fontWeight:'500' }}>Login</h1>
 
-                    {/* <form noValidate autoComplete="off"> */}
 
                     <Snackbar
                         place="tr"
@@ -97,7 +101,7 @@ class Login extends React.Component {
                         closeNotification={() => this.setState({ tr: false })}
                         close
                     />
-                    <div>
+                    <div className='col-md-8'>
                         <TextField fullWidth
                             label="User Name"
                             variant="outlined"
@@ -107,7 +111,7 @@ class Login extends React.Component {
                         />
                     </div>
 
-                    <div style={{ marginTop: "15px" }}>
+                    <div className='col-md-8' style={{ marginTop: "15px" }}>
                         <TextField type='password'
                             fullWidth
                             label="Password"
@@ -119,11 +123,12 @@ class Login extends React.Component {
                     </div>
 
                     <div style={{ marginTop: '15px', width: '100%', display: "flex", justifyContent: "center" }}>
-                        <Button onClick={() => this.handleLogin()} variant="contained" color="primary">
+                        <Button style={{ paddingLeft: '25%', paddingRight: '25%', paddingTop: '2%', paddingBottom: '2%' }} onClick={() => this.handleLogin()} variant="contained" color="primary">
                             Login
                  </Button>
                     </div>
-                </div>
+                {/* </div> */}
+                </Card>
             </div>
         )
     }
