@@ -32,19 +32,39 @@ import { ConnectedRouter } from 'connected-react-router'
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react'
 import configureStore, { history } from './store';
-import Login from './layouts/Login.js'
+import Login from './layouts/Login.js';
+import axios from "axios";
 
 import NotFound from './components/NotFound/NotFound'
 
 
 export const { persistor, store } = configureStore();
-
-
 const hist = createBrowserHistory();
 
+function interceptor(){
+  axios.interceptors.request.use(function (config) {
+    console.log('requset interceptor');
+    const token = '';
+    // Do something before request is sent
+    if(token){
+      config.headers.Authorization = 'Bearer '+token;      
+    }
 
+    return config;    
+  }, function (error) {
+    // Do something with request error
+    return Promise.reject(error);
+  });
 
+  axios.interceptors.response.use(function(response) {
+    return response;
+  }, function (error) {
+    console.log("error: ", error.response.data);
+    return error;
+  });
+}
 const MainApp = () => {
+  interceptor();
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
