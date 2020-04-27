@@ -6,6 +6,7 @@ import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 
 import Snackbar from 'components/Snackbar/Snackbar';
+import Notification from 'components/Snackbar/Notification.js';
 
 import AddAlert from '@material-ui/icons/AddAlert';
 
@@ -27,7 +28,9 @@ class Login extends React.Component {
 
       tr: false,
 
-      verifiedUser: false
+      verifiedUser: false,
+
+      msg:""
     };
   }
 
@@ -46,7 +49,7 @@ class Login extends React.Component {
       var re = /\S+@\S+\.\S+/;
 
       if (!re.test(this.state.userName)) {
-        this.setState({ tr: true });
+        this.setState({ tr: true, msg:"Enter the valid email address" });
       } else {
         const params = {
           email: this.state.userName,
@@ -67,7 +70,7 @@ class Login extends React.Component {
           })
           .catch(e => {
             console.log('error is ', e);
-            this.setState({ tr: true });
+            this.setState({ tr: true, msg:"Login failed" });
           });
       }
     }
@@ -80,8 +83,8 @@ class Login extends React.Component {
   render() {
     if (this.state.tr) {
       setTimeout(() => {
-        this.setState({ tr: false });
-      }, 1000);
+        this.setState({ tr: false, msg:"" });
+      }, 2000);
     }
     if (this.state.verifiedUser) {
       return <Redirect to="/admin/dashboard" />;
@@ -122,7 +125,7 @@ class Login extends React.Component {
               Login
             </h1>
 
-            <Snackbar
+            {/* <Snackbar
               place="tr"
               color="danger"
               icon={AddAlert}
@@ -130,7 +133,9 @@ class Login extends React.Component {
               open={this.state.tr}
               closeNotification={() => this.setState({ tr: false })}
               close
-            />
+            /> */}
+
+            <Notification msg={this.state.msg} open={this.state.tr} />
 
             <TextField
               fullWidth

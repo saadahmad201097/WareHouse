@@ -5,7 +5,7 @@ import Button from '@material-ui/core/Button';
 import { Redirect } from 'react-router-dom';
 
 import axios from 'axios';
-import { addItemUrl } from '../../public/endpoins';
+import { addItemUrl, updateItemUrl } from '../../public/endpoins';
 
 import Loader from 'react-loader-spinner';
 
@@ -32,6 +32,8 @@ function AddItems(props) {
   const [barCode, setBarcode] = useState('');
   const [description, setDesc] = useState('');
 
+  const [selectedItemToEdit, setSelectedItem] = useState('');
+
   const [null_name, setNullName] = useState(false);
   const [null_subClass, setNullSubClass] = useState(false);
   const [null_unit, setNullUnit] = useState(false);
@@ -47,6 +49,7 @@ function AddItems(props) {
     if (props.history.location.state.selectedItem) {
       const temp = props.history.location.state.selectedItem;
 
+      setSelectedItem(temp);
       setName(temp.name);
       setSubClass(temp.subClass);
       setDesc(temp.description);
@@ -115,7 +118,7 @@ function AddItems(props) {
     }
   };
 
-  const addNewItemUrl = () => {
+  const addNewItemFun = () => {
     const params = {
       name: name,
       description: description,
@@ -132,6 +135,8 @@ function AddItems(props) {
       .then(res => {
         if (res.data.success) {
           console.log('response after adding item', res);
+          props.history.goBack();
+
         }
         // else if (!res.data.success) {
         //   this.setState({ tr: true });
@@ -156,7 +161,55 @@ function AddItems(props) {
     ) {
       emptyFields();
     } else {
-      addNewItemUrl();
+      addNewItemFun();
+    }
+  };
+
+  const editItemFun = () => {
+    const params = {
+      ...selectedItemToEdit,
+      name: name,
+      description: description,
+      subClass: subClass,
+      unit: unit,
+      vendorId: vendorId,
+      purchasePrice: purchasePrice,
+      buPrice: buPrice,
+      salePrice: salePrice,
+      barCode: barCode
+    };
+    console.log(params);
+    axios
+      .put(updateItemUrl, params)
+      .then(res => {
+        if (res.data.success) {
+          console.log('response after adding item', res);
+          props.history.goBack();
+        }
+        // else if (!res.data.success) {
+        //   this.setState({ tr: true });
+        // }
+      })
+      .catch(e => {
+        console.log('error after adding item', e);
+      });
+  };
+
+  const handleEdit = () => {
+    if (
+      name === '' ||
+      purchasePrice === '' ||
+      vendorId === '' ||
+      description === '' ||
+      barCode === '' ||
+      buPrice === '' ||
+      salePrice === '' ||
+      subClass === '' ||
+      unit === ''
+    ) {
+      emptyFields();
+    } else {
+      editItemFun();
     }
   };
 
@@ -301,15 +354,27 @@ function AddItems(props) {
             marginTop: '2%'
           }}
         >
-          <Button
-            style={{ paddingLeft: 30, paddingRight: 30 }}
-            onClick={handleAdd}
-            variant="contained"
-            color="primary"
-          >
-            {' '}
-            Add{' '}
-          </Button>
+          {comingFor === 'AddItems' ? (
+            <Button
+              style={{ paddingLeft: 30, paddingRight: 30 }}
+              onClick={handleAdd}
+              variant="contained"
+              color="primary"
+            >
+              {' '}
+              Add{' '}
+            </Button>
+          ) : (
+            <Button
+              style={{ paddingLeft: 30, paddingRight: 30 }}
+              onClick={handleEdit}
+              variant="contained"
+              color="primary"
+            >
+              {' '}
+              Edit{' '}
+            </Button>
+          )}
         </div>
       </div>
     </div>
