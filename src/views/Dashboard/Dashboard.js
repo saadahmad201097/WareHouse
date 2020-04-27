@@ -1,46 +1,45 @@
-import React from "react";
+import React, { useEffect } from 'react';
 // react plugin for creating charts
-import ChartistGraph from "react-chartist";
+import ChartistGraph from 'react-chartist';
 // @material-ui/core
-import { makeStyles } from "@material-ui/core/styles";
-import Icon from "@material-ui/core/Icon";
+import { makeStyles } from '@material-ui/core/styles';
+import Icon from '@material-ui/core/Icon';
 // @material-ui/icons
-import Store from "@material-ui/icons/Store";
-import Warning from "@material-ui/icons/Warning";
-import DateRange from "@material-ui/icons/DateRange";
-import LocalOffer from "@material-ui/icons/LocalOffer";
-import Update from "@material-ui/icons/Update";
-import ArrowUpward from "@material-ui/icons/ArrowUpward";
-import AccessTime from "@material-ui/icons/AccessTime";
-import Accessibility from "@material-ui/icons/Accessibility";
-import BugReport from "@material-ui/icons/BugReport";
-import Code from "@material-ui/icons/Code";
-import Cloud from "@material-ui/icons/Cloud";
+import Store from '@material-ui/icons/Store';
+import Warning from '@material-ui/icons/Warning';
+import DateRange from '@material-ui/icons/DateRange';
+import LocalOffer from '@material-ui/icons/LocalOffer';
+import Update from '@material-ui/icons/Update';
+import ArrowUpward from '@material-ui/icons/ArrowUpward';
+import AccessTime from '@material-ui/icons/AccessTime';
+import Accessibility from '@material-ui/icons/Accessibility';
+import BugReport from '@material-ui/icons/BugReport';
+import Code from '@material-ui/icons/Code';
+import Cloud from '@material-ui/icons/Cloud';
 // core components
-import GridItem from "components/Grid/GridItem.js";
-import GridContainer from "components/Grid/GridContainer.js";
-import Table from "components/Table/Table.js";
-import Tasks from "components/Tasks/Tasks.js";
-import CustomTabs from "components/CustomTabs/CustomTabs.js";
-import Danger from "components/Typography/Danger.js";
-import Card from "components/Card/Card.js";
-import CardHeader from "components/Card/CardHeader.js";
-import CardIcon from "components/Card/CardIcon.js";
-import CardBody from "components/Card/CardBody.js";
-import CardFooter from "components/Card/CardFooter.js";
+import GridItem from 'components/Grid/GridItem.js';
+import GridContainer from 'components/Grid/GridContainer.js';
+import Table from 'components/Table/Table.js';
+import Tasks from 'components/Tasks/Tasks.js';
+import CustomTabs from 'components/CustomTabs/CustomTabs.js';
+import Danger from 'components/Typography/Danger.js';
+import Card from 'components/Card/Card.js';
+import CardHeader from 'components/Card/CardHeader.js';
+import CardIcon from 'components/Card/CardIcon.js';
+import CardBody from 'components/Card/CardBody.js';
+import CardFooter from 'components/Card/CardFooter.js';
 
-import { bugs, website, server } from "variables/general.js";
+import { bugs, website, server } from 'variables/general.js';
 
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 
 import {
   dailySalesChart,
   emailsSubscriptionChart,
   completedTasksChart
-} from "variables/charts.js";
+} from 'variables/charts.js';
 
-import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
-
+import styles from 'assets/jss/material-dashboard-react/views/dashboardStyle.js';
 
 import Button from '@material-ui/core/Button';
 
@@ -48,11 +47,9 @@ import { funForSaga } from '../../actions/Checking';
 
 import { connect } from 'react-redux';
 
-import { Redirect } from "react-router-dom";
-
+import { Redirect } from 'react-router-dom';
 
 const useStyles = makeStyles(styles);
-
 
 function Dashboard(props) {
   const classes = useStyles();
@@ -60,11 +57,17 @@ function Dashboard(props) {
   const routeChange = () => {
     let path = `dashboard/next`;
     props.history.push(path);
-  }
+  };
+
+  useEffect(() => {
+    // const history = props.history.entries;
+
+    // set first entry in history to mirror the last entry
+    props.history[0] = props.history[props.history.length - 1];
+  }, []);
 
   return (
     <div>
-
       {/* {props.count} */}
 
       {/* <Button variant="contained" color='primary' onClick={() => { return (<Redirect from={'/admin/dashboard'} to={'/admin/dashboard/details'} />) }}>
@@ -170,7 +173,7 @@ function Dashboard(props) {
               <p className={classes.cardCategory}>
                 <span className={classes.successText}>
                   <ArrowUpward className={classes.upArrowCardCategory} /> 55%
-                </span>{" "}
+                </span>{' '}
                 increase in today sales.
               </p>
             </CardBody>
@@ -234,7 +237,7 @@ function Dashboard(props) {
             headerColor="primary"
             tabs={[
               {
-                tabName: "Bugs",
+                tabName: 'Bugs',
                 tabIcon: BugReport,
                 tabContent: (
                   <Tasks
@@ -245,7 +248,7 @@ function Dashboard(props) {
                 )
               },
               {
-                tabName: "Website",
+                tabName: 'Website',
                 tabIcon: Code,
                 tabContent: (
                   <Tasks
@@ -256,7 +259,7 @@ function Dashboard(props) {
                 )
               },
               {
-                tabName: "Server",
+                tabName: 'Server',
                 tabIcon: Cloud,
                 tabContent: (
                   <Tasks
@@ -280,12 +283,12 @@ function Dashboard(props) {
             <CardBody>
               <Table
                 tableHeaderColor="warning"
-                tableHead={["ID", "Name", "Salary", "Country"]}
+                tableHead={['ID', 'Name', 'Salary', 'Country']}
                 tableData={[
-                  ["1", "Dakota Rice", "$36,738", "Niger"],
-                  ["2", "Minerva Hooper", "$23,789", "Curaçao"],
-                  ["3", "Sage Rodriguez", "$56,142", "Netherlands"],
-                  ["4", "Philip Chaney", "$38,735", "Korea, South"]
+                  ['1', 'Dakota Rice', '$36,738', 'Niger'],
+                  ['2', 'Minerva Hooper', '$23,789', 'Curaçao'],
+                  ['3', 'Sage Rodriguez', '$56,142', 'Netherlands'],
+                  ['4', 'Philip Chaney', '$38,735', 'Korea, South']
                 ]}
               />
             </CardBody>
@@ -296,14 +299,14 @@ function Dashboard(props) {
   );
 }
 
-
-
 const mapStateToProps = ({ CheckingReducer }) => {
   const { count } = CheckingReducer;
-  return { count }
+  return { count };
 };
 
-export default connect(mapStateToProps, {
-  funForSaga,
-})(Dashboard);
-
+export default connect(
+  mapStateToProps,
+  {
+    funForSaga
+  }
+)(Dashboard);

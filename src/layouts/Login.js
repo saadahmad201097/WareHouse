@@ -11,9 +11,8 @@ import AddAlert from '@material-ui/icons/AddAlert';
 
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
+import cookie from 'react-cookies';
 import { loginUrl } from '../public/endpoins';
-
-import { withCookies, Cookies } from 'react-cookie';
 
 class Login extends React.Component {
   constructor(props) {
@@ -37,47 +36,41 @@ class Login extends React.Component {
   }
 
   handleLogin() {
-    const params = {
-      email: this.state.userName,
-      password: this.state.password
-    };
+    if (this.state.userName === '' && this.state.password === '') {
+      this.setState({ null_userName: true, null_password: true });
+    } else if (this.state.userName === '') {
+      this.setState({ null_userName: true });
+    } else if (this.state.password === '') {
+      this.setState({ null_password: true });
+    } else {
+      var re = /\S+@\S+\.\S+/;
 
-    axios
-      .post(loginUrl, params)
-      .then(res => {
-        if (res.data.success) {
-          //   use cookies instead token
-          //   const { cookies } = this.props;
-          //   cookies.set('token', res.data.token);
-          console.log('token: ', res.data.token);
+      if (!re.test(this.state.userName)) {
+        this.setState({ tr: true });
+      } else {
+        const params = {
+          email: this.state.userName,
+          password: this.state.password
+        };
 
-          // localStorage.setItem("token", JSON.stringify(res.data.token));
-        } else if (!res.data.success) {
-        }
-      })
-      .catch(e => {
-        console.log(e);
-      });
-
-    // if (this.state.userName === '' && this.state.password === '') {
-    //   this.setState({ null_userName: true, null_password: true });
-    // } else if (this.state.userName === '') {
-    //   this.setState({ null_userName: true });
-    // } else if (this.state.password === '') {
-    //   this.setState({ null_password: true });
-    // } else {
-    //   if (this.state.userName === 'admin' && this.state.password === '123') {
-    //     this.setState({ verifiedUser: true });
-    //   } else {
-    //     this.setState({
-    //       tr: true,
-    //       userName: '',
-    //       password: '',
-    //       null_password: false,
-    //       null_userName: false
-    //     });
-    //   }
-    // }
+        axios
+          .post(loginUrl, params)
+          .then(res => {
+            if (res.data.success) {
+              console.log(res);
+              cookie.save('token', res.data.token, { path: '/' });
+              this.setState({ verifiedUser: true });
+            }
+            // else if (!res.data.success) {
+            //   this.setState({ tr: true });
+            // }
+          })
+          .catch(e => {
+            console.log('error is ', e);
+            this.setState({ tr: true });
+          });
+      }
+    }
   }
 
   handleNameChange(name) {
@@ -89,7 +82,8 @@ class Login extends React.Component {
       setTimeout(() => {
         this.setState({ tr: false });
       }, 1000);
-    } else if (this.state.verifiedUser) {
+    }
+    if (this.state.verifiedUser) {
       return <Redirect to="/admin/dashboard" />;
     }
 

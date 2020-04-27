@@ -73,173 +73,173 @@
 // };
 
 /*eslint-disable*/
-import React, { useState, useEffect } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import Paper from "@material-ui/core/Paper";
+import React, { useState, useEffect } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import Table from '@material-ui/core/Table';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import Paper from '@material-ui/core/Paper';
 
 const useStyles = makeStyles(styles);
 
 const styles = {
   cardCategoryWhite: {
-    "&,& a,& a:hover,& a:focus": {
-      color: "rgba(255,255,255,.62)",
-      margin: "0",
-      fontSize: "14px",
-      marginTop: "0",
-      marginBottom: "0",
+    '&,& a,& a:hover,& a:focus': {
+      color: 'rgba(255,255,255,.62)',
+      margin: '0',
+      fontSize: '14px',
+      marginTop: '0',
+      marginBottom: '0'
     },
-    "& a,& a:hover,& a:focus": {
-      color: "#FFFFFF",
-    },
+    '& a,& a:hover,& a:focus': {
+      color: '#FFFFFF'
+    }
   },
   cardTitleWhite: {
-    color: "#FFFFFF",
-    marginTop: "0px",
-    minHeight: "auto",
-    fontWeight: "300",
+    color: '#FFFFFF',
+    marginTop: '0px',
+    minHeight: 'auto',
+    fontWeight: '300',
     fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
-    marginBottom: "3px",
-    textDecoration: "none",
-    "& small": {
-      color: "#777",
-      fontSize: "65%",
-      fontWeight: "400",
-      lineHeight: "1",
-    },
+    marginBottom: '3px',
+    textDecoration: 'none',
+    '& small': {
+      color: '#777',
+      fontSize: '65%',
+      fontWeight: '400',
+      lineHeight: '1'
+    }
   },
 
   tableData: {
-    fontSize: "0.8125rem",
-    fontWeight: "400",
-    fontFamily: "Ubuntu",
-  },
+    fontSize: '0.8125rem',
+    fontWeight: '400',
+    fontFamily: 'Ubuntu'
+  }
 };
 
 const tableHead = [
-  "Id",
-  "Name",
-  "Description",
-  "Sub Class",
-  "Unit",
-  "Vendor Id",
-  "Purchase Price",
-  "BU Price",
-  "Sale Price",
-  "Bar Code",
-  "Edit",
-  "Delete",
+  'Id',
+  'Name',
+  'Description',
+  'Sub Class',
+  'Unit',
+  'Vendor Id',
+  'Purchase Price',
+  'BU Price',
+  'Sale Price',
+  'Bar Code',
+  'Edit',
+  'Delete'
 ];
 
 const tableData = [
   {
-    id: "1",
-    name: "Cotton",
+    id: '1',
+    name: 'Cotton',
     desc:
-      "Cotton is of the best quality. We ensure it we will provide the quality at its best",
-    sub_class: "Garments",
-    unit: "Levis",
-    vendor_id: "23",
-    purchase_price: "100",
-    bu_price: "500",
-    sales_price: "250",
-    bar_code: "023333022",
+      'Cotton is of the best quality. We ensure it we will provide the quality at its best',
+    sub_class: 'Garments',
+    unit: 'Levis',
+    vendor_id: '23',
+    purchase_price: '100',
+    bu_price: '500',
+    sales_price: '250',
+    bar_code: '023333022'
   },
   {
-    id: "2",
-    name: "Cotton",
+    id: '2',
+    name: 'Cotton',
     desc:
-      "Cotton is of the best quality. We ensure it we will provide the quality at its best",
-    sub_class: "Garments",
-    unit: "Levis",
-    vendor_id: "23",
-    purchase_price: "100",
-    bu_price: "500",
-    sales_price: "250",
-    bar_code: "023333022",
+      'Cotton is of the best quality. We ensure it we will provide the quality at its best',
+    sub_class: 'Garments',
+    unit: 'Levis',
+    vendor_id: '23',
+    purchase_price: '100',
+    bu_price: '500',
+    sales_price: '250',
+    bar_code: '023333022'
   },
   {
-    id: "3",
-    name: "Cotton",
+    id: '3',
+    name: 'Cotton',
     desc:
-      "Cotton is of the best quality. We ensure it we will provide the quality at its best",
-    sub_class: "Garments",
-    unit: "Levis",
-    vendor_id: "23",
-    purchase_price: "100",
-    bu_price: "500",
-    sales_price: "250",
-    bar_code: "023333022",
+      'Cotton is of the best quality. We ensure it we will provide the quality at its best',
+    sub_class: 'Garments',
+    unit: 'Levis',
+    vendor_id: '23',
+    purchase_price: '100',
+    bu_price: '500',
+    sales_price: '250',
+    bar_code: '023333022'
   },
   {
-    id: "4",
-    name: "Cotton",
+    id: '4',
+    name: 'Cotton',
     desc:
-      "Cotton is of the best quality. We ensure it we will provide the quality at its best",
-    sub_class: "Garments",
-    unit: "Levis",
-    vendor_id: "23",
-    purchase_price: "100",
-    bu_price: "500",
-    sales_price: "250",
-    bar_code: "023333022",
+      'Cotton is of the best quality. We ensure it we will provide the quality at its best',
+    sub_class: 'Garments',
+    unit: 'Levis',
+    vendor_id: '23',
+    purchase_price: '100',
+    bu_price: '500',
+    sales_price: '250',
+    bar_code: '023333022'
   },
   {
-    id: "5",
-    name: "Cotton",
+    id: '5',
+    name: 'Cotton',
     desc:
-      "Cotton is of the best quality. We ensure it we will provide the quality at its best",
-    sub_class: "Garments",
-    unit: "Levis",
-    vendor_id: "23",
-    purchase_price: "100",
-    bu_price: "500",
-    sales_price: "250",
-    bar_code: "023333022",
+      'Cotton is of the best quality. We ensure it we will provide the quality at its best',
+    sub_class: 'Garments',
+    unit: 'Levis',
+    vendor_id: '23',
+    purchase_price: '100',
+    bu_price: '500',
+    sales_price: '250',
+    bar_code: '023333022'
   },
   {
-    id: "6",
-    name: "Cotton",
+    id: '6',
+    name: 'Cotton',
     desc:
-      "Cotton is of the best quality. We ensure it we will provide the quality at its best",
-    sub_class: "Garments",
-    unit: "Levis",
-    vendor_id: "23",
-    purchase_price: "100",
-    bu_price: "500",
-    sales_price: "250",
-    bar_code: "023333022",
+      'Cotton is of the best quality. We ensure it we will provide the quality at its best',
+    sub_class: 'Garments',
+    unit: 'Levis',
+    vendor_id: '23',
+    purchase_price: '100',
+    bu_price: '500',
+    sales_price: '250',
+    bar_code: '023333022'
   },
   {
-    id: "7",
-    name: "Cotton",
+    id: '7',
+    name: 'Cotton',
     desc:
-      "Cotton is of the best quality. We ensure it we will provide the quality at its best",
-    sub_class: "Garments",
-    unit: "Levis",
-    vendor_id: "23",
-    purchase_price: "100",
-    bu_price: "500",
-    sales_price: "250",
-    bar_code: "023333022",
+      'Cotton is of the best quality. We ensure it we will provide the quality at its best',
+    sub_class: 'Garments',
+    unit: 'Levis',
+    vendor_id: '23',
+    purchase_price: '100',
+    bu_price: '500',
+    sales_price: '250',
+    bar_code: '023333022'
   },
   {
-    id: "8",
-    name: "Cotton",
+    id: '8',
+    name: 'Cotton',
     desc:
-      "Cotton is of the best quality. We ensure it we will provide the quality at its best",
-    sub_class: "Garments",
-    unit: "Levis",
-    vendor_id: "23",
-    purchase_price: "100",
-    bu_price: "500",
-    sales_price: "250",
-    bar_code: "023333022",
-  },
+      'Cotton is of the best quality. We ensure it we will provide the quality at its best',
+    sub_class: 'Garments',
+    unit: 'Levis',
+    vendor_id: '23',
+    purchase_price: '100',
+    bu_price: '500',
+    sales_price: '250',
+    bar_code: '023333022'
+  }
 ];
 
 export default function Items(props) {
@@ -249,11 +249,10 @@ export default function Items(props) {
   const [tableData, setTableData] = useState([]);
 
   useEffect(() => {
+    console.log('in table', tableData);
     setTableData(props.tableData);
     setTableHeading(props.tableHeading);
   }, []);
-
-
 
   return (
     <div>
@@ -261,17 +260,17 @@ export default function Items(props) {
         size="small"
         aria-label="a dense table"
         component={Paper}
-        style={{ marginTop: "3%" }}
+        style={{ marginTop: '3%' }}
       >
         <TableHead>
           <TableRow
-            style={{ borderWidth: 5, borderColor: "black", borderRadius: 5 }}
+            style={{ borderWidth: 5, borderColor: 'black', borderRadius: 5 }}
           >
             {tableHeading &&
-              tableHeading.map((item) => {
+              tableHeading.map(item => {
                 return (
                   <TableCell colSpan={0.1} key={item}>
-                    <span style={{ color: "black", fontFamily: "Ubuntu" }}>
+                    <span style={{ color: 'black', fontFamily: 'Ubuntu' }}>
                       {item}
                     </span>
                   </TableCell>
@@ -282,11 +281,11 @@ export default function Items(props) {
 
         <TableBody>
           {tableData &&
-            tableData.map((item) => {
+            tableData.map((item, index) => {
               return (
-                <TableRow key={item.id} className={classes.tableBodyRow}>
+                <TableRow key={item._id} className={classes.tableBodyRow}>
                   <TableCell style={{}}>
-                    <span style={styles.tableData}>{item.id}</span>
+                    <span style={styles.tableData}>{index + 1}</span>
                   </TableCell>
 
                   <TableCell>
@@ -294,41 +293,41 @@ export default function Items(props) {
                   </TableCell>
 
                   <TableCell colSpan={1}>
-                    <span style={styles.tableData}>{item.desc}</span>
+                    <span style={styles.tableData}>{item.description}</span>
                   </TableCell>
 
                   <TableCell>
-                    <span style={styles.tableData}>{item.sub_class}</span>
+                    <span style={styles.tableData}>{item.subClass}</span>
                   </TableCell>
 
                   <TableCell>
-                    <span style={styles.tableData}> {item.unit}</span>
+                    <span style={styles.tableData}>{item.unit}</span>
                   </TableCell>
 
                   <TableCell>
-                    <span style={styles.tableData}> {item.vendor_id}</span>
+                    <span style={styles.tableData}>{item.vendorId}</span>
                   </TableCell>
 
                   <TableCell>
-                    <span style={styles.tableData}> {item.purchase_price}</span>
+                    <span style={styles.tableData}>{item.purchasePrice}</span>
                   </TableCell>
 
                   <TableCell>
-                    <span style={styles.tableData}>{item.bu_price}</span>
+                    <span style={styles.tableData}>{item.buPrice}</span>
                   </TableCell>
 
                   <TableCell>
-                    <span style={styles.tableData}> {item.sales_price}</span>
+                    <span style={styles.tableData}>{item.salePrice}</span>
                   </TableCell>
 
                   <TableCell>
-                    <span style={styles.tableData}>{item.bar_code}</span>
+                    <span style={styles.tableData}>{item.barCode}</span>
                   </TableCell>
 
                   {props.handleEdit ? (
                     <TableCell
                       onClick={() => props.handleEdit(item)}
-                      style={{ cursor: "pointer" }}
+                      style={{ cursor: 'pointer' }}
                       className={classes.tableCell}
                     >
                       <i className="zmdi zmdi-edit zmdi-hc-2x"></i>
@@ -339,8 +338,8 @@ export default function Items(props) {
 
                   {props.handleDelete ? (
                     <TableCell
-                      onClick={() => props.handleDelete()}
-                      style={{ cursor: "pointer" }}
+                      onClick={() => props.handleDelete(item._id)}
+                      style={{ cursor: 'pointer' }}
                       className={classes.tableCell}
                     >
                       <i className="zmdi zmdi-delete zmdi-hc-2x"></i>
