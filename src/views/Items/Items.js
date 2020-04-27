@@ -261,7 +261,7 @@ export default function Items(props) {
     };
 
     await axios
-      .delete(deleteItemUrl, params)
+      .delete(deleteItemUrl+'/'+ params._id)
       .then(res => {
         if (res.data.success) {
           console.log('response after deletion', res);

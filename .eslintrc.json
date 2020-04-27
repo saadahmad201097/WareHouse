@@ -9,6 +9,8 @@
     "no-else-return":"off",
     "no-param-reassign":"off",
     "react/prop-types": "off",
-    "func-names":"off"
+    "func-names":"off",
+    "react/no-array-index-key":"off",
+    "object-shorthand":"warn"
   }
 }
