@@ -9,6 +9,9 @@ import { addItemUrl, updateItemUrl } from '../../public/endpoins';
 
 import Loader from 'react-loader-spinner';
 
+import Notification from 'components/Snackbar/Notification.js';
+
+
 const useStyles = makeStyles(styles);
 
 const styles = {
@@ -43,6 +46,11 @@ function AddItems(props) {
   const [null_salePrice, setNullSalePrice] = useState(false);
   const [null_barCode, setNullBarcode] = useState(false);
   const [null_description, setNullDesc] = useState(false);
+
+  const [msg, setMsg] = useState("");
+  const [tr, setTr] = useState(false);
+  
+
 
   useEffect(() => {
     setcomingFor(props.history.location.state.comingFor);
@@ -136,7 +144,6 @@ function AddItems(props) {
         if (res.data.success) {
           console.log('response after adding item', res);
           props.history.goBack();
-
         }
         // else if (!res.data.success) {
         //   this.setState({ tr: true });
@@ -144,6 +151,8 @@ function AddItems(props) {
       })
       .catch(e => {
         console.log('error after adding item', e);
+        setTr(true)
+        setMsg("Error while adding the item")
       });
   };
 
@@ -192,6 +201,8 @@ function AddItems(props) {
       })
       .catch(e => {
         console.log('error after adding item', e);
+        setTr(true)
+        setMsg("Error while updating the item")
       });
   };
 
@@ -212,6 +223,14 @@ function AddItems(props) {
       editItemFun();
     }
   };
+
+
+  if (tr) {
+    setTimeout(() => {
+      setTr(false)
+      setMsg("")
+    }, 2000);
+  }
 
   return (
     <div className="container">
@@ -377,6 +396,8 @@ function AddItems(props) {
           )}
         </div>
       </div>
+
+      <Notification msg={msg} open={tr} />
     </div>
   );
 }

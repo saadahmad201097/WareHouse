@@ -217,13 +217,14 @@ export default function Items(props) {
         console.log('error is ', e);
       });
 
-    if (response.status === 200) {
+    if (response && response.status === 200) {
       setItem(response.data.data);
       console.log('res===>>>', response);
     }
   }
 
   useEffect(() => {
+    console.log('use effect called');
     getItems();
   }, []);
 
@@ -261,12 +262,13 @@ export default function Items(props) {
     };
 
     await axios
-      .delete(deleteItemUrl+'/'+ params._id)
+      .delete(deleteItemUrl + '/' + params._id)
       .then(res => {
         if (res.data.success) {
           console.log('response after deletion', res);
           setdeleteItem('');
           setModalVisible(false);
+          window.location.reload(false);
         }
         // else if (!res.data.success) {
         //   this.setState({ tr: true });
@@ -401,31 +403,45 @@ export default function Items(props) {
 
           <Modal
             open={modalVisible}
-            onClose={() => setModalVisible(false)}
+            style={{
+              backgroundColor: '#72101e',
+              borderRadius: 10,
+              // width: '60%',
+              height: '40%',
+              marginLeft: '15%',
+              marginRight: '15%',
+              marginTop: '10%',
+              // marginBottom:"10%",
+              display: 'flex',
+              justifyContent: 'center',
+              flexDirection: 'column',
+              flex: 1,
+              position: 'fixed'
+            }}
+            // onClose={() => setModalVisible(false)}
             aria-labelledby="simple-modal-title"
             aria-describedby="simple-modal-description"
           >
             <div
-              style={{
-                width: '100%',
-                height: '60%',
-                alignSelf: 'center',
-                display: 'flex',
-                justifyContent: 'center',
-                flex: 1,
-                flexDirection: 'column'
-              }}
+              style={
+                {
+                  // width: '100%',
+                  // height: '60%',
+                }
+              }
             >
-              <span
+              <h4
                 style={{
                   color: 'white',
                   textAlign: 'center',
                   fontWeight: 'bold',
-                  fontSize: 25
+                  fontFamily: 'Ubuntu',
+                  // fontSize: 25,
+                  textAlign: 'center'
                 }}
               >
                 Are you sure want to delete the item?
-              </span>
+              </h4>
 
               <div
                 style={{

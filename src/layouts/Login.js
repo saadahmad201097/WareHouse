@@ -30,7 +30,7 @@ class Login extends React.Component {
 
       verifiedUser: false,
 
-      msg:""
+      msg: ''
     };
   }
 
@@ -49,7 +49,7 @@ class Login extends React.Component {
       var re = /\S+@\S+\.\S+/;
 
       if (!re.test(this.state.userName)) {
-        this.setState({ tr: true, msg:"Enter the valid email address" });
+        this.setState({ tr: true, msg: 'Enter the valid email address' });
       } else {
         const params = {
           email: this.state.userName,
@@ -62,7 +62,9 @@ class Login extends React.Component {
             if (res.data.success) {
               console.log(res);
               cookie.save('token', res.data.token, { path: '/' });
-              this.setState({ verifiedUser: true });
+              this.setState({
+                verifiedUser: true
+              });
             }
             // else if (!res.data.success) {
             //   this.setState({ tr: true });
@@ -70,7 +72,7 @@ class Login extends React.Component {
           })
           .catch(e => {
             console.log('error is ', e);
-            this.setState({ tr: true, msg:"Login failed" });
+            this.setState({ tr: true, msg: 'Login failed' });
           });
       }
     }
@@ -83,7 +85,7 @@ class Login extends React.Component {
   render() {
     if (this.state.tr) {
       setTimeout(() => {
-        this.setState({ tr: false, msg:"" });
+        this.setState({ tr: false, msg: '' });
       }, 2000);
     }
     if (this.state.verifiedUser) {
