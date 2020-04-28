@@ -43,11 +43,12 @@ import styles from 'assets/jss/material-dashboard-react/views/dashboardStyle.js'
 
 import Button from '@material-ui/core/Button';
 
-import { funForSaga } from '../../actions/Checking';
 
 import { connect } from 'react-redux';
 
 import { Redirect } from 'react-router-dom';
+import { funForSaga } from '../../actions/Checking';
+
 
 const useStyles = makeStyles(styles);
 
@@ -172,8 +173,10 @@ function Dashboard(props) {
               <h4 className={classes.cardTitle}>Daily Sales</h4>
               <p className={classes.cardCategory}>
                 <span className={classes.successText}>
-                  <ArrowUpward className={classes.upArrowCardCategory} /> 55%
-                </span>{' '}
+                  <ArrowUpward className={classes.upArrowCardCategory} /> 
+                  55%
+                </span>
+                {' '}
                 increase in today sales.
               </p>
             </CardBody>

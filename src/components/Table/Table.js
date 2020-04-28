@@ -135,113 +135,6 @@ const tableHead = [
   'Delete'
 ];
 
-const tableData = [
-  {
-    id: '1',
-    name: 'Cotton',
-    desc:
-      'Cotton is of the best quality. We ensure it we will provide the quality at its best',
-    sub_class: 'Garments',
-    unit: 'Levis',
-    vendor_id: '23',
-    purchase_price: '100',
-    bu_price: '500',
-    sales_price: '250',
-    bar_code: '023333022'
-  },
-  {
-    id: '2',
-    name: 'Cotton',
-    desc:
-      'Cotton is of the best quality. We ensure it we will provide the quality at its best',
-    sub_class: 'Garments',
-    unit: 'Levis',
-    vendor_id: '23',
-    purchase_price: '100',
-    bu_price: '500',
-    sales_price: '250',
-    bar_code: '023333022'
-  },
-  {
-    id: '3',
-    name: 'Cotton',
-    desc:
-      'Cotton is of the best quality. We ensure it we will provide the quality at its best',
-    sub_class: 'Garments',
-    unit: 'Levis',
-    vendor_id: '23',
-    purchase_price: '100',
-    bu_price: '500',
-    sales_price: '250',
-    bar_code: '023333022'
-  },
-  {
-    id: '4',
-    name: 'Cotton',
-    desc:
-      'Cotton is of the best quality. We ensure it we will provide the quality at its best',
-    sub_class: 'Garments',
-    unit: 'Levis',
-    vendor_id: '23',
-    purchase_price: '100',
-    bu_price: '500',
-    sales_price: '250',
-    bar_code: '023333022'
-  },
-  {
-    id: '5',
-    name: 'Cotton',
-    desc:
-      'Cotton is of the best quality. We ensure it we will provide the quality at its best',
-    sub_class: 'Garments',
-    unit: 'Levis',
-    vendor_id: '23',
-    purchase_price: '100',
-    bu_price: '500',
-    sales_price: '250',
-    bar_code: '023333022'
-  },
-  {
-    id: '6',
-    name: 'Cotton',
-    desc:
-      'Cotton is of the best quality. We ensure it we will provide the quality at its best',
-    sub_class: 'Garments',
-    unit: 'Levis',
-    vendor_id: '23',
-    purchase_price: '100',
-    bu_price: '500',
-    sales_price: '250',
-    bar_code: '023333022'
-  },
-  {
-    id: '7',
-    name: 'Cotton',
-    desc:
-      'Cotton is of the best quality. We ensure it we will provide the quality at its best',
-    sub_class: 'Garments',
-    unit: 'Levis',
-    vendor_id: '23',
-    purchase_price: '100',
-    bu_price: '500',
-    sales_price: '250',
-    bar_code: '023333022'
-  },
-  {
-    id: '8',
-    name: 'Cotton',
-    desc:
-      'Cotton is of the best quality. We ensure it we will provide the quality at its best',
-    sub_class: 'Garments',
-    unit: 'Levis',
-    vendor_id: '23',
-    purchase_price: '100',
-    bu_price: '500',
-    sales_price: '250',
-    bar_code: '023333022'
-  }
-];
-
 export default function Items(props) {
   const classes = useStyles();
 
@@ -249,10 +142,25 @@ export default function Items(props) {
   const [tableData, setTableData] = useState([]);
 
   useEffect(() => {
-    console.log('in table', tableData);
+    console.log('in table', props.tableData);
     setTableData(props.tableData);
     setTableHeading(props.tableHeading);
   }, []);
+
+  // function getKeys() {
+  //   return Object.keys(this.props.data[0]);
+  // }
+
+  // function getRowsData() {
+  //   props.tableKeys
+  //   return props.tableKeys.map((key, index)=>{
+  //     return(
+  //       <TableCell>
+  //         <span style={styles.tableData}>{item.name}</span>
+  //       </TableCell>
+  //     )
+  //   })
+  // }
 
   return (
     <div>
@@ -280,14 +188,10 @@ export default function Items(props) {
         </TableHead>
 
         <TableBody>
-          {tableData &&
-            tableData.map((item, index) => {
+          {props.tableData &&
+            props.tableData.map((item, index) => {
               return (
                 <TableRow key={item._id} className={classes.tableBodyRow}>
-                  <TableCell style={{}}>
-                    <span style={styles.tableData}>{index + 1}</span>
-                  </TableCell>
-
                   <TableCell>
                     <span style={styles.tableData}>{item.name}</span>
                   </TableCell>

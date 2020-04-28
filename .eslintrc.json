@@ -11,6 +11,14 @@
     "react/prop-types": "off",
     "func-names":"off",
     "react/no-array-index-key":"off",
-    "object-shorthand":"warn"
+    "object-shorthand":"warn",
+    "react/jsx-one-expression-per-line":"off",
+    "prefer-template":"off",
+    "no-debugger":"off",
+    "import/no-unresolved":"off",
+    "import/extensions":"off",
+    "no-use-before-define":"off",
+    "react/destructuring-assignment":"off",
+    "react/jsx-indent-props":"off"
   }
 }

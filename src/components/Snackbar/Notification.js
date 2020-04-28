@@ -1,13 +1,14 @@
-import React,{useEffect, useState} from 'react'
-import Snackbar from './Snackbar.js';
+import React from 'react';
 import AddAlert from '@material-ui/icons/AddAlert';
 import { isPropertySignature } from 'typescript';
+import Snackbar from './Snackbar.js';
+
 
 
 function Notification (props) {
 
     return(
-        <Snackbar
+      <Snackbar
         place="tr"
         color="danger"
         icon={AddAlert}

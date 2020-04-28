@@ -30,7 +30,12 @@ import DashboardPage from "views/Dashboard/Dashboard.js";
 import UserProfile from "views/UserProfile/UserProfile.js";
 import BusinessUnit from "views/BusinessUnit/BusinessUnit.js";
 import Typography from "views/Typography/Typography.js";
+// eslint-disable-next-line import/extensions
 import Items from "views/Items/Items.js";
+import BuInventory from "views/BuInventory/buInventory";
+import BuRepRequest from "views/BuRepRequest/buRepRequest";
+import BuRepRequestDetails from "views/BuRepRequestDetails/buRepRequestDetails";
+import BuReturn from "views/BuReturn/buReturn";
 import Maps from "views/Maps/Maps.js";
 import NotificationsPage from "views/Notifications/Notifications.js";
 import UpgradeToPro from "views/UpgradeToPro/UpgradeToPro.js";
@@ -49,8 +54,6 @@ const dashboardRoutes = [
     component: DashboardPage,
     layout: "/admin"
   },
-
-
   {
     path: "/items",
     name: "Items",
@@ -59,7 +62,38 @@ const dashboardRoutes = [
     component: Items,
     layout: "/admin"
   },
-
+  {
+    path: "/buInventory",
+    name: "Bu Inventory",
+    rtlName: "الرموز",
+    icon: BubbleChart,
+    component: BuInventory,
+    layout: "/admin"
+  },
+  {
+    path: "/buRepRequest",
+    name: "Bu Rep Request",
+    rtlName: "الرموز",
+    icon: BubbleChart,
+    component: BuRepRequest,
+    layout: "/admin"
+  },
+  {
+    path: "/buRepRequestDetails",
+    name: "Bu Rep Request Details",
+    rtlName: "الرموز",
+    icon: BubbleChart,
+    component: BuRepRequestDetails,
+    layout: "/admin"
+  },
+  {
+    path: "/buReturn",
+    name: "Bu Return",
+    rtlName: "الرموز",
+    icon: BubbleChart,
+    component: BuReturn,
+    layout: "/admin"
+  },
 
 
   // {
@@ -78,61 +112,7 @@ const dashboardRoutes = [
     icon: "content_paste",
     component: BusinessUnit,
     layout: "/admin"
-  },
-
-  // {
-  //   path: "/typography",
-  //   name: "Typography",
-  //   rtlName: "طباعة",
-  //   icon: LibraryBooks,
-  //   component: Typography,
-  //   layout: "/admin"
-  // },
-
-
-  // {
-  //   path: "/user",
-  //   name: "User",
-  //   rtlName: "ملف تعريفي للمستخدم",
-  //   icon: Person,
-  //   component: UserProfile,
-  //   layout: "/admin"
-  // },
-
-
-  // {
-  //   path: "/maps",
-  //   name: "Maps",
-  //   rtlName: "خرائط",
-  //   icon: LocationOn,
-  //   component: Maps,
-  //   layout: "/admin"
-  // },
-  // {
-  //   path: "/notifications",
-  //   name: "Notifications",
-  //   rtlName: "إخطارات",
-  //   icon: Notifications,
-  //   component: NotificationsPage,
-  //   layout: "/admin"
-  // },
-
-  // {
-  //   path: "/rtl-page",
-  //   name: "RTL Support",
-  //   rtlName: "پشتیبانی از راست به چپ",
-  //   icon: Language,
-  //   component: RTLPage,
-  //   layout: "/rtl"
-  // },
-  // {
-  //   path: "/upgrade-to-pro",
-  //   name: "Upgrade To PRO",
-  //   rtlName: "التطور للاحترافية",
-  //   icon: Unarchive,
-  //   component: UpgradeToPro,
-  //   layout: "/admin"
-  // }
+  }
 
 ];
 

@@ -64,7 +64,6 @@ function SecuredRoute(props) {
 }
 
 function interceptor() {
-  console.log('interdd');
   axios.interceptors.request.use(
     function(config) {
       console.log('requset interceptor');

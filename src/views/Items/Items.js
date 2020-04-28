@@ -70,7 +70,6 @@ const styles = {
 };
 
 const tableHead = [
-  'Id',
   'Name',
   'Description',
   'Sub Class',
@@ -311,88 +310,6 @@ export default function Items(props) {
               </Button>
             </div>
           </div>
-
-          {/* <Table size="small" aria-label="a dense table" component={Paper} style={{ marginTop: '3%' }}>
-
-          <TableHead >
-            <TableRow style={{ borderWidth: 5, borderColor: 'black', borderRadius: 5 }}>
-              {tableHead.map((item) => {
-                return (
-                  <TableCell colSpan={0.1} key={item}>
-                    <span style={{ color: 'black', fontFamily: "Ubuntu" }}>{item}</span>
-                  </TableCell>
-                );
-              })}
-            </TableRow>
-          </TableHead>
-
-          <TableBody>
-            {
-              tableData.map(item => {
-                return (
-
-                  <TableRow key={item.id} className={classes.tableBodyRow}>
-
-                    <TableCell  style={{ }}>
-                      <span style={styles.tableData}>
-                        {item.id}
-                      </span>
-                    </TableCell>
-
-                    <TableCell >
-                      <span style={styles.tableData}>{item.name}</span>
-                    </TableCell>
-
-                    <TableCell colSpan={1}>
-                      <span style={styles.tableData}>{item.desc}</span>
-                    </TableCell>
-
-                    <TableCell> 
-                      <span style={styles.tableData}>{item.sub_class}</span>
-                    </TableCell>
-
-                    <TableCell>
-                      <span style={styles.tableData}>  {item.unit}</span>
-                    </TableCell>
-
-                    <TableCell>
-                      <span style={styles.tableData}>  {item.vendor_id}</span>
-                    </TableCell>
-
-                    <TableCell >
-                      <span style={styles.tableData}>  {item.purchase_price}</span>
-                    </TableCell>
-
-                    <TableCell >
-                      <span style={styles.tableData}>{item.bu_price}</span>
-                    </TableCell>
-
-                    <TableCell >
-                      <span style={styles.tableData}>  {item.sales_price}</span>
-                    </TableCell>
-
-                    <TableCell >
-                      <span style={styles.tableData} >{item.bar_code}</span>
-                    </TableCell>
-
-
-                    <TableCell  onClick={() => handleEdit(item)} style={{ cursor: "pointer" }} className={classes.tableCell}>
-                      <i className="zmdi zmdi-edit zmdi-hc-2x"></i>
-                    </TableCell>
-
-
-                    <TableCell  onClick={() => handleDelete()} style={{ cursor: "pointer" }} className={classes.tableCell}>
-                      <i className="zmdi zmdi-delete zmdi-hc-2x"></i>
-                    </TableCell>
-
-                  </TableRow>
-                );
-
-              })
-            }
-          </TableBody>
-
-        </Table> */}
 
           <Table
             tableData={itemsArray}

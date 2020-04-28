@@ -29,8 +29,12 @@ import NotFound from '../components/NotFound/NotFound.js'
 
 import DashboardRoutes from '.././subRoutes/dashboard.js'
 
-import ItemsRoutes from '.././subRoutes/items.js'
-import BusinessUnitRoutes from '.././subRoutes/business_unit.js'
+import ItemsRoutes from '.././subRoutes/items.js';
+import BusinessUnitRoutes from '.././subRoutes/business_unit.js';
+import BuInventoryRoutes from '../subRoutes/buInvetory';
+import BuRepRequestRoutes from '../subRoutes/buRepRequest';
+import BuRepRequestDetailsRoutes from '../subRoutes/buRepRequestDetails';
+import BuReturnRoutes from '../subRoutes/buReturn';
 
 
 
@@ -52,9 +56,13 @@ const switchRoutes = (
       return null;
     })}
 
-    <Route path={'/admin/dashboard/next'} component={DashboardRoutes} />
-    <Route path={'/admin/items/next'} component={ItemsRoutes} />
-    <Route path={'/admin/businessunit/next'} component={BusinessUnitRoutes} />
+    <Route path='/admin/dashboard/next' component={DashboardRoutes} />
+    <Route path='/admin/items/next' component={ItemsRoutes} />
+    <Route path='/admin/businessunit/next' component={BusinessUnitRoutes} />
+    <Route path='/admin/buinventory/next' component={BuInventoryRoutes} />
+    <Route path='/admin/bureprequest/next' component={BuRepRequestRoutes} />
+    <Route path='/admin/bureprequestdetails/next' component={BuRepRequestDetailsRoutes} />
+    <Route path='/admin/bureturn/next' component={BuReturnRoutes} />
 
 
     {/* <Route path={'/admin/dashboard/details/login'} component={Login} /> */}
