@@ -10,14 +10,6 @@ import Loader from 'react-loader-spinner';
 
 import SearchBar from '../../components/SearchBar/Searchbar.js';
 
-import DateFnsUtils from '@date-io/date-fns'; // choose your lib
-import {
-  DatePicker,
-  TimePicker,
-  DateTimePicker,
-  MuiPickersUtilsProvider
-} from '@material-ui/pickers';
-
 const tableHeading = [
   'Name',
   'Description',
@@ -126,6 +118,7 @@ export default function Items(props) {
       });
   }
 
+
   return (
     <div>
       {itemsArray ? (
@@ -169,9 +162,7 @@ export default function Items(props) {
             handleDelete={handleDelete}
           />
 
-          <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <DateTimePicker onChange={value => console.log(value)} />
-          </MuiPickersUtilsProvider>
+      
           <Modal
             open={modalVisible}
             style={{

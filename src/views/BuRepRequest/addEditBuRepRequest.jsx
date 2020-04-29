@@ -8,6 +8,8 @@ import axios from 'axios';
 import Notification from 'components/Snackbar/Notification.js';
 import { addBuRepRequestUrl, updateBuRepRequestUrl } from '../../public/endpoins';
 
+import DateFnsUtils from '@date-io/date-fns';
+import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 
 
 const useStyles = makeStyles(styles);
@@ -115,6 +117,11 @@ function AddEditBuRepRequest(props) {
         }, 2000);
     }
 
+
+    const onChangeDate = value => {
+        dispatch({ field: 'timeStamp', value: value });
+      };
+
     return (
         <div className="container">
         <h1><span> {comingFor === 'add' ? 'Add': 'Edit'}</span></h1>
@@ -145,7 +152,7 @@ function AddEditBuRepRequest(props) {
             </div>
 
             <div className="col-md-4" style={styles.inputContainer}>
-            <TextField
+            {/* <TextField
                 fullWidth
                 id="timeStamp"
                 name="timeStamp"
@@ -154,7 +161,15 @@ function AddEditBuRepRequest(props) {
                 variant="outlined"
                 value={timeStamp}
                 onChange={onChangeValue}
+            /> */}
+
+          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <DateTimePicker
+              inputVariant="outlined"
+              onChange={onChangeDate}
+              value={timeStamp ? timeStamp : new Date()}
             />
+          </MuiPickersUtilsProvider>
             </div>
         </div>
 
