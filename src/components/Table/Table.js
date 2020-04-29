@@ -140,7 +140,7 @@ export default function CustomTable(props) {
           </TableHead>
         ) : null}
         <TableBody>
-          {tableData
+          {tableData && tableData
             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             .map((prop, index) => {
               return (
@@ -149,7 +149,7 @@ export default function CustomTable(props) {
                     ? tableDataKeys.map((val, key) => {
                         return (
                           <TableCell className={classes.tableCell} key={key}>
-                            {prop[val]}
+                            { Array.isArray(val) ? prop[val[0]][val[1]]: prop[val] }
                           </TableCell>
                         );
                       })
