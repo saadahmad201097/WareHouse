@@ -139,101 +139,16 @@ export default function BuReturn(props) {
                 </div>
             </div>
 
-            {/* table */}
             <div>
-
                 <CustomTable 
                     tableData={buReturn}
                     tableDataKeys={tableDataKeys}
                     tableHeading={tableHeading}
                     handleEdit={handleEdit}
                     handleDelete={handleDelete}
-                />
-                    {/* <Table
-                        tableData={itemsArray}
-                        tableHeading={tableHeading}
-                        handleEdit={handleEdit}
-                        handleDelete={handleDelete}
-                    /> */}
-                {/* <Table
-                    size="small"
-                    aria-label="a dense table"
-                    component={Paper}
-                    style={{ marginTop: '3%' }}
-                >
-                    <TableHead>
-                    <TableRow
-                        style={{ borderWidth: 5, borderColor: 'black', borderRadius: 5 }}
-                    >
-                        {tableHeading &&
-                        tableHeading.map(item => {
-                            return (
-                            <TableCell colSpan={0.1} key={item}>
-                                <span style={{ color: 'black', fontFamily: 'Ubuntu' }}>
-                                {item}
-                                </span>
-                            </TableCell>
-                            );
-                        })}
-                    </TableRow>
-                    </TableHead>
-
-                    <TableBody>
-                    {buReturn.map((data, index) => {
-                        return (
-                            <TableRow key={data._id} className={classes.tableBodyRow}>
-                            <TableCell>
-                                <span className={classes.tableData}>{data.buId}</span>
-                            </TableCell>
-
-                            <TableCell colSpan={1}>
-                                <span className={classes.tableData}>{data.itemId}</span>
-                            </TableCell>
-
-                            <TableCell>
-                                <span className={classes.tableData}>{data.qty}</span>
-                            </TableCell>
-
-                            <TableCell>
-                                <span className={classes.tableData}>{data.timeStamp}</span>
-                            </TableCell>
-
-                            <TableCell>
-                                <span className={classes.tableData}>{data.returnReason}</span>
-                            </TableCell>
-
-                            <TableCell>
-                                <span className={classes.tableData}>{data.batchNo}</span>
-                            </TableCell>
-
-                            <TableCell>
-                                <span className={classes.tableData}>{data.staffId}</span>
-                            </TableCell>
-
-                            <TableCell
-                                onClick={() => handleEdit(data)}
-                                style={{ cursor: 'pointer' }}
-                                className={classes.tableCell}
-                            >
-                                <i className="zmdi zmdi-edit zmdi-hc-2x"></i>
-                            </TableCell>
-
-                            <TableCell
-                                onClick={() => handleDelete(data._id)}
-                                style={{ cursor: 'pointer' }}
-                                // className={classes.tableCell}
-                            >
-                                <i className="zmdi zmdi-delete zmdi-hc-2x"></i>
-                            </TableCell>
-                            
-                            </TableRow>
-                        );
-                        })}
-                    </TableBody>
-                </Table> */}
+                />                   
             </div>
 
-            {/* end table */}
 
                 <ConfirmationModal modalVisible={modalVisible} 
                     msg="Are you sure want to delete the record?"
