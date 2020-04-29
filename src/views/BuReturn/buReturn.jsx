@@ -16,23 +16,23 @@ import Loader from 'react-loader-spinner';
 const useStyles = makeStyles(styles);
 
 const tableHeading = [
-  'Bu ID',
-  'Item Id',
+  'Bu Name',
+  'Item Name',
   'Quantity',
   'Time Stamp',
   'Return Reason',
   'Batch Number',
-  'Staff ID',
+  'Staff Name',
   'Action'
 ];
 const tableDataKeys = [
-    'buId',
-    'itemId',
+    ['buId', 'buName'],
+    ['itemId', 'name'],
     'qty',
     'timeStamp',
     'returnReason',
     'batchNo',
-    'staffId'
+    ['staffId', 'firstName']
   ];
 
 
@@ -40,6 +40,9 @@ export default function BuReturn(props) {
 
     const classes = useStyles();
     const [buReturn, setBuReturn] = useState('');
+    const [items, setItems] = useState('');
+    const [staff, setStaff] = useState('');
+    const [businessUnit, setBusinessUnit] = useState('');
     const [deleteItem, setdeleteItem] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
     const [errorMsg, setErrorMsg] = useState("");
@@ -55,7 +58,10 @@ export default function BuReturn(props) {
     function getBuReturn() {
         axios.get(getBuReturnUrl).then(res => {
             if(res.data.success) {
-                setBuReturn(res.data.data);
+                setBuReturn(res.data.data.buReturn);
+                setItems(res.data.data.items);
+                setStaff(res.data.data.staff);
+                setBusinessUnit(res.data.data.businessUnit);
             }
             else if (!res.data.success) {
                 setErrorMsg(res.data.error)
@@ -76,15 +82,15 @@ export default function BuReturn(props) {
         let path = `bureturn/next/add`;
         props.history.push({
             pathname: path,
-            state: { comingFor: 'add' }
+            state: { comingFor: 'add', items, staff, businessUnit }
         });
     };
 
-    function handleEdit(item) {
+    function handleEdit(rec) {
         let path = `bureturn/next/edit`;
         props.history.push({
             pathname: path,
-            state: { comingFor: 'edit', selectedItem: item }
+            state: { comingFor: 'edit', selectedItem: rec, items, staff, businessUnit }
         });
     }
 
