@@ -71,6 +71,11 @@ const tableStyle = theme => ({
     display: "table-row",
     outline: "none",
     verticalAlign: "middle"
+  },
+  tableData: {
+    fontSize: '0.8125rem',
+    fontWeight: '400',
+    fontFamily: 'Ubuntu'
   }
 });
 

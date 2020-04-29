@@ -19,6 +19,8 @@
     "import/extensions":"off",
     "no-use-before-define":"off",
     "react/destructuring-assignment":"off",
-    "react/jsx-indent-props":"off"
+    "react/jsx-indent-props":"off",
+    "no-underscore-dangle":"off",
+    "jsx-a11y/click-events-have-key-events": "off"
   }
 }

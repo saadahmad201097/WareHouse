@@ -12,51 +12,15 @@ import TableCell from '@material-ui/core/TableCell';
 import Button from '@material-ui/core/Button';
 import Notification from 'components/Snackbar/Notification.js';
 import Paper from '@material-ui/core/Paper';
-
+import styles from "assets/jss/material-dashboard-react/components/tableStyle.js";
+import CustomTable from '../../components/Table/Table';
 import ConfirmationModal  from '../../components/Modal/confirmationModal';
-
 import axios from 'axios';
 import { getBuReturnUrl, deleteBuReturnUrl } from '../../public/endpoins';
 
 import Loader from 'react-loader-spinner';
 
 const useStyles = makeStyles(styles);
-
-const styles = {
-  cardCategoryWhite: {
-    '&,& a,& a:hover,& a:focus': {
-      color: 'rgba(255,255,255,.62)',
-      margin: '0',
-      fontSize: '14px',
-      marginTop: '0',
-      marginBottom: '0'
-    },
-    '& a,& a:hover,& a:focus': {
-      color: '#FFFFFF'
-    }
-  },
-  cardTitleWhite: {
-    color: '#FFFFFF',
-    marginTop: '0px',
-    minHeight: 'auto',
-    fontWeight: '300',
-    fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
-    marginBottom: '3px',
-    textDecoration: 'none',
-    '& small': {
-      color: '#777',
-      fontSize: '65%',
-      fontWeight: '400',
-      lineHeight: '1'
-    }
-  },
-
-  tableData: {
-    fontSize: '0.8125rem',
-    fontWeight: '400',
-    fontFamily: 'Ubuntu'
-  }
-};
 
 const tableHeading = [
   'Bu ID',
@@ -66,9 +30,17 @@ const tableHeading = [
   'Return Reason',
   'Batch Number',
   'Staff ID',
-  'Edit',
-  'Delete'
+  'Action'
 ];
+const tableDataKeys = [
+    'buId',
+    'itemId',
+    'qty',
+    'timeStamp',
+    'returnReason',
+    'batchNo',
+    'staffId'
+  ];
 
 
 export default function BuReturn(props) {
@@ -169,7 +141,21 @@ export default function BuReturn(props) {
 
             {/* table */}
             <div>
-                <Table
+
+                <CustomTable 
+                    tableData={buReturn}
+                    tableDataKeys={tableDataKeys}
+                    tableHeading={tableHeading}
+                    handleEdit={handleEdit}
+                    handleDelete={handleDelete}
+                />
+                    {/* <Table
+                        tableData={itemsArray}
+                        tableHeading={tableHeading}
+                        handleEdit={handleEdit}
+                        handleDelete={handleDelete}
+                    /> */}
+                {/* <Table
                     size="small"
                     aria-label="a dense table"
                     component={Paper}
@@ -197,31 +183,31 @@ export default function BuReturn(props) {
                         return (
                             <TableRow key={data._id} className={classes.tableBodyRow}>
                             <TableCell>
-                                <span style={styles.tableData}>{data.buId}</span>
+                                <span className={classes.tableData}>{data.buId}</span>
                             </TableCell>
 
                             <TableCell colSpan={1}>
-                                <span style={styles.tableData}>{data.itemId}</span>
+                                <span className={classes.tableData}>{data.itemId}</span>
                             </TableCell>
 
                             <TableCell>
-                                <span style={styles.tableData}>{data.qty}</span>
+                                <span className={classes.tableData}>{data.qty}</span>
                             </TableCell>
 
                             <TableCell>
-                                <span style={styles.tableData}>{data.timeStamp}</span>
+                                <span className={classes.tableData}>{data.timeStamp}</span>
                             </TableCell>
 
                             <TableCell>
-                                <span style={styles.tableData}>{data.returnReason}</span>
+                                <span className={classes.tableData}>{data.returnReason}</span>
                             </TableCell>
 
                             <TableCell>
-                                <span style={styles.tableData}>{data.batchNo}</span>
+                                <span className={classes.tableData}>{data.batchNo}</span>
                             </TableCell>
 
                             <TableCell>
-                                <span style={styles.tableData}>{data.staffId}</span>
+                                <span className={classes.tableData}>{data.staffId}</span>
                             </TableCell>
 
                             <TableCell
@@ -244,7 +230,7 @@ export default function BuReturn(props) {
                         );
                         })}
                     </TableBody>
-                </Table>
+                </Table> */}
             </div>
 
             {/* end table */}

@@ -311,12 +311,12 @@ export default function Items(props) {
             </div>
           </div>
 
-          <Table
+          {/* <Table
             tableData={itemsArray}
             tableHeading={tableHead}
             handleEdit={handleEdit}
             handleDelete={handleDelete}
-          />
+          /> */}
 
           <Modal
             open={modalVisible}
