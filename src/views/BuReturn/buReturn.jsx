@@ -2,13 +2,6 @@
 import React, { useState, useEffect } from 'react';
 // @material-ui/core components
 import { makeStyles } from '@material-ui/core/styles';
-// table
-import Table from '@material-ui/core/Table';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-
 import Button from '@material-ui/core/Button';
 import Notification from 'components/Snackbar/Notification.js';
 import Paper from '@material-ui/core/Paper';
