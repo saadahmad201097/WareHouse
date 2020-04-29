@@ -11,7 +11,6 @@ import Loader from 'react-loader-spinner';
 
 import Notification from 'components/Snackbar/Notification.js';
 
-
 const useStyles = makeStyles(styles);
 
 const styles = {
@@ -47,10 +46,8 @@ function AddItems(props) {
   const [null_barCode, setNullBarcode] = useState(false);
   const [null_description, setNullDesc] = useState(false);
 
-  const [msg, setMsg] = useState("");
+  const [msg, setMsg] = useState('');
   const [tr, setTr] = useState(false);
-  
-
 
   useEffect(() => {
     setcomingFor(props.history.location.state.comingFor);
@@ -151,8 +148,8 @@ function AddItems(props) {
       })
       .catch(e => {
         console.log('error after adding item', e);
-        setTr(true)
-        setMsg("Error while adding the item")
+        setTr(true);
+        setMsg('Error while adding the item');
       });
   };
 
@@ -201,8 +198,8 @@ function AddItems(props) {
       })
       .catch(e => {
         console.log('error after adding item', e);
-        setTr(true)
-        setMsg("Error while updating the item")
+        setTr(true);
+        setMsg('Error while updating the item');
       });
   };
 
@@ -224,11 +221,10 @@ function AddItems(props) {
     }
   };
 
-
   if (tr) {
     setTimeout(() => {
-      setTr(false)
-      setMsg("")
+      setTr(false);
+      setMsg('');
     }, 2000);
   }
 
@@ -237,7 +233,7 @@ function AddItems(props) {
       <h1>{comingFor}</h1>
 
       <div className="row">
-        <div className="col-md-4" style={styles.inputContainer}>
+        <div className="col-md-12" style={styles.inputContainer}>
           <TextField
             fullWidth
             id="outlined-basic"
@@ -248,8 +244,26 @@ function AddItems(props) {
             error={!name && null_name}
           />
         </div>
+      </div>
 
-        <div className="col-md-4" style={styles.inputContainer}>
+      <div className="row">
+        <div className="col-md-12" style={styles.inputContainer}>
+          <TextField
+            fullWidth
+            // multiline
+            // rows={4}
+            id="outlined-basic"
+            label="Description"
+            variant="outlined"
+            value={description}
+            onChange={e => handleInput('desc', e.target.value)}
+            error={!description && null_description}
+          />
+        </div>
+      </div>
+
+      <div className="row">
+        <div className="col-md-6" style={styles.inputContainer}>
           <TextField
             fullWidth
             id="outlined-basic"
@@ -260,16 +274,16 @@ function AddItems(props) {
             error={!subClass && null_subClass}
           />
         </div>
-
-        <div className="col-md-4" style={styles.inputContainer}>
+        <div className="col-md-6" style={styles.inputContainer}>
           <TextField
             fullWidth
             id="outlined-basic"
-            label="Unit"
+            label="Barcode"
             variant="outlined"
-            value={unit}
-            onChange={e => handleInput('unit', e.target.value)}
-            error={!unit && null_unit}
+            value={barCode}
+            type={'number'}
+            onChange={e => handleInput('barcode', e.target.value)}
+            error={!barCode && null_barCode}
           />
         </div>
       </div>
@@ -333,28 +347,11 @@ function AddItems(props) {
           <TextField
             fullWidth
             id="outlined-basic"
-            label="Barcode"
+            label="Unit"
             variant="outlined"
-            value={barCode}
-            type={'number'}
-            onChange={e => handleInput('barcode', e.target.value)}
-            error={!barCode && null_barCode}
-          />
-        </div>
-      </div>
-
-      <div className="row">
-        <div className="col-md-12" style={styles.inputContainer}>
-          <TextField
-            fullWidth
-            multiline
-            rows={4}
-            id="outlined-basic"
-            label="Description"
-            variant="outlined"
-            value={description}
-            onChange={e => handleInput('desc', e.target.value)}
-            error={!description && null_description}
+            value={unit}
+            onChange={e => handleInput('unit', e.target.value)}
+            error={!unit && null_unit}
           />
         </div>
       </div>

@@ -1,75 +1,24 @@
 /*eslint-disable*/
 import React, { useState, useEffect } from 'react';
-// @material-ui/core components
-import { makeStyles } from '@material-ui/core/styles';
-import Hidden from '@material-ui/core/Hidden';
-// core components
-import GridItem from 'components/Grid/GridItem.js';
-import GridContainer from 'components/Grid/GridContainer.js';
-// import Table from "components/Table/Table.js";
-// import Card from "components/Card/Card.js";
-import CardHeader from 'components/Card/CardHeader.js';
-import CardBody from 'components/Card/CardBody.js';
-
-// import styles from "assets/jss/material-dashboard-react/views/iconsStyle.js";
 import Button from '@material-ui/core/Button';
-
-// import Table from "@material-ui/core/Table";
-// import TableHead from "@material-ui/core/TableHead";
-// import TableRow from "@material-ui/core/TableRow";
-// import TableBody from "@material-ui/core/TableBody";
-// import TableCell from "@material-ui/core/TableCell";
-
-import Paper from '@material-ui/core/Paper';
-
 import Modal from '@material-ui/core/Modal';
 
 import Table from '../../components/Table/Table.js';
-
 import axios from 'axios';
 import { getItemsUrl, deleteItemUrl } from '../../public/endpoins';
-
 import Loader from 'react-loader-spinner';
 
-const useStyles = makeStyles(styles);
+import SearchBar from '../../components/SearchBar/Searchbar.js';
 
-const styles = {
-  cardCategoryWhite: {
-    '&,& a,& a:hover,& a:focus': {
-      color: 'rgba(255,255,255,.62)',
-      margin: '0',
-      fontSize: '14px',
-      marginTop: '0',
-      marginBottom: '0'
-    },
-    '& a,& a:hover,& a:focus': {
-      color: '#FFFFFF'
-    }
-  },
-  cardTitleWhite: {
-    color: '#FFFFFF',
-    marginTop: '0px',
-    minHeight: 'auto',
-    fontWeight: '300',
-    fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
-    marginBottom: '3px',
-    textDecoration: 'none',
-    '& small': {
-      color: '#777',
-      fontSize: '65%',
-      fontWeight: '400',
-      lineHeight: '1'
-    }
-  },
+import DateFnsUtils from '@date-io/date-fns'; // choose your lib
+import {
+  DatePicker,
+  TimePicker,
+  DateTimePicker,
+  MuiPickersUtilsProvider
+} from '@material-ui/pickers';
 
-  tableData: {
-    fontSize: '0.8125rem',
-    fontWeight: '400',
-    fontFamily: 'Ubuntu'
-  }
-};
-
-const tableHead = [
+const tableHeading = [
   'Name',
   'Description',
   'Sub Class',
@@ -79,120 +28,22 @@ const tableHead = [
   'BU Price',
   'Sale Price',
   'Bar Code',
-  'Edit',
-  'Delete'
+  'Actions'
 ];
 
-const tableData = [
-  {
-    id: '1',
-    name: 'Cotton',
-    desc:
-      'Cotton is of the best quality. We ensure it we will provide the quality at its best',
-    sub_class: 'Garments',
-    unit: 'Levis',
-    vendor_id: '23',
-    purchase_price: '100',
-    bu_price: '500',
-    sales_price: '250',
-    bar_code: '023333022'
-  },
-  {
-    id: '2',
-    name: 'Wool',
-    desc:
-      'Cotton is of the best quality. We ensure it we will provide the quality at its best',
-    sub_class: 'Garments',
-    unit: 'Levis',
-    vendor_id: '23',
-    purchase_price: '100',
-    bu_price: '500',
-    sales_price: '250',
-    bar_code: '023333022'
-  },
-  {
-    id: '3',
-    name: 'Silk',
-    desc:
-      'Cotton is of the best quality. We ensure it we will provide the quality at its best',
-    sub_class: 'Garments',
-    unit: 'Levis',
-    vendor_id: '23',
-    purchase_price: '100',
-    bu_price: '500',
-    sales_price: '250',
-    bar_code: '023333022'
-  },
-  {
-    id: '4',
-    name: 'Jeans',
-    desc:
-      'Cotton is of the best quality. We ensure it we will provide the quality at its best',
-    sub_class: 'Garments',
-    unit: 'Levis',
-    vendor_id: '23',
-    purchase_price: '100',
-    bu_price: '500',
-    sales_price: '250',
-    bar_code: '023333022'
-  },
-  {
-    id: '5',
-    name: 'Leather',
-    desc:
-      'Cotton is of the best quality. We ensure it we will provide the quality at its best',
-    sub_class: 'Garments',
-    unit: 'Levis',
-    vendor_id: '23',
-    purchase_price: '100',
-    bu_price: '500',
-    sales_price: '250',
-    bar_code: '023333022'
-  },
-  {
-    id: '6',
-    name: 'Cotton',
-    desc:
-      'Cotton is of the best quality. We ensure it we will provide the quality at its best',
-    sub_class: 'Garments',
-    unit: 'Levis',
-    vendor_id: '23',
-    purchase_price: '100',
-    bu_price: '500',
-    sales_price: '250',
-    bar_code: '023333022'
-  },
-  {
-    id: '7',
-    name: 'Cotton',
-    desc:
-      'Cotton is of the best quality. We ensure it we will provide the quality at its best',
-    sub_class: 'Garments',
-    unit: 'Levis',
-    vendor_id: '23',
-    purchase_price: '100',
-    bu_price: '500',
-    sales_price: '250',
-    bar_code: '023333022'
-  },
-  {
-    id: '8',
-    name: 'Cotton',
-    desc:
-      'Cotton is of the best quality. We ensure it we will provide the quality at its best',
-    sub_class: 'Garments',
-    unit: 'Levis',
-    vendor_id: '23',
-    purchase_price: '100',
-    bu_price: '500',
-    sales_price: '250',
-    bar_code: '023333022'
-  }
+const tableDataKeys = [
+  'name',
+  'description',
+  'subClass',
+  'unit',
+  'vendorId',
+  'purchasePrice',
+  'buPrice',
+  'salePrice',
+  'barCode'
 ];
 
 export default function Items(props) {
-  const classes = useStyles();
-
   const [itemsArray, setItem] = useState('');
   const [addItem, setaddItem] = useState(false);
   const [editItem, seteditItem] = useState(false);
@@ -248,12 +99,6 @@ export default function Items(props) {
     setdeleteItem(id);
   }
 
-  // const obj = {
-  //   name: '',
-  //   password: ''
-  // };
-  // console.log(Object.keys(obj).length);
-
   async function onConfirmDelete() {
     console.log(deleteItem);
     const params = {
@@ -279,27 +124,21 @@ export default function Items(props) {
         setModalVisible(false);
         setdeleteItem('');
       });
-
-    // axios({
-    //   method: 'DELETE',
-    //   url: deleteItem,
-    //   data: JSON.stringify({
-    //     _id: '5ea58caffc33931589f1b5f5'
-    //   }),
-    //   headers: {
-    //     'content-type': 'application/json'
-    //   }
-    // })
-    //   .then(res => console.log(res))
-    //   .catch(e => console.log(e));
   }
 
   return (
     <div>
       {itemsArray ? (
-        <div>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
+        <div className="container">
+          <div className="row">
+            <div
+              className="col-md-6 col-sm-12 col-lg-8"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                paddingTop: '2%'
+              }}
+            >
               <Button
                 onClick={addNewItem}
                 style={{ width: 65, height: 65, borderRadius: 65 / 2 }}
@@ -309,15 +148,30 @@ export default function Items(props) {
                 <i className="zmdi zmdi-plus zmdi-hc-3x"></i>
               </Button>
             </div>
+
+            <div
+              className="col-md-6 col-sm-12 col-lg-4"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                paddingTop: '2%'
+              }}
+            >
+              <SearchBar placeHolder={'Search Items'} />
+            </div>
           </div>
 
-          {/* <Table
+          <Table
             tableData={itemsArray}
-            tableHeading={tableHead}
+            tableDataKeys={tableDataKeys}
+            tableHeading={tableHeading}
             handleEdit={handleEdit}
             handleDelete={handleDelete}
-          /> */}
+          />
 
+          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <DateTimePicker onChange={value => console.log(value)} />
+          </MuiPickersUtilsProvider>
           <Modal
             open={modalVisible}
             style={{
