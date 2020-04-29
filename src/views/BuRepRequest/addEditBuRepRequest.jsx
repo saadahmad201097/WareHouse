@@ -167,6 +167,7 @@ function AddEditBuRepRequest(props) {
             <DateTimePicker
               inputVariant="outlined"
               onChange={onChangeDate}
+              fullWidth={true}
               value={timeStamp ? timeStamp : new Date()}
             />
           </MuiPickersUtilsProvider>

@@ -223,6 +223,7 @@ function AddEditBuReturn(props) {
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <DateTimePicker
               inputVariant="outlined"
+              fullWidth
               onChange={onChangeDate}
               value={timeStamp ? timeStamp : new Date()}
             />
