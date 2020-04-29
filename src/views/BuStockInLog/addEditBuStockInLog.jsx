@@ -11,7 +11,7 @@ import axios from 'axios';
 import Notification from 'components/Snackbar/Notification.js';
 import DateFnsUtils from '@date-io/date-fns';
 import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
-import { addBuReturnUrl, updateBuReturnUrl } from '../../public/endpoins';
+import { addBuStockInLogUrl, updateBuStockInLogUrl } from '../../public/endpoins';
 
 
 const useStyles = makeStyles(styles);
@@ -25,17 +25,18 @@ const styles = {
 function AddEditBuReturn(props) {
     const initialState ={
         _id: "",
-        buId: "",
+        buRepRequestId: "",
         itemId: "",
         qty: "",
-        timeStamp: "",
-        returnReason: "",
+        buPrice: "",
+        salePrice: "",
         batchNo: "",
-        staffId: "",
+        expiryDate: "",
+        timeStamp:"",
+        staffId:"",
         items: [],
         staffs:[],
-        businessUnits: []
-
+        buRepRequests: []
     }
 
     function reducer(state, { field, value}){
@@ -47,14 +48,15 @@ function AddEditBuReturn(props) {
 
     const [state, dispatch] = useReducer(reducer, initialState);
 
-    const { _id, buId, itemId, qty, timeStamp, returnReason, batchNo, staffId, items, staffs, businessUnits } = state;
+    const { _id, buRepRequestId, itemId, qty, buPrice, salePrice, batchNo, expiryDate, staffId, timeStamp, items, staffs, buRepRequests } = state;
 
     const onChangeValue = ((e)=>{ 
         dispatch({field: e.target.name, value: e.target.value});
     });
 
     function validateForm() {
-        return qty && returnReason && returnReason.length > 0;
+        // return buPrice && batchNo && batchNo.length > 0;
+        return true;
     }
 
     const [comingFor, setcomingFor] = useState('');
@@ -84,8 +86,8 @@ function AddEditBuReturn(props) {
         if(props.history.location.state.staff){
             dispatch({field: 'staffs', value: props.history.location.state.staff});
         }
-        if(props.history.location.state.businessUnit){
-            dispatch({field: 'businessUnits', value: props.history.location.state.businessUnit});
+        if(props.history.location.state.buRepRequest){
+            dispatch({field: 'buRepRequests', value: props.history.location.state.buRepRequest});
         }
     }, []);
 
@@ -95,19 +97,21 @@ function AddEditBuReturn(props) {
 
     const handleAdd = () => {
         setIsFormSubmitted(true);
-        if (qty && returnReason && returnReason.length > 0) {
+        // if (buPrice && batchNo && batchNo.length > 0) {
         const params = {
-            buId,
+            buRepRequestId, 
             itemId,
-            qty,
-            timeStamp,
-            returnReason,
-            batchNo,
-            staffId
+            qty, 
+            buPrice,
+            salePrice, 
+            batchNo, 
+            expiryDate, 
+            staffId, 
+            timeStamp
+
         };
-        console.log(params,params)
         axios
-            .post(addBuReturnUrl, params)
+            .post(addBuStockInLogUrl, params)
             .then(res => {
             if (res.data.success) {
                 props.history.goBack();
@@ -120,24 +124,26 @@ function AddEditBuReturn(props) {
             setOpenNotification(true);
             setErrorMsg('Error while adding the item');
             });
-        }
+        // }
     };
 
     const handleEdit = () => {
         setIsFormSubmitted(true);
-        if (qty && returnReason && returnReason.length > 0) {
+        // if (buPrice && batchNo && batchNo.length > 0) {
         const params = {
             _id,
-            buId,
+            buRepRequestId, 
             itemId,
-            qty,
-            timeStamp,
-            returnReason,
-            batchNo,
-            staffId
+            qty, 
+            buPrice,
+            salePrice, 
+            batchNo, 
+            expiryDate, 
+            staffId, 
+            timeStamp
         };
         axios
-            .put(updateBuReturnUrl, params)
+            .put(updateBuStockInLogUrl, params)
             .then(res => {
             if (res.data.success) {
                 props.history.goBack();
@@ -150,7 +156,7 @@ function AddEditBuReturn(props) {
             setOpenNotification(true);
             setErrorMsg('Error while editing the item');
             });
-        }
+        // }
     };
 
     if (openNotification) {
@@ -161,7 +167,7 @@ function AddEditBuReturn(props) {
     }
 
     const onChangeDate = value => {
-        dispatch({ field: 'timeStamp', value: value });
+        dispatch({ field: 'timeStamp', value });
     };
 
     return (
@@ -171,21 +177,21 @@ function AddEditBuReturn(props) {
             </h1>
             <div className="row">
                 <div className="col-md-4" style={styles.inputContainer}>
-                    <InputLabel id="buId-label">Business Unit</InputLabel>
+                    <InputLabel id="buRepRequestId-label">Business Unit</InputLabel>
                     <Select
                         fullWidth
-                        labelId="buId-label"
-                        id="buId"
-                        name="buId"
-                        value={buId}
+                        labelId="buRepRequestId-label"
+                        id="buRepRequestId"
+                        name="buRepRequestId"
+                        value={buRepRequestId}
                         onChange={onChangeValue}
                         label="Business Unit"
                     >
                         <MenuItem value="">
                             <em>None</em>
                         </MenuItem>
-                        {businessUnits.map((val, key)=>{
-                            return <MenuItem key={val._id} value={val._id}>{val.buName}</MenuItem>
+                        {buRepRequests.map((val)=>{
+                            return <MenuItem key={val._id} value={val._id}>{val.status}</MenuItem>
                         })}
                     </Select>  
                 </div>
@@ -211,55 +217,26 @@ function AddEditBuReturn(props) {
                 </div>
 
                 <div className="col-md-4" style={styles.inputContainer}>
-            <TextField
-                fullWidth
-                id="qty"
-                name="qty"
-                label="Quantity"
-                type="number"
-                min="0"
-                variant="outlined"
-                value={qty}
-                onChange={onChangeValue}
-
-            /> 
-          <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <DateTimePicker
-              inputVariant="outlined"
-              fullWidth
-              onChange={onChangeDate}
-              value={timeStamp ? timeStamp : new Date()}
-                error={!qty && isFormSubmitted}
-            />
-            </MuiPickersUtilsProvider>
-            </div>
+                    <TextField
+                        fullWidth
+                        id="qty"
+                        name="qty"
+                        label="Quantity"
+                        type="number"
+                        min="0"
+                        variant="outlined"
+                        value={qty}
+                        onChange={onChangeValue}
+                        error={!qty && isFormSubmitted}
+                    />
+                </div>
             </div>
 
             <div className="row">
                 <div className="col-md-4" style={styles.inputContainer}>
-                {/* <TextField
-                        fullWidth
-                        id="timeStamp"
-                        name="timeStamp"
-                        label="Time Stamp"
-                        type="datetime-local"
-                        variant="outlined"
-                        value={timeStamp}
-                        onChange={onChangeValue}
-                    /> */}
-                {/* <TextField
-                        onChange={onChangeValue}
-
-                    id="datetime"
-                    label="Next appointment"
-                    type="datetime-local"
-                    defaultValue="2017-05-24T10:30"
-                    InputLabelProps={{
-                    shrink: true
-                    }}
-                /> */}
-                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <MuiPickersUtilsProvider fullWidth utils={DateFnsUtils}>
                     <DateTimePicker
+                    fullWidth
                     inputVariant="outlined"
                     onChange={onChangeDate}
                     value={timeStamp ? timeStamp : new Date()}
@@ -270,12 +247,12 @@ function AddEditBuReturn(props) {
                 <div className="col-md-4" style={styles.inputContainer}>
                     <TextField
                         fullWidth
-                        id="returnReason"
-                        name="returnReason"
-                        label="Return Reason"
-                        type="text"
+                        id="buPrice"
+                        name="buPrice"
+                        label="Business Unit Price"
+                        type="number"
                         variant="outlined"
-                        value={returnReason}
+                        value={buPrice}
                         onChange={onChangeValue}
                     />
                 </div>
@@ -311,6 +288,18 @@ function AddEditBuReturn(props) {
                             return <MenuItem key={val._id} value={val._id}>{val.firstName}</MenuItem>
                         })}
                     </Select>  
+                </div>
+                <div className="col-md-4" style={styles.inputContainer}>
+                    <TextField
+                        fullWidth
+                        id="salePrice"
+                        name="salePrice"
+                        label="Sale Price"
+                        type="number"
+                        variant="outlined"
+                        value={salePrice}
+                        onChange={onChangeValue}
+                    />
                 </div>
             </div>
 
