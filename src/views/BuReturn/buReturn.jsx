@@ -105,7 +105,7 @@ export default function BuReturn(props) {
         };
 
         axios.delete(deleteBuReturnUrl + '/' + params._id).then(res => {
-            if (res.data.success) {
+            if(res.data.success) {
             setdeleteItem('');
             setModalVisible(false);
             window.location.reload(false);

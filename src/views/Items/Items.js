@@ -15,7 +15,7 @@ const tableHeading = [
   'Description',
   'Sub Class',
   'Unit',
-  'Vendor Id',
+  'Vendor Name',
   'Purchase Price',
   'BU Price',
   'Sale Price',
@@ -28,7 +28,7 @@ const tableDataKeys = [
   'description',
   'subClass',
   'unit',
-  'vendorId',
+  ['vendorId', 'name'],
   'purchasePrice',
   'buPrice',
   'salePrice',
@@ -37,18 +37,15 @@ const tableDataKeys = [
 
 export default function Items(props) {
   const [itemsArray, setItem] = useState('');
-  const [addItem, setaddItem] = useState(false);
-  const [editItem, seteditItem] = useState(false);
+  const [vendors, setVendors] = useState('');
   const [deleteItem, setdeleteItem] = useState('');
-
   const [modalVisible, setModalVisible] = useState(false);
 
   async function getItems() {
-    const response = await axios
-      .get(getItemsUrl)
-      .then(res => {
+    axios.get(getItemsUrl).then(res => {
         if (res.data.success) {
-          // console.log('response of items', res.data.data);
+          setItem(res.data.data.items);
+          setVendors(res.data.data.vendors)
         }
         // else if (!res.data.success) {
         //   this.setState({ tr: true });
@@ -58,15 +55,9 @@ export default function Items(props) {
       .catch(e => {
         console.log('error is ', e);
       });
-
-    if (response && response.status === 200) {
-      setItem(response.data.data);
-      console.log('res===>>>', response);
-    }
   }
 
   useEffect(() => {
-    console.log('use effect called');
     getItems();
   }, []);
 
@@ -74,7 +65,7 @@ export default function Items(props) {
     let path = `items/next/add`;
     props.history.push({
       pathname: path,
-      state: { comingFor: 'AddItems' }
+      state: { comingFor: 'AddItems', vendors }
     });
   };
 
@@ -82,7 +73,7 @@ export default function Items(props) {
     let path = `items/next/edit`;
     props.history.push({
       pathname: path,
-      state: { comingFor: 'EditItems', selectedItem: item }
+      state: { comingFor: 'EditItems', selectedItem: item, vendors }
     });
   }
 
@@ -91,17 +82,13 @@ export default function Items(props) {
     setdeleteItem(id);
   }
 
-  async function onConfirmDelete() {
-    console.log(deleteItem);
+  function onConfirmDelete() {
     const params = {
       _id: deleteItem
     };
 
-    await axios
-      .delete(deleteItemUrl + '/' + params._id)
-      .then(res => {
+    axios.delete(deleteItemUrl + '/' + params._id).then(res => {
         if (res.data.success) {
-          console.log('response after deletion', res);
           setdeleteItem('');
           setModalVisible(false);
           window.location.reload(false);
@@ -184,14 +171,7 @@ export default function Items(props) {
             aria-labelledby="simple-modal-title"
             aria-describedby="simple-modal-description"
           >
-            <div
-              style={
-                {
-                  // width: '100%',
-                  // height: '60%',
-                }
-              }
-            >
+            <div>
               <h4
                 style={{
                   color: 'white',
@@ -249,51 +229,4 @@ export default function Items(props) {
       )}
     </div>
   );
-}
-
-{
-  /* <GridContainer>
-<GridItem xs={12} sm={12} md={12}>
-  <Card plain>
-    <CardHeader plain color="primary">
-      <h4 className={classes.cardTitleWhite}>Material Design Icons</h4>
-      <p className={classes.cardCategoryWhite}>
-        Handcrafted by our friends from{" "}
-        <a
-          href="https://design.google.com/icons/?ref=creativetime"
-          target="_blank"
-        >
-          Google
-        </a>
-      </p>
-    </CardHeader>
-    <CardBody>
-      <Hidden only={["sm", "xs"]}>
-        <iframe
-          className={classes.iframe}
-          src="https://material.io/icons/"
-          title="Icons iframe"
-        >
-          <p>Your browser does not support iframes.</p>
-        </iframe>
-      </Hidden>
-      <Hidden only={["lg", "md"]}>
-        <GridItem xs={12} sm={12} md={6}>
-          <h5>
-            The icons are visible on Desktop mode inside an iframe. Since
-            the iframe is not working on Mobile and Tablets please visit
-            the icons on their original page on Google. Check the
-            <a
-              href="https://design.google.com/icons/?ref=creativetime"
-              target="_blank"
-            >
-              Material Icons
-            </a>
-          </h5>
-        </GridItem>
-      </Hidden>
-    </CardBody>
-  </Card>
-</GridItem>
-</GridContainer> */
 }

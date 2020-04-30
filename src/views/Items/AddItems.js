@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import TextField from '@material-ui/core/TextField';
+import Select from '@material-ui/core/Select';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import { Redirect } from 'react-router-dom';
@@ -33,6 +36,7 @@ function AddItems(props) {
   const [salePrice, setSalePrice] = useState('');
   const [barCode, setBarcode] = useState('');
   const [description, setDesc] = useState('');
+  const [vendors, setVendors] = useState('');
 
   const [selectedItemToEdit, setSelectedItem] = useState('');
 
@@ -59,11 +63,15 @@ function AddItems(props) {
       setSubClass(temp.subClass);
       setDesc(temp.description);
       setUnit(temp.unit);
-      setVendorId(temp.vendorId);
+      setVendorId(temp.vendorId._id);
       setPurchasePrice(temp.purchasePrice);
       setBUPrice(temp.buPrice);
       setSalePrice(temp.salePrice);
       setBarcode(temp.barCode);
+    }
+
+    if(props.history.location.state.vendors){
+      setVendors(props.history.location.state.vendors);
     }
   }, []);
 
@@ -281,7 +289,7 @@ function AddItems(props) {
             label="Barcode"
             variant="outlined"
             value={barCode}
-            type={'number'}
+            type='text'
             onChange={e => handleInput('barcode', e.target.value)}
             error={!barCode && null_barCode}
           />
@@ -290,16 +298,27 @@ function AddItems(props) {
 
       <div className="row">
         <div className="col-md-4" style={styles.inputContainer}>
-          <TextField
+          <InputLabel id="vendorId-label">Vendors</InputLabel>
+          <Select
             fullWidth
-            id="outlined-basic"
-            label="Vendor Id"
-            type={'number'}
-            variant="outlined"
+            labelId="vendorId-label"
+            id="vendorId"
+            name="vendorId"
             value={vendorId}
             onChange={e => handleInput('vendorId', e.target.value)}
-            error={!vendorId && null_vendorId}
-          />
+            label="Vendors"
+          >
+            <MenuItem value="">
+              <em>None</em>
+            </MenuItem>
+            {vendors && vendors.map((val, key) => {
+              return (
+                <MenuItem key={val._id} value={val._id}>
+                  {val.name}
+                </MenuItem>
+              );
+            })}
+          </Select>
         </div>
 
         <div className="col-md-4" style={styles.inputContainer}>

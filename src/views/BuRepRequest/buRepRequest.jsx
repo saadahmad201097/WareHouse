@@ -58,28 +58,26 @@ const styles = {
 };
 
 const tableHeading = [
-  'Bu ID',
-  'Requester Staff ID',
+  'Business Unit',
+  'Staff Name',
   'Time stamp',
   'Status',
-  'Edit',
-  'Delete'
+  'Actions'
 ];
 
 
 const tableDataKeys = [
   ['buId', 'buName'],
-  ['itemId', 'name'],
-  'qty',
+  ['requesterStaffId', 'firstName'],
   'timeStamp',
-  'returnReason',
-  'batchNo',
-  ['staffId', 'firstName']
+  'status'
 ];
 
 export default function BuRepRequest(props) {
   const classes = useStyles();
   const [buRepRequests, setBuRepRequests] = useState('');
+  const [businessUnit, setBusinessUnit] = useState('');
+  const [staff, setStaff] = useState('');
   const [deleteItem, setdeleteItem] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
@@ -97,8 +95,9 @@ export default function BuRepRequest(props) {
       .get(getBuRepRequestUrl)
       .then(res => {
         if (res.data.success) {
-          setBuRepRequests(res.data.data);
-          console.log(res.data.data)
+          setBuRepRequests(res.data.data.buRepRequest);
+          setBusinessUnit(res.data.data.businessUnit);
+          setStaff(res.data.data.staff);
         } else if (!res.data.success) {
           setErrorMsg(res.data.error);
           setOpenNotification(true);
@@ -118,15 +117,15 @@ export default function BuRepRequest(props) {
     let path = `bureprequest/next/add`;
     props.history.push({
       pathname: path,
-      state: { comingFor: 'add' }
+      state: { comingFor: 'add', businessUnit, staff }
     });
   };
 
-  function handleEdit(item) {
+  function handleEdit(rec) {
     let path = `bureprequest/next/edit`;
     props.history.push({
       pathname: path,
-      state: { comingFor: 'edit', selectedItem: item }
+      state: { comingFor: 'edit', selectedItem: rec, businessUnit, staff }
     });
   }
 
@@ -179,7 +178,7 @@ export default function BuRepRequest(props) {
           <div>
             {buRepRequests ? (
               <CustomTable
-                tableData={buRepRequests.buRepRequest}
+                tableData={buRepRequests}
                 tableDataKeys={tableDataKeys}
                 tableHeading={tableHeading}
                 handleEdit={handleEdit}

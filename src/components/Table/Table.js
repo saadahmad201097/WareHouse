@@ -1,8 +1,10 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable no-shadow */
 import React from 'react';
 import PropTypes from 'prop-types';
+import Moment from 'react-moment';
 // @material-ui/core components
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -149,7 +151,7 @@ export default function CustomTable(props) {
                     ? tableDataKeys.map((val, key) => {
                         return (
                           <TableCell className={classes.tableCell} key={key}>
-                            { Array.isArray(val) ? prop[val[0]][val[1]]: prop[val] }
+                            { Array.isArray(val) ? ( prop[val[0]] ? prop[val[0]][val[1]] : null): prop[val] }
                           </TableCell>
                         );
                       })
@@ -176,7 +178,7 @@ export default function CustomTable(props) {
       <TablePagination
         rowsPerPageOptions={[2, 4]}
         component="div"
-        count={props.tableData.length}
+        count={props.tableData && props.tableData.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onChangePage={handleChangePage}
@@ -201,6 +203,6 @@ CustomTable.propTypes = {
     'rose',
     'gray'
   ]),
-  tableHead: PropTypes.arrayOf(PropTypes.string),
-  tableData: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string))
+  // tableHead: PropTypes.arrayOf(PropTypes.string),
+  // tableData: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string))
 };

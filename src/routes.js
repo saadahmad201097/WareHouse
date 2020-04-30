@@ -66,7 +66,7 @@ const dashboardRoutes = [
   },
   {
     path: "/buInventory",
-    name: "Bu Inventory",
+    name: "Business Unit Inventory",
     rtlName: "الرموز",
     icon: BubbleChart,
     component: BuInventory,
@@ -74,7 +74,7 @@ const dashboardRoutes = [
   },
   {
     path: "/buRepRequest",
-    name: "Bu Rep Request",
+    name: "Business Unit Rep Request",
     rtlName: "الرمز",
     icon: BubbleChart,
     component: BuRepRequest,
@@ -82,7 +82,7 @@ const dashboardRoutes = [
   },
   {
     path: "/buRepRequestDetails",
-    name: "Bu Rep Request Details",
+    name: "Business Unit Rep Request Details",
     rtlName: "الرمو",
     icon: BubbleChart,
     component: BuRepRequestDetails,
@@ -90,7 +90,7 @@ const dashboardRoutes = [
   },
   {
     path: "/buReturn",
-    name: "Bu Return",
+    name: "Business Return",
     rtlName: "الموز",
     icon: BubbleChart,
     component: BuReturn,

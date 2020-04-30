@@ -2,6 +2,9 @@
 /* eslint-disable react/jsx-indent */
 import React, { useEffect, useState, useReducer } from 'react';
 import TextField from '@material-ui/core/TextField';
+import Select from '@material-ui/core/Select';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
@@ -23,7 +26,9 @@ function AddEditBuInventory(props) {
         _id: "",
         buId: "",
         itemId: "",
-        qty: ""
+        qty: "",
+        items:[],
+        businessUnits:[]
     }
 
     function reducer(state, { field, value}){
@@ -35,7 +40,7 @@ function AddEditBuInventory(props) {
 
     const [state, dispatch] = useReducer(reducer, initialState);
 
-    const { _id, buId, itemId, qty } = state;
+    const { _id, buId, itemId, qty, items, businessUnits } = state;
 
     const onChangeValue = ((e)=>{ 
         dispatch({field: e.target.name, value: e.target.value});
@@ -59,11 +64,21 @@ function AddEditBuInventory(props) {
 
     useEffect(() => {
         setcomingFor(props.history.location.state.comingFor);
-        const temp = props.history.location.state.selectedItem;
-        if(temp){
-            Object.entries(temp).map(([key,val])=>{
-                dispatch({field: key, value: val});
+        const selectedRec = props.history.location.state.selectedItem;
+        if(selectedRec){
+            Object.entries(selectedRec).map(([key,val])=>{
+                if (val && typeof val === 'object') {
+                    dispatch({ field: key, value: val._id });
+                } else {
+                    dispatch({ field: key, value: val });
+                }
             })
+        }
+        if(props.history.location.state.items) {
+            dispatch({ field: 'items', value: props.history.location.state.items });
+        }
+        if(props.history.location.state.businessUnit) {
+            dispatch({field: 'businessUnits',value: props.history.location.state.businessUnit});
         }
     }, []);
 
@@ -126,27 +141,51 @@ function AddEditBuInventory(props) {
 
         <div className="row">
             <div className="col-md-4" style={styles.inputContainer}>
-            <TextField
-                fullWidth
-                id="bu_id"
-                name="buId"
-                label="Bu ID"
-                variant="outlined"
-                value={buId}
-                onChange={onChangeValue}
-            />
+                <InputLabel id="buId-label">Business Unit</InputLabel>
+                <Select
+                    fullWidth
+                    labelId="buId-label"
+                    id="buId"
+                    name="buId"
+                    value={buId}
+                    onChange={onChangeValue}
+                    label="Business Unit"
+                >
+                    <MenuItem value="">
+                    <em>None</em>
+                    </MenuItem>
+                    {businessUnits.map((val, key) => {
+                    return (
+                        <MenuItem key={val._id} value={val._id}>
+                            {val.buName}
+                        </MenuItem>
+                    );
+                    })}
+                </Select>
             </div>
 
             <div className="col-md-4" style={styles.inputContainer}>
-            <TextField
-                fullWidth
-                id="item_id"
-                name="itemId"
-                label="Item ID"
-                variant="outlined"
-                value={itemId}
-                onChange={onChangeValue}
-            />
+                <InputLabel id="itemId-label">Item</InputLabel>
+                <Select
+                    fullWidth
+                    labelId="itemId-label"
+                    id="itemId"
+                    name="itemId"
+                    value={itemId}
+                    onChange={onChangeValue}
+                    label="Item"
+                >
+                    <MenuItem value="">
+                        <em>None</em>
+                    </MenuItem>
+                    {items.map((val, key) => {
+                        return (
+                            <MenuItem key={val._id} value={val._id}>
+                                {val.name}
+                            </MenuItem>
+                        );
+                    })}
+                </Select>
             </div>
 
             <div className="col-md-4" style={styles.inputContainer}>

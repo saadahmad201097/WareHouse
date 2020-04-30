@@ -14,7 +14,7 @@ import { getBuInventoryUrl, deleteBuInventoryUrl } from '../../public/endpoins';
 
 import Loader from 'react-loader-spinner';
 
-import Table from '../../components/Table/Table.js';
+import CustomTable from '../../components/Table/Table.js';
 
 const useStyles = makeStyles(styles);
 
@@ -54,13 +54,15 @@ const styles = {
   }
 };
 
-const tableHeading = ['Bu Id', 'Item Id', 'Qty', 'Actions'];
+const tableHeading = ['Business Unit', 'Item Name', 'Qty', 'Actions'];
 
-const tableDataKeys = ['buId', 'itemId', 'qty'];
+const tableDataKeys = [ ['buId', 'buName'], [ 'itemId', 'name'], 'qty'];
 
 export default function BuInventory(props) {
   const classes = useStyles();
   const [buInventories, setBuInventories] = useState('');
+  const [items, setItems] = useState('');
+  const [businessUnit, setBusinessUnit] = useState('');
   const [deleteItem, setdeleteItem] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
@@ -74,12 +76,11 @@ export default function BuInventory(props) {
   }
 
   function getBuInventory() {
-    axios
-      .get(getBuInventoryUrl)
-      .then(res => {
+    axios.get(getBuInventoryUrl).then(res => {
         if (res.data.success) {
-          console.log(res.data.data);
-          setBuInventories(res.data.data);
+          setBuInventories(res.data.data.buInventory);
+          setItems(res.data.data.items);
+          setBusinessUnit(res.data.data.businessUnit);
         } else if (!res.data.success) {
           setErrorMsg(res.data.error);
           setOpenNotification(true);
@@ -99,15 +100,15 @@ export default function BuInventory(props) {
     let path = `buinventory/next/add`;
     props.history.push({
       pathname: path,
-      state: { comingFor: 'add' }
+      state: { comingFor: 'add', items, businessUnit }
     });
   };
 
-  function handleEdit(item) {
+  function handleEdit(rec) {
     let path = `buinventory/next/edit`;
     props.history.push({
       pathname: path,
-      state: { comingFor: 'edit', selectedItem: item }
+      state: { comingFor: 'edit', selectedItem: rec, items, businessUnit }
     });
   }
 
@@ -158,8 +159,8 @@ export default function BuInventory(props) {
 
           {/* table */}
           <div>
-            <Table
-              tableData={buInventories.buInventory}
+            <CustomTable
+              tableData={buInventories}
               tableDataKeys={tableDataKeys}
               tableHeading={tableHeading}
               handleEdit={handleEdit}

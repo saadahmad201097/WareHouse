@@ -58,26 +58,23 @@ const styles = {
 };
 
 const tableHeading = [
-  'Bu Rep Request ID',
-  'Item Id',
+  'Bu Rep Request',
+  'Item Name',
   'Quantity',
-  'Edit',
-  'Delete'
+  'Actions'
 ];
 
 const tableDataKeys = [
-  ['buId', 'buName'],
+  ['buRepRequestId', 'status'],
   ['itemId', 'name'],
-  'qty',
-  'timeStamp',
-  'returnReason',
-  'batchNo',
-  ['staffId', 'firstName']
+  'qty'
 ];
 
 export default function BuRepRequest(props) {
   const classes = useStyles();
   const [buRepRequestDetails, setBuRepRequestDetails] = useState('');
+  const [items, setItems] = useState('');
+  const [buRepRequests, setBuRepRequests] = useState('');
   const [deleteItem, setdeleteItem] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
@@ -95,8 +92,9 @@ export default function BuRepRequest(props) {
       .get(getBuRepRequestDetailsUrl)
       .then(res => {
         if (res.data.success) {
-          setBuRepRequestDetails(res.data.data);
-          console.log(res.data.data);
+          setBuRepRequestDetails(res.data.data.buRepRequestDetails);
+          setItems(res.data.data.items);
+          setBuRepRequests(res.data.data.buRepRequest);
         } else if (!res.data.success) {
           setErrorMsg(res.data.error);
           setOpenNotification(true);
@@ -116,15 +114,15 @@ export default function BuRepRequest(props) {
     let path = `bureprequestdetails/next/add`;
     props.history.push({
       pathname: path,
-      state: { comingFor: 'add' }
+      state: { comingFor: 'add', items, buRepRequests }
     });
   };
 
-  function handleEdit(item) {
+  function handleEdit(rec) {
     let path = `bureprequestdetails/next/edit`;
     props.history.push({
       pathname: path,
-      state: { comingFor: 'edit', selectedItem: item }
+      state: { comingFor: 'edit', selectedItem: rec, items, buRepRequests }
     });
   }
 
@@ -176,7 +174,7 @@ export default function BuRepRequest(props) {
           <div>
             {buRepRequestDetails ? (
               <CustomTable
-                tableData={buRepRequestDetails.buRepRequest}
+                tableData={buRepRequestDetails}
                 tableDataKeys={tableDataKeys}
                 tableHeading={tableHeading}
                 handleEdit={handleEdit}

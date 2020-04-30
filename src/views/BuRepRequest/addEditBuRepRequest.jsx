@@ -2,14 +2,16 @@
 /* eslint-disable react/jsx-indent */
 import React, { useEffect, useState, useReducer } from 'react';
 import TextField from '@material-ui/core/TextField';
+import Select from '@material-ui/core/Select';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
 import Notification from 'components/Snackbar/Notification.js';
-import { addBuRepRequestUrl, updateBuRepRequestUrl } from '../../public/endpoins';
-
 import DateFnsUtils from '@date-io/date-fns';
 import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import { addBuRepRequestUrl, updateBuRepRequestUrl } from '../../public/endpoins';
 
 
 const useStyles = makeStyles(styles);
@@ -26,7 +28,9 @@ function AddEditBuRepRequest(props) {
         buId: "",
         requesterStaffId: "",
         timeStamp: "",
-        status: ""
+        status: "",
+        staffs: [],
+        businessUnits: []
     }
 
     function reducer(state, { field, value}){
@@ -38,11 +42,15 @@ function AddEditBuRepRequest(props) {
 
     const [state, dispatch] = useReducer(reducer, initialState);
 
-    const { _id, buId, requesterStaffId, timeStamp, status } = state;
+    const { _id, buId, requesterStaffId, timeStamp, status, staffs, businessUnits } = state;
 
-    const onChangeValue = ((e)=>{ 
+    const onChangeValue = ((e)=>{
         dispatch({field: e.target.name, value: e.target.value});
     });
+
+    const onChangeDate = value => {
+        dispatch({ field: 'timeStamp', value });
+    };
 
     function validateForm() {
         return status && status.length >0;
@@ -58,11 +66,21 @@ function AddEditBuRepRequest(props) {
 
     useEffect(() => {
         setcomingFor(props.history.location.state.comingFor);
-        const temp = props.history.location.state.selectedItem;
-        if(temp){
-            Object.entries(temp).map(([key,val])=>{
-                dispatch({field: key, value: val});
+        const selectedRec = props.history.location.state.selectedItem;
+        if(selectedRec){
+            Object.entries(selectedRec).map(([key,val])=>{
+                if (val && typeof val === 'object') {
+                    dispatch({ field: key, value: val._id });
+                } else {
+                    dispatch({ field: key, value: val });
+                }
             })
+        }
+        if(props.history.location.state.staff) {
+            dispatch({ field: 'staffs', value: props.history.location.state.staff });
+        }
+        if(props.history.location.state.businessUnit) {
+            dispatch({field: 'businessUnits',value: props.history.location.state.businessUnit});
         }
     }, []);
 
@@ -118,59 +136,69 @@ function AddEditBuRepRequest(props) {
     }
 
 
-    const onChangeDate = value => {
-        dispatch({ field: 'timeStamp', value: value });
-      };
-
     return (
         <div className="container">
         <h1><span> {comingFor === 'add' ? 'Add': 'Edit'}</span></h1>
 
         <div className="row">
             <div className="col-md-4" style={styles.inputContainer}>
-            <TextField
-                fullWidth
-                id="bu_id"
-                name="buId"
-                label="Bu ID"
-                variant="outlined"
-                value={buId}
-                onChange={onChangeValue}
-            />
+                <InputLabel id="bu_id-label">Business Unit</InputLabel>
+                <Select
+                    fullWidth
+                    labelId="bu_id-label"
+                    id="bu_id"
+                    name="buId"
+                    value={buId}
+                    onChange={onChangeValue}
+                    label="Business Unit"
+                >
+                    <MenuItem value="">
+                        <em>None</em>
+                    </MenuItem>
+                    {businessUnits.map((val) => {
+                        return (
+                            <MenuItem key={val._id} value={val._id}>
+                                {val.buName}
+                            </MenuItem>
+                        );
+                    })}
+                </Select>
             </div>
 
             <div className="col-md-4" style={styles.inputContainer}>
-            <TextField
-                fullWidth
-                id="requesterStaffId"
-                name="requesterStaffId"
-                label="Requester Staff ID"
-                variant="outlined"
-                value={requesterStaffId}
-                onChange={onChangeValue}
-            />
+                <InputLabel id="requesterStaffId-label">Staff</InputLabel>
+                <Select
+                    fullWidth
+                    labelId="requesterStaffId-label"
+                    id="requesterStaffId"
+                    name="requesterStaffId"
+                    value={requesterStaffId}
+                    onChange={onChangeValue}
+                    label="Staff"
+                >
+                    <MenuItem value="">
+                        <em>None</em>
+                    </MenuItem>
+                    {staffs.map((val) => {
+                        return (
+                            <MenuItem key={val._id} value={val._id}>
+                                {val.firstName}
+                            </MenuItem>
+                        );
+                    })}
+                </Select>
             </div>
 
             <div className="col-md-4" style={styles.inputContainer}>
-            {/* <TextField
-                fullWidth
-                id="timeStamp"
-                name="timeStamp"
-                label="Time stamp"
-                type="date"
-                variant="outlined"
-                value={timeStamp}
-                onChange={onChangeValue}
-            /> */}
-
-          <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <DateTimePicker
-              inputVariant="outlined"
-              onChange={onChangeDate}
-              fullWidth={true}
-              value={timeStamp ? timeStamp : new Date()}
-            />
-          </MuiPickersUtilsProvider>
+                <MuiPickersUtilsProvider fullWidth utils={DateFnsUtils}>
+                    <DateTimePicker
+                        fullWidth
+                        name="timeStamp"
+                        inputVariant="outlined"
+                        onChange={onChangeDate}
+                        value={timeStamp ? timeStamp : new Date()}
+                    />
+                </MuiPickersUtilsProvider>
             </div>
         </div>
 
