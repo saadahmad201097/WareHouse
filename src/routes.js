@@ -36,6 +36,8 @@ import BuInventory from "views/BuInventory/buInventory";
 import BuRepRequest from "views/BuRepRequest/buRepRequest";
 import BuRepRequestDetails from "views/BuRepRequestDetails/buRepRequestDetails";
 import BuReturn from "views/BuReturn/buReturn";
+import BuStockInLog from "views/BuStockInLog/buStockInLog";
+import BuStockOutLog from "views/BuStockOutLog/buStockOutLog";
 import Maps from "views/Maps/Maps.js";
 import NotificationsPage from "views/Notifications/Notifications.js";
 import UpgradeToPro from "views/UpgradeToPro/UpgradeToPro.js";
@@ -92,6 +94,22 @@ const dashboardRoutes = [
     rtlName: "الموز",
     icon: BubbleChart,
     component: BuReturn,
+    layout: "/admin"
+  },
+  {
+    path: "/buStockInLog",
+    name: "Business Unit Stock In Log",
+    rtlName: "الموز",
+    icon: BubbleChart,
+    component: BuStockInLog,
+    layout: "/admin"
+  },
+  {
+    path: "/buStockOutLog",
+    name: "Business Unit Stock Out Log",
+    rtlName: "الموز",
+    icon: BubbleChart,
+    component: BuStockOutLog,
     layout: "/admin"
   },
 

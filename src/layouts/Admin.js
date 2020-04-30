@@ -35,6 +35,8 @@ import BuInventoryRoutes from '../subRoutes/buInvetory';
 import BuRepRequestRoutes from '../subRoutes/buRepRequest';
 import BuRepRequestDetailsRoutes from '../subRoutes/buRepRequestDetails';
 import BuReturnRoutes from '../subRoutes/buReturn';
+import BuStockInLogRoutes from '../subRoutes/buStockInLog';
+import BuStockOutLogRoutes from '../subRoutes/buStockOutLog';
 
 
 
@@ -63,6 +65,8 @@ const switchRoutes = (
     <Route path='/admin/bureprequest/next' component={BuRepRequestRoutes} />
     <Route path='/admin/bureprequestdetails/next' component={BuRepRequestDetailsRoutes} />
     <Route path='/admin/bureturn/next' component={BuReturnRoutes} />
+    <Route path='/admin/bustockinlog/next' component={BuStockInLogRoutes} />
+    <Route path='/admin/bustockoutlog/next' component={BuStockOutLogRoutes} />
 
 
     {/* <Route path={'/admin/dashboard/details/login'} component={Login} /> */}

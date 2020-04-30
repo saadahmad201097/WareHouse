@@ -228,37 +228,21 @@ function AddEditBuReturn(props) {
           </Select>
         </div>
 
-        <div className="col-md-4" style={styles.inputContainer}>
-          <TextField
-            fullWidth
-            id="qty"
-            name="qty"
-            label="Quantity"
-            type="number"
-            min="0"
-            variant="outlined"
-            value={qty}
-            onChange={onChangeValue}
+                <div className="col-md-4" style={styles.inputContainer}>
+                    <TextField
+                        fullWidth
+                        id="qty"
+                        name="qty"
+                        label="Quantity"
+                        type="number"
+                        min="0"
+                        variant="outlined"
+                        value={qty}
+                        onChange={onChangeValue}
 
-            // id="datetime"
-            // label="Next appointment"
-            // type="datetime-local"
-            // defaultValue="2017-05-24T10:30"
-            // InputLabelProps={{
-            //   shrink: true
-            // }}
-          />
-          {/* <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <DateTimePicker
-              inputVariant="outlined"
-              fullWidth
-              onChange={onChangeDate}
-              value={timeStamp ? timeStamp : new Date()}
-                error={!qty && isFormSubmitted}
-            />
-            </MuiPickersUtilsProvider> */}
-        </div>
-      </div>
+                    /> 
+                </div>
+            </div>
 
       <div className="row">
         <div className="col-md-4" style={styles.inputContainer}>
