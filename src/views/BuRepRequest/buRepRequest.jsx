@@ -3,20 +3,19 @@ import React, { useState, useEffect } from 'react';
 // @material-ui/core components
 import { makeStyles } from '@material-ui/core/styles';
 // table
-import Table from '@material-ui/core/Table';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
+import CustomTable from '../../components/Table/Table';
+
 
 import Button from '@material-ui/core/Button';
 import Notification from 'components/Snackbar/Notification.js';
-import Paper from '@material-ui/core/Paper';
 
-import ConfirmationModal  from '../../components/Modal/confirmationModal';
+import ConfirmationModal from '../../components/Modal/confirmationModal';
 
 import axios from 'axios';
-import { getBuRepRequestUrl, deleteBuRepRequestUrl } from '../../public/endpoins';
+import {
+  getBuRepRequestUrl,
+  deleteBuRepRequestUrl
+} from '../../public/endpoins';
 
 import Loader from 'react-loader-spinner';
 
@@ -68,41 +67,52 @@ const tableHeading = [
 ];
 
 
+const tableDataKeys = [
+  ['buId', 'buName'],
+  ['itemId', 'name'],
+  'qty',
+  'timeStamp',
+  'returnReason',
+  'batchNo',
+  ['staffId', 'firstName']
+];
+
 export default function BuRepRequest(props) {
+  const classes = useStyles();
+  const [buRepRequests, setBuRepRequests] = useState('');
+  const [deleteItem, setdeleteItem] = useState('');
+  const [modalVisible, setModalVisible] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
+  const [openNotification, setOpenNotification] = useState(false);
 
-    const classes = useStyles();
-    const [buRepRequests, setBuRepRequests] = useState('');
-    const [deleteItem, setdeleteItem] = useState('');
-    const [modalVisible, setModalVisible] = useState(false);
-    const [errorMsg, setErrorMsg] = useState("");
-    const [openNotification, setOpenNotification] = useState(false);
+  if (openNotification) {
+    setTimeout(() => {
+      setOpenNotification(false);
+      setErrorMsg('');
+    }, 2000);
+  }
 
-    if(openNotification) {
-        setTimeout(() => {
-        setOpenNotification(false);
-        setErrorMsg("")
-        }, 2000);
-    }
+  function getBuRepRequest() {
+    axios
+      .get(getBuRepRequestUrl)
+      .then(res => {
+        if (res.data.success) {
+          setBuRepRequests(res.data.data);
+          console.log(res.data.data)
+        } else if (!res.data.success) {
+          setErrorMsg(res.data.error);
+          setOpenNotification(true);
+        }
+        return res;
+      })
+      .catch(e => {
+        console.log('error: ', e);
+      });
+  }
 
-    function getBuRepRequest() {
-        axios.get(getBuRepRequestUrl).then(res => {
-            if(res.data.success) {
-                setBuRepRequests(res.data.data);
-            }
-            else if (!res.data.success) {
-                setErrorMsg(res.data.error)
-                setOpenNotification(true);
-            }
-            return res;
-        })
-        .catch(e => {
-            console.log('error: ', e);
-        });
-    }
-
-    useEffect(() => {
-        getBuRepRequest();
-    }, []);
+  useEffect(() => {
+    getBuRepRequest();
+  }, []);
 
   const addNewItem = () => {
     let path = `bureprequest/next/add`;
@@ -130,15 +140,16 @@ export default function BuRepRequest(props) {
       _id: deleteItem
     };
 
-    axios.delete(deleteBuRepRequestUrl + '/' + params._id).then(res => {
+    axios
+      .delete(deleteBuRepRequestUrl + '/' + params._id)
+      .then(res => {
         if (res.data.success) {
           setdeleteItem('');
           setModalVisible(false);
           window.location.reload(false);
-        }
-        else if (!res.data.success) {
-            setErrorMsg(res.data.error)
-            setOpenNotification(true);
+        } else if (!res.data.success) {
+          setErrorMsg(res.data.error);
+          setOpenNotification(true);
         }
         return res;
       })
@@ -164,91 +175,31 @@ export default function BuRepRequest(props) {
             </div>
           </div>
 
-         {/* table */}
-         <div>
-            <Table
-                size="small"
-                aria-label="a dense table"
-                component={Paper}
-                style={{ marginTop: '3%' }}
-            >
-                <TableHead>
-                <TableRow
-                    style={{ borderWidth: 5, borderColor: 'black', borderRadius: 5 }}
-                >
-                    {tableHeading &&
-                    tableHeading.map(item => {
-                        return (
-                        <TableCell colSpan={0.1} key={item}>
-                            <span style={{ color: 'black', fontFamily: 'Ubuntu' }}>
-                            {item}
-                            </span>
-                        </TableCell>
-                        );
-                    })}
-                </TableRow>
-                </TableHead>
+          {/* table */}
+          <div>
+            {buRepRequests ? (
+              <CustomTable
+                tableData={buRepRequests.buRepRequest}
+                tableDataKeys={tableDataKeys}
+                tableHeading={tableHeading}
+                handleEdit={handleEdit}
+                handleDelete={handleDelete}
+              />
+            ) : (
+              undefined
+            )}
+          </div>
+          {/* end table */}
 
-                <TableBody>
-                {buRepRequests.map((data, index) => {
-                    return (
-                        <TableRow key={data._id} className={classes.tableBodyRow}>
-                        <TableCell>
-                            <span style={styles.tableData}>{data.buId}</span>
-                        </TableCell>
+          <ConfirmationModal
+            modalVisible={modalVisible}
+            msg="Are you sure want to delete the record?"
+            hideconfirmationModal={() => setModalVisible(false)}
+            onConfirmDelete={() => deleteBuRepRequest()}
+            setdeleteItem={() => setdeleteItem('')}
+          />
 
-                        <TableCell colSpan={1}>
-                            <span style={styles.tableData}>{data.requesterStaffId}</span>
-                        </TableCell>
-
-                        <TableCell>
-                            <span style={styles.tableData}>{data.timeStamp}</span>
-                        </TableCell>
-
-                        <TableCell>
-                            <span style={styles.tableData}>{data.status}</span>
-                        </TableCell>
-
-                        {handleEdit ? (
-                            <TableCell
-                            onClick={() => handleEdit(data)}
-                            style={{ cursor: 'pointer' }}
-                            className={classes.tableCell}
-                            >
-                            <i className="zmdi zmdi-edit zmdi-hc-2x"></i>
-                            </TableCell>
-                        ) : (
-                            undefined
-                        )}
-
-                        {handleDelete ? (
-                            <TableCell
-                            onClick={() => handleDelete(data._id)}
-                            style={{ cursor: 'pointer' }}
-                            // className={classes.tableCell}
-                            >
-                            <i className="zmdi zmdi-delete zmdi-hc-2x"></i>
-                            </TableCell>
-                        ) : (
-                            undefined
-                        )}
-                        </TableRow>
-                    );
-                    })}
-                </TableBody>
-            </Table>
-        </div>
-
-        {/* end table */}
-
-            <ConfirmationModal modalVisible={modalVisible} 
-                msg="Are you sure want to delete the record?"
-                hideconfirmationModal={()=>setModalVisible(false)}
-                onConfirmDelete={()=> deleteBuRepRequest()}
-                setdeleteItem={()=>setdeleteItem('')}
-            />
-
-            <Notification msg={errorMsg} open={openNotification} />
+          <Notification msg={errorMsg} open={openNotification} />
         </div>
       ) : (
         <div
