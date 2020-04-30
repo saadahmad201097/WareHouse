@@ -46,6 +46,11 @@ import RTLPage from "views/RTLPage/RTLPage.js";
 
 // const items = () => { return (< i class="zmdi zmdi-collection-item" ></i >) }
 
+import FunctionalUnit from "views/FunctionalUnit/functionalUnit.jsx";
+
+import WareHouseInventory from "views/WareHouseInventory/wareHouseInventory.jsx";
+
+
 
 const dashboardRoutes = [
   {
@@ -129,6 +134,25 @@ const dashboardRoutes = [
     rtlName: "قائمة الجدول",
     icon: "content_paste",
     component: BusinessUnit,
+    layout: "/admin"
+  },
+
+
+  {
+    path: "/functionalunit",
+    name: "Functional Unit",
+    rtlName: "قائمة الجدول",
+    icon: "content_paste",
+    component: FunctionalUnit,
+    layout: "/admin"
+  },
+
+  {
+    path: "/warehouseinventory",
+    name: "WareHouse Inventory",
+    rtlName: "قائمة الجدول",
+    icon: "content_paste",
+    component: WareHouseInventory,
     layout: "/admin"
   }
 

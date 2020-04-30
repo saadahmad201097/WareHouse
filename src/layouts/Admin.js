@@ -1,33 +1,32 @@
-import React from "react";
-import { Switch, Route, Redirect } from "react-router-dom";
+import React from 'react';
+import { Switch, Route, Redirect } from 'react-router-dom';
 // creates a beautiful scrollbar
-import PerfectScrollbar from "perfect-scrollbar";
-import "perfect-scrollbar/css/perfect-scrollbar.css";
+import PerfectScrollbar from 'perfect-scrollbar';
+import 'perfect-scrollbar/css/perfect-scrollbar.css';
 // @material-ui/core components
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from '@material-ui/core/styles';
 // core components
-import Navbar from "components/Navbars/Navbar.js";
-import Footer from "components/Footer/Footer.js";
-import Sidebar from "../components/Sidebar/Sidebar.js";
-import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
+import Navbar from 'components/Navbars/Navbar.js';
+import Footer from 'components/Footer/Footer.js';
+import Sidebar from '../components/Sidebar/Sidebar.js';
+import FixedPlugin from 'components/FixedPlugin/FixedPlugin.js';
 
-import routes from "routes.js";
+import routes from 'routes.js';
 
-import styles from "assets/jss/material-dashboard-react/layouts/adminStyle.js";
+import styles from 'assets/jss/material-dashboard-react/layouts/adminStyle.js';
 
-import bgImage from "assets/img/sidebar-2.jpg";
+import bgImage from 'assets/img/sidebar-2.jpg';
 
-import logo from "assets/companyLogo/reactlogo.png";
+import logo from 'assets/companyLogo/reactlogo.png';
 
+import { warehouseName, backgroundColorForActiveSideNavTab } from '../config';
 
-import { warehouseName, backgroundColorForActiveSideNavTab } from '../config'
+import New from '../New.js';
+import Login from '../layouts/Login';
 
-import New from '../New.js'
-import Login from '../layouts/Login'
+import NotFound from '../components/NotFound/NotFound.js';
 
-import NotFound from '../components/NotFound/NotFound.js'
-
-import DashboardRoutes from '.././subRoutes/dashboard.js'
+import DashboardRoutes from '.././subRoutes/dashboard.js';
 
 import ItemsRoutes from '.././subRoutes/items.js';
 import BusinessUnitRoutes from '.././subRoutes/business_unit.js';
@@ -37,15 +36,16 @@ import BuRepRequestDetailsRoutes from '../subRoutes/buRepRequestDetails';
 import BuReturnRoutes from '../subRoutes/buReturn';
 import BuStockInLogRoutes from '../subRoutes/buStockInLog';
 import BuStockOutLogRoutes from '../subRoutes/buStockOutLog';
+import FunctionalUnitRoutes from '../subRoutes/FunctionalUnitRoutes';
 
-
+import WareHouseInventoryRoutes from '../subRoutes/warehouseInventory.js';
 
 let ps;
 
 const switchRoutes = (
   <Switch>
     {routes.map((prop, key) => {
-      if (prop.layout === "/admin") {
+      if (prop.layout === '/admin') {
         return (
           <Route
             exact
@@ -58,21 +58,26 @@ const switchRoutes = (
       return null;
     })}
 
-    <Route path='/admin/dashboard/next' component={DashboardRoutes} />
-    <Route path='/admin/items/next' component={ItemsRoutes} />
-    <Route path='/admin/businessunit/next' component={BusinessUnitRoutes} />
-    <Route path='/admin/buinventory/next' component={BuInventoryRoutes} />
-    <Route path='/admin/bureprequest/next' component={BuRepRequestRoutes} />
-    <Route path='/admin/bureprequestdetails/next' component={BuRepRequestDetailsRoutes} />
-    <Route path='/admin/bureturn/next' component={BuReturnRoutes} />
-    <Route path='/admin/bustockinlog/next' component={BuStockInLogRoutes} />
-    <Route path='/admin/bustockoutlog/next' component={BuStockOutLogRoutes} />
-
+    <Route path="/admin/dashboard/next" component={DashboardRoutes} />
+    <Route path="/admin/items/next" component={ItemsRoutes} />
+    <Route path="/admin/businessunit/next" component={BusinessUnitRoutes} />
+    <Route path="/admin/buinventory/next" component={BuInventoryRoutes} />
+    <Route path="/admin/bureprequest/next" component={BuRepRequestRoutes} />
+    <Route
+      path="/admin/bureprequestdetails/next"
+      component={BuRepRequestDetailsRoutes}
+    />
+    <Route path="/admin/bureturn/next" component={BuReturnRoutes} />
+    <Route path="/admin/bustockinlog/next" component={BuStockInLogRoutes} />
+    <Route path="/admin/functionalunit/next" component={FunctionalUnitRoutes} />
+    <Route
+      path="/admin/warehouseinventory/next"
+      component={WareHouseInventoryRoutes}
+    />
 
     {/* <Route path={'/admin/dashboard/details/login'} component={Login} /> */}
 
     <Redirect from="/admin" to="/admin/dashboard" />
-
   </Switch>
 );
 
@@ -86,7 +91,7 @@ export default function Admin({ ...rest }) {
   // states and functions
   // const [image, setImage] = React.useState(bgImage);
   // const [color, setColor] = React.useState(colorForNavBar);
-  const [fixedClasses, setFixedClasses] = React.useState("dropdown show");
+  const [fixedClasses, setFixedClasses] = React.useState('dropdown show');
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
   // const handleImageClick = image => {
@@ -98,10 +103,10 @@ export default function Admin({ ...rest }) {
   // };
 
   const handleFixedClick = () => {
-    if (fixedClasses === "dropdown") {
-      setFixedClasses("dropdown show");
+    if (fixedClasses === 'dropdown') {
+      setFixedClasses('dropdown show');
     } else {
-      setFixedClasses("dropdown");
+      setFixedClasses('dropdown');
     }
   };
 
@@ -110,7 +115,7 @@ export default function Admin({ ...rest }) {
   };
 
   const getRoute = () => {
-    return window.location.pathname !== "/admin/maps";
+    return window.location.pathname !== '/admin/maps';
   };
 
   const resizeFunction = () => {
@@ -120,20 +125,20 @@ export default function Admin({ ...rest }) {
   };
   // initialize and destroy the PerfectScrollbar plugin
   React.useEffect(() => {
-    if (navigator.platform.indexOf("Win") > -1) {
+    if (navigator.platform.indexOf('Win') > -1) {
       ps = new PerfectScrollbar(mainPanel.current, {
         suppressScrollX: true,
         suppressScrollY: false
       });
-      document.body.style.overflow = "hidden";
+      document.body.style.overflow = 'hidden';
     }
-    window.addEventListener("resize", resizeFunction);
+    window.addEventListener('resize', resizeFunction);
     // Specify how to clean up after this effect:
     return function cleanup() {
-      if (navigator.platform.indexOf("Win") > -1) {
+      if (navigator.platform.indexOf('Win') > -1) {
         ps.destroy();
       }
-      window.removeEventListener("resize", resizeFunction);
+      window.removeEventListener('resize', resizeFunction);
     };
   }, [mainPanel]);
   return (
@@ -150,7 +155,6 @@ export default function Admin({ ...rest }) {
         {...rest}
       />
       <div className={classes.mainPanel} ref={mainPanel}>
-
         <Navbar
           routes={routes}
           handleDrawerToggle={handleDrawerToggle}
@@ -163,8 +167,8 @@ export default function Admin({ ...rest }) {
             <div className={classes.container}>{switchRoutes}</div>
           </div>
         ) : (
-            <div className={classes.map}>{switchRoutes}</div>
-          )}
+          <div className={classes.map}>{switchRoutes}</div>
+        )}
 
         {getRoute() ? <Footer /> : null}
 
@@ -176,7 +180,6 @@ export default function Admin({ ...rest }) {
           handleFixedClick={handleFixedClick}
           fixedClasses={fixedClasses}
         /> */}
-
       </div>
     </div>
   );
