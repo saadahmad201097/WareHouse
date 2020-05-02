@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from 'react';
+/* eslint-disable array-callback-return */
+import React, { useEffect, useState, useReducer } from 'react';
 import TextField from '@material-ui/core/TextField';
-import { makeStyles } from '@material-ui/core/styles';
+import Select from '@material-ui/core/Select';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem'
+// import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import { Redirect } from 'react-router-dom';
-
+import axios from 'axios';
 import DateFnsUtils from '@date-io/date-fns';
 import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
-import { setDate } from 'date-fns';
-
-const useStyles = makeStyles(styles);
+import { addBusinessUnitUrl, updateBusinessUnitUrl } from '../../public/endpoins';
 
 const styles = {
   inputContainer: {
@@ -17,105 +18,176 @@ const styles = {
 };
 
 function AddBusinessUnit(props) {
-  const classes = useStyles();
 
+  const initialState ={
+    _id: "",
+    buName: "",
+    description:"",
+    buHead: "",
+    createBySystemAdminStaffId: "",
+    timeStamp: new Date(),
+    systemAdmins: []
+  }
+
+  function reducer(state, { field, value}){
+    return{...state, [field] : value}
+  }
+
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  const { _id, buName, description, buHead, createBySystemAdminStaffId, timeStamp, systemAdmins } = state;
   const [comingFor, setcomingFor] = useState('');
-
-  const [BU_name, setName] = useState('');
-  const [BU_Head, setHeadName] = useState('');
-  const [createBySystemAdminStaffId, setCreatedBy] = useState('');
-  const [timeStamp, setTimestamp] = useState('');
-  const [desc, setDesc] = useState('');
+  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+  const [openNotification, setOpenNotification] = useState(false);
 
   useEffect(() => {
     setcomingFor(props.history.location.state.comingFor);
-    if (props.history.location.state.selectedItem) {
-      const temp = props.history.location.state.selectedItem;
-
-      setName(temp.name);
-      setHeadName(temp.BU_Head);
-      setCreatedBy(temp.created_by);
-      setTimestamp(temp.Timestamp);
-      setDesc(temp.desc);
+    const selectedRec = props.history.location.state.selectedItem;
+    if(selectedRec){
+        Object.entries(selectedRec).map(([key,val])=>{
+            if(val && typeof val === 'object'){
+                dispatch({field: key, value: val._id});
+            }
+            else{
+                dispatch({field: key, value: val});
+            }
+        })
+    }
+    if(props.history.location.state.systemAdmins){
+        dispatch({field: 'systemAdmins', value: props.history.location.state.systemAdmins});
     }
   }, []);
+
+  if (openNotification) {
+    setTimeout(() => {
+    setOpenNotification(false);
+    setErrorMsg('');
+    }, 2000);
+  }
 
   const handleCancel = () => {
     props.history.goBack();
   };
 
   const handleAdd = () => {
-    props.history.goBack();
-  };
-
-  function handleInput(key, value) {
-    if ('name' === key) {
-      setName(value);
-    }  else if ('headname' === key) {
-      setHeadName(value);
-    } else if ('createBySystemAdminStaffId' === key) {
-      setCreatedBy(value);
-    } else if ('desc') {
-      setDesc(value);
-    }
+    setIsFormSubmitted(true);
+    // if (buPrice && batchNo && batchNo.length > 0) {
+    const params = {
+      buName,
+      description,
+      buHead, 
+      createBySystemAdminStaffId, 
+      timeStamp
+    };
+    axios.post(addBusinessUnitUrl, params).then(res => {
+      if (res.data.success) {
+          props.history.goBack();
+      } else if (!res.data.success) {
+          setOpenNotification(true);
+      }
+      })
+      .catch(e => {
+        console.log('error after adding bu inventory', e);
+        setOpenNotification(true);
+        setErrorMsg('Error while adding the item');
+    });
   }
 
-  const onChangeDate = value => {
-    setTimestamp(value)
-  };
+  const onChangeValue = ((e)=>{ 
+    dispatch({field: e.target.name, value: e.target.value});
+  });
+
+  function validateForm() {
+    // return buPrice && batchNo && batchNo.length > 0;
+    return true;
+  }
+
+  const handleEdit = () => {
+    setIsFormSubmitted(true);
+    // if (buPrice && batchNo && batchNo.length > 0) {
+    const params = {
+      _id,
+      buName,
+      description,
+      buHead, 
+      createBySystemAdminStaffId, 
+      timeStamp
+    };
+
+    axios.put(updateBusinessUnitUrl, params).then(res => {
+      if (res.data.success) {
+          props.history.goBack();
+      } else if (!res.data.success) {
+          setOpenNotification(true);
+      }
+      })
+      .catch(e => {
+        console.log('error after adding bu inventory', e);
+        setOpenNotification(true);
+        setErrorMsg('Error while editing the item');
+    });
+  }
+
+  const onChangeDate = ((value) => {
+    dispatch({field: 'timeStamp', value});
+  });
 
   return (
     <div className="container">
-      <h1>{comingFor}</h1>
+      <h1>{comingFor === 'add' ? 'Add' : 'Edit' }</h1>
 
       <div className="row">
         <div className="col-md-6" style={styles.inputContainer}>
           <TextField
             fullWidth
-            id="outlined-basic"
+            name="buName"
             label="Business Unit Name"
             variant="outlined"
-            value={BU_name}
-            onChange={e => handleInput('name', e.target.value)}
+            value={buName}
+            onChange={onChangeValue}
           />
         </div>
 
         <div className="col-md-6" style={styles.inputContainer}>
           <TextField
             fullWidth
-            id="outlined-basic"
-            label="Business Unit Head Name"
+            name="buHead"
+            label="Business Unit Head"
             variant="outlined"
-            value={BU_Head}
-            onChange={e => handleInput('headname', e.target.value)}
+            value={buHead}
+            onChange={onChangeValue}
           />
         </div>
       </div>
 
       <div className="row">
         <div className="col-md-6" style={styles.inputContainer}>
-          <TextField
-            fullWidth
-            id="outlined-basic"
-            label="Created By"
-            type={'number'}
-            variant="outlined"
-            value={createBySystemAdminStaffId}
-            onChange={e => handleInput('createBySystemAdminStaffId', e.target.value)}
-          />
-        </div>
-
-        <div className="col-md-6" style={styles.inputContainer}>
-  
-
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <DateTimePicker
               inputVariant="outlined"
               onChange={onChangeDate}
-              fullWidth={true}
-              value={timeStamp ? timeStamp : new Date()}
+              fullWidth
+              value={timeStamp}
             />
           </MuiPickersUtilsProvider>
+        </div>
+        <div className="col-md-6" style={styles.inputContainer}>
+          <InputLabel id="createdBySystemAdminStaffId-label">Admin Staff</InputLabel>
+          <Select
+            fullWidth
+            name="createBySystemAdminStaffId"
+            value={createBySystemAdminStaffId}
+            onChange={onChangeValue}
+            label="Admin Staff"
+          >
+            <MenuItem value="">
+              <em>Select</em>
+            </MenuItem>
+            {systemAdmins.map((val)=>{
+              return <MenuItem key={val._id} value={val._id}>{val.username}</MenuItem>
+            })}
+          </Select>
         </div>
       </div>
 
@@ -125,11 +197,12 @@ function AddBusinessUnit(props) {
             fullWidth
             multiline
             rows={4}
-            id="outlined-basic"
+            name="description"
+            id="description"
             label="Description"
             variant="outlined"
-            value={desc}
-            onChange={e => handleInput('desc', e.target.value)}
+            value={description}
+            onChange={onChangeValue}
           />
         </div>
       </div>
@@ -148,15 +221,27 @@ function AddBusinessUnit(props) {
             marginTop: '2%'
           }}
         >
-          <Button
+          {comingFor === 'add' ? (
+            <Button
+              style={{ paddingLeft: 30, paddingRight: 30 }}
+              disabled={!validateForm()}
+              onClick={handleAdd}
+              variant="contained"
+              color="primary"
+            >
+              Add
+            </Button>
+          ) : (
+            <Button
             style={{ paddingLeft: 30, paddingRight: 30 }}
-            onClick={handleAdd}
+            disabled={!validateForm()}
+            onClick={handleEdit}
             variant="contained"
             color="primary"
-          >
-            {' '}
-            Add{' '}
-          </Button>
+            >
+              Edit
+            </Button>
+          )}
         </div>
       </div>
     </div>

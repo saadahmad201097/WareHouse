@@ -13,104 +13,17 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 // core components
 import styles from 'assets/jss/material-dashboard-react/components/tableStyle.js';
-
 import TablePagination from '@material-ui/core/TablePagination';
 
 
 const useStyles = makeStyles(styles);
-
-// export default function CustomTable(props) {
-//   const classes = useStyles(styles);
-//   const { tableHeading, tableData, tableDataKeys, tableHeaderColor } = props;
-
-//   return (
-//     <div className={classes.tableResponsive}>
-//       <Table className={classes.table}>
-//         {tableHeading !== undefined ? (
-//           <TableHead className={classes[tableHeaderColor + 'TableHeader']}>
-//             <TableRow className={classes.tableHeadRow}>
-//               {tableHeading.map((prop, key) => {
-//                 return (
-//                   <TableCell
-//                     className={classes.tableCell + ' ' + classes.tableHeadCell}
-//                     key={key}
-//                   >
-//                     {prop}
-//                   </TableCell>
-//                 );
-//               })}
-//             </TableRow>
-//           </TableHead>
-//         ) : null}
-//         <TableBody>
-//           {tableData.map((prop, key) => {
-//             return (
-//               <TableRow key={key} className={classes.tableBodyRow}>
-//                 {tableDataKeys
-//                   ? tableDataKeys.map((val, key) => {
-//                       return (
-//                         <TableCell className={classes.tableCell} key={key}>
-//                           {prop[val]}
-//                         </TableCell>
-//                       );
-//                     })
-//                   : null}
-//                 <TableCell
-//                   style={{
-//                     cursor: 'pointer'
-//                   }}
-//                   className={classes.tableCell}
-//                   colSpan="2"
-//                 >
-//                   <span onClick={() => props.handleEdit(prop)}>
-//                     <i className="zmdi zmdi-edit zmdi-hc-2x" />
-//                   </span>
-//                   <span onClick={() => props.handleDelete(prop._id)}>
-//                     <i className=" ml-10 zmdi zmdi-delete zmdi-hc-2x" />
-//                   </span>
-//                 </TableCell>
-
-//                 {/* <TableCell
-//                   onClick={() => props.handleDelete(prop._id)}
-//                   style={{ cursor: 'pointer' }}
-//                   className={classes.tableCell}
-//                 >
-//                   <i className="zmdi zmdi-delete zmdi-hc-2x" />
-//                 </TableCell> */}
-//               </TableRow>
-//             );
-//           })}
-//         </TableBody>
-//       </Table>
-
-//     </div>
-//   );
-// }
-
-// CustomTable.defaultProps = {
-//   tableHeaderColor: 'gray'
-// };
-
-// CustomTable.propTypes = {
-//   tableHeaderColor: PropTypes.oneOf([
-//     "warning",
-//     "primary",
-//     "danger",
-//     "success",
-//     "info",
-//     "rose",
-//     "gray"
-//   ]),
-//   tableHead: PropTypes.arrayOf(PropTypes.string),
-//   tableData: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string))
-// };
 
 export default function CustomTable(props) {
   const { tableHeading, tableData, tableDataKeys, tableHeaderColor } = props;
 
   const classes = useStyles();
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(2);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -119,6 +32,13 @@ export default function CustomTable(props) {
   const handleChangeRowsPerPage = event => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
+  };
+
+  const options = {
+    year: 'numeric', month: 'numeric', day: 'numeric',
+    hour: 'numeric', minute: 'numeric', second: 'numeric',
+    hour12: true,
+    timeZone: 'America/Los_Angeles' 
   };
 
   return (
@@ -150,7 +70,7 @@ export default function CustomTable(props) {
                     ? tableDataKeys.map((val, key) => {
                         return (
                           <TableCell className={classes.tableCell} key={key}>
-                            { Array.isArray(val) ? ( prop[val[0]] ? prop[val[0]][val[1]] : null): prop[val] }
+                            { Array.isArray(val) ? ( prop[val[0]] ? prop[val[0]][val[1]] : null): ( val.toLowerCase() === 'timestamp' ? new Intl.DateTimeFormat('en-US', options).format(Date.parse(prop[val])) : prop[val] )}
                           </TableCell>
                         );
                       })
@@ -175,7 +95,7 @@ export default function CustomTable(props) {
         </TableBody>
       </Table>
       <TablePagination
-        rowsPerPageOptions={[2, 4]}
+        rowsPerPageOptions={[5, 10]}
         component="div"
         count={props.tableData && props.tableData.length}
         rowsPerPage={rowsPerPage}

@@ -4,7 +4,7 @@ import React, { useEffect, useState, useReducer } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem'
+import MenuItem from '@material-ui/core/MenuItem';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
@@ -118,7 +118,7 @@ function AddEditVendor(props) {
                 console.log('error after adding bu inventory', e);
                 setOpenNotification(true);
                 setErrorMsg('Error while adding the item');
-            });
+        });
     };
 
     const handleEdit = () => {
@@ -138,9 +138,7 @@ function AddEditVendor(props) {
             review,
             rating
         };
-        axios
-            .put(updateVendorUrl, params)
-            .then(res => {
+        axios.put(updateVendorUrl, params).then(res => {
             if (res.data.success) {
                 props.history.goBack();
             } else if (!res.data.success) {

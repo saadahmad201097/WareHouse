@@ -227,14 +227,14 @@ function AddEditBuReturn(props) {
 
             <div className="row">
                 <div className="col-md-4" style={styles.inputContainer}>
-                <MuiPickersUtilsProvider fullWidth utils={DateFnsUtils}>
-                    <DateTimePicker
-                    fullWidth
-                    inputVariant="outlined"
-                    onChange={onChangeDate}
-                    value={timeStamp ? timeStamp : new Date()}
-                    />
-                </MuiPickersUtilsProvider>
+                    <MuiPickersUtilsProvider fullWidth utils={DateFnsUtils}>
+                        <DateTimePicker
+                        fullWidth
+                        inputVariant="outlined"
+                        onChange={onChangeDate}
+                        value={timeStamp ? timeStamp : new Date()}
+                        />
+                    </MuiPickersUtilsProvider>
                 </div>
 
                 <div className="col-md-4" style={styles.inputContainer}>
@@ -249,8 +249,7 @@ function AddEditBuReturn(props) {
                         onChange={onChangeValue}
                     />
                 </div>
-            </div>
-            <div className="row">
+
                 <div className="col-md-4" style={styles.inputContainer}>
                     <InputLabel id="staff-label">Staff</InputLabel>
                     <Select
