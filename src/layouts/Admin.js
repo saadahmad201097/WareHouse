@@ -37,7 +37,7 @@ import BuReturnRoutes from '../subRoutes/buReturn';
 import BuStockInLogRoutes from '../subRoutes/buStockInLog';
 import BuStockOutLogRoutes from '../subRoutes/buStockOutLog';
 import FunctionalUnitRoutes from '../subRoutes/FunctionalUnitRoutes';
-
+import VendorRoutes from '../subRoutes/vendor';
 import WareHouseInventoryRoutes from '../subRoutes/warehouseInventory.js';
 
 let ps;
@@ -63,17 +63,13 @@ const switchRoutes = (
     <Route path="/admin/businessunit/next" component={BusinessUnitRoutes} />
     <Route path="/admin/buinventory/next" component={BuInventoryRoutes} />
     <Route path="/admin/bureprequest/next" component={BuRepRequestRoutes} />
-    <Route
-      path="/admin/bureprequestdetails/next"
-      component={BuRepRequestDetailsRoutes}
-    />
+    <Route path="/admin/bureprequestdetails/next" component={BuRepRequestDetailsRoutes} />
     <Route path="/admin/bureturn/next" component={BuReturnRoutes} />
     <Route path="/admin/bustockinlog/next" component={BuStockInLogRoutes} />
+    <Route path="/admin/bustockoutlog/next" component={BuStockOutLogRoutes} />
     <Route path="/admin/functionalunit/next" component={FunctionalUnitRoutes} />
-    <Route
-      path="/admin/warehouseinventory/next"
-      component={WareHouseInventoryRoutes}
-    />
+    <Route path="/admin/vendor/next" component={VendorRoutes} />
+    <Route path="/admin/warehouseinventory/next" component={WareHouseInventoryRoutes} />
 
     {/* <Route path={'/admin/dashboard/details/login'} component={Login} /> */}
 

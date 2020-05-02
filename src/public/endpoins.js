@@ -50,3 +50,9 @@ export const getBuStockOutLogUrl = `${baseUrl}/bustockoutlog/getbustockoutlog`;
 export const addBuStockOutLogUrl= `${baseUrl}/bustockoutlog/addbustockoutlog`;
 export const updateBuStockOutLogUrl= `${baseUrl}/bustockoutlog/updatebustockoutlog`;
 export const deleteBuStockOutLogUrl= `${baseUrl}/bustockoutlog/deletebustockoutlog`;
+
+// vendor
+export const getVendorUrl = `${baseUrl}/vendor/getvendors`;
+export const addVendorUrl= `${baseUrl}/vendor/addvendor`;
+export const updateVendorUrl= `${baseUrl}/vendor/updatevendor`;
+export const deleteVendorUrl= `${baseUrl}/vendor/deletevendor`;

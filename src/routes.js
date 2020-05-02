@@ -38,6 +38,7 @@ import BuRepRequestDetails from "views/BuRepRequestDetails/buRepRequestDetails";
 import BuReturn from "views/BuReturn/buReturn";
 import BuStockInLog from "views/BuStockInLog/buStockInLog";
 import BuStockOutLog from "views/BuStockOutLog/buStockOutLog";
+import Vendor from "views/Vendor/vendor";
 import Maps from "views/Maps/Maps.js";
 import NotificationsPage from "views/Notifications/Notifications.js";
 import UpgradeToPro from "views/UpgradeToPro/UpgradeToPro.js";
@@ -153,6 +154,14 @@ const dashboardRoutes = [
     rtlName: "قائمة الجدول",
     icon: "content_paste",
     component: WareHouseInventory,
+    layout: "/admin"
+  },
+  {
+    path: "/vendor",
+    name: "Vendor",
+    rtlName: "قائمة الجدول",
+    icon: "content_paste",
+    component: Vendor,
     layout: "/admin"
   }
 

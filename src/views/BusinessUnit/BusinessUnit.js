@@ -57,8 +57,9 @@ const styles = {
 
 const tableHeading = [
   'BU Name',
-  'BU Head',
+  'Description',
   "Status",
+  "Time Stamp",
   "Actions"
 
 ];
@@ -67,7 +68,7 @@ const tableDataKeys = [
  
 'buName',
 'description',
-'buHead',
+'Status',
 'timeStamp'
 
 
