@@ -41,6 +41,7 @@ const headerStyle = () => ({
     letterSpacing: "unset",
     lineHeight: "30px",
     fontSize: "18px",
+    fontFamily: "Roboto",
     borderRadius: "3px",
     textTransform: "none",
     color: "inherit",

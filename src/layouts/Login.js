@@ -55,13 +55,14 @@ class Login extends React.Component {
           email: this.state.userName,
           password: this.state.password
         };
-
+        
         axios
           .post(loginUrl, params)
           .then(res => {
             if (res.data.success) {
-              console.log(res);
-              cookie.save('token', res.data.token, { path: '/' });
+              console.log(res.data);
+              cookie.save('token', res.data.data.token, { path: '/' });
+              cookie.save('current_user', res.data.data.user, { path: '/' });
               this.setState({
                 verifiedUser: true
               });

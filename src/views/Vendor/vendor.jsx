@@ -9,7 +9,7 @@ import styles from "assets/jss/material-dashboard-react/components/tableStyle.js
 import CustomTable from '../../components/Table/Table';
 import ConfirmationModal  from '../../components/Modal/confirmationModal';
 import axios from 'axios';
-import { getVendorUrl, deleteVendorUrl } from '../../public/endpoins';
+import { getVendorUrl, deleteVendorUrl, socketUrl } from '../../public/endpoins';
 
 import Loader from 'react-loader-spinner';
 
@@ -17,16 +17,16 @@ const useStyles = makeStyles(styles);
 
 const tableHeading = [
   'Name',
+  'Contact Person',
   'Phone Number',
-  'status',
-  'Fax',
+  'Status',
   'Action'
 ];
 const tableDataKeys = [
     'name',
+    'contactPerson',
     'phoneNumber',
-    'status',
-    'fax'
+    'status'
 ];
 
 
@@ -34,11 +34,19 @@ export default function BuReturn(props) {
 
     const classes = useStyles();
     const [vendors, setVendor] = useState('');
-    const [systemAdmin, setSystemAdmin] = useState('');
     const [deleteItem, setdeleteItem] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
     const [errorMsg, setErrorMsg] = useState("");
     const [openNotification, setOpenNotification] = useState(false);
+    const ws = new WebSocket(socketUrl);
+
+    ws.onmessage = message => {
+        if(message.data == 'add_vendor'){
+            getVendors();
+            console.log("inside check");
+        }
+        // console.log(`Received: ${message.data}`);
+    }
 
     if(openNotification) {
         setTimeout(() => {
@@ -51,7 +59,6 @@ export default function BuReturn(props) {
         axios.get(getVendorUrl).then(res => {
             if(res.data.success) {
                 setVendor(res.data.data.vendor);
-                setSystemAdmin(res.data.data.systemAdmin);
             }
             else if (!res.data.success) {
                 setErrorMsg(res.data.error)
@@ -72,7 +79,7 @@ export default function BuReturn(props) {
         let path = `vendor/next/add`;
         props.history.push({
             pathname: path,
-            state: { comingFor: 'add', systemAdmin }
+            state: { comingFor: 'add' }
         });
     };
 
@@ -80,7 +87,7 @@ export default function BuReturn(props) {
         let path = `vendor/next/edit`;
         props.history.push({
             pathname: path,
-            state: { comingFor: 'edit', selectedItem: rec, systemAdmin }
+            state: { comingFor: 'edit', selectedItem: rec }
         });
     }
 
@@ -89,9 +96,9 @@ export default function BuReturn(props) {
         setdeleteItem(id);
     }
 
-    function deleteBuReturn() {
+    function deleteVendor() {
         const params = {
-        _id: deleteItem
+            _id: deleteItem
         };
 
         axios.delete(deleteVendorUrl + '/' + params._id).then(res => {
@@ -142,7 +149,7 @@ export default function BuReturn(props) {
                 <ConfirmationModal modalVisible={modalVisible} 
                     msg="Are you sure want to delete the record?"
                     hideconfirmationModal={()=>setModalVisible(false)}
-                    onConfirmDelete={()=> deleteBuReturn()}
+                    onConfirmDelete={()=> deleteVendor()}
                     setdeleteItem={()=>setdeleteItem('')}
                 />
 

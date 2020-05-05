@@ -39,9 +39,6 @@ import BuReturn from "views/BuReturn/buReturn";
 import BuStockInLog from "views/BuStockInLog/buStockInLog";
 import BuStockOutLog from "views/BuStockOutLog/buStockOutLog";
 import Vendor from "views/Vendor/vendor";
-import Maps from "views/Maps/Maps.js";
-import NotificationsPage from "views/Notifications/Notifications.js";
-import UpgradeToPro from "views/UpgradeToPro/UpgradeToPro.js";
 // core components/views for RTL layout
 import RTLPage from "views/RTLPage/RTLPage.js";
 

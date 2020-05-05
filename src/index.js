@@ -66,12 +66,15 @@ function SecuredRoute(props) {
 function interceptor() {
   axios.interceptors.request.use(
     function(config) {
-      console.log('requset interceptor');
       const token = cookie.load('token') || '';
+      const currentUser = cookie.load('current_user') || '';
       console.log('token: ', token);
       // Do something before request is sent
-      if (token) {
+      if(token) {
         config.headers.Authorization = `Bearer ${token}`;
+        if(currentUser && currentUser.staffTypeId){
+          config.headers.role = currentUser.staffTypeId.type;
+        }
       }
       return config;
     },
@@ -85,7 +88,12 @@ function interceptor() {
       return response;
     },
     function(error) {
-      console.log('error: ', error.response.data);
+      if(error.response){
+        console.log('error: ', error.response.data);
+      }
+      else{
+        console.log('error: ', error);
+      }
       return error;
     }
   );
@@ -120,7 +128,3 @@ const MainApp = () => {
 };
 
 ReactDOM.render(<MainApp />, document.getElementById('root'));
-
-/* <Route path="/rtl" component={RTL} /> */
-
-/* <Redirect from="/" to="/admin" /> */

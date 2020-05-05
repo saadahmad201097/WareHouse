@@ -39,7 +39,7 @@ export default function Header(props) {
       <Toolbar className={classes.container}>
         <div className={classes.flex}>
           {/* Here we create navbar brand, based on route name */}
-          <Button color="transparent" href="#" style={{fontWeight:'bold', fontSize:'2rem', fontFamily:'Ubuntu'}}>
+          <Button color="transparent" href="#" style={{fontWeight:'bold', fontSize:'2rem', fontFamily:'Roboto'}}>
             {makeBrand()}
           </Button>
         </div>

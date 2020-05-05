@@ -2,16 +2,11 @@
 /* eslint-disable react/jsx-indent */
 import React, { useEffect, useState, useReducer } from 'react';
 import TextField from '@material-ui/core/TextField';
-import Select from '@material-ui/core/Select';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
 import Notification from 'components/Snackbar/Notification.js';
-import DateFnsUtils from '@date-io/date-fns';
-import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
-import { addVendorUrl, updateVendorUrl } from '../../public/endpoins';
+import { addVendorUrl, updateVendorUrl, socketUrl } from '../../public/endpoins';
 
 
 const useStyles = makeStyles(styles);
@@ -27,17 +22,16 @@ function AddEditVendor(props) {
     const initialState ={
         _id: "",
         name: "",
-        phoneNumber: "",
-        status: "",
-        address: "",
-        fax: "",
-        email: "",
         contactPerson: "",
-        timeStamp:"",
-        createdBySystemAdminStaffId:"",
-        review:"",
+        phoneNumber: "",
+        website: "",
+        address: "",
+        zipCode: "",
+        city: "",
+        country:"",
+        shippingTerms: [],
         rating: "",
-        systemAdmins: []
+        status: ""
     }
 
     function reducer(state, { field, value}){
@@ -49,16 +43,15 @@ function AddEditVendor(props) {
 
     const [state, dispatch] = useReducer(reducer, initialState);
 
-    const { _id, name, phoneNumber, status, address, fax, email, contactPerson, createdBySystemAdminStaffId, timeStamp,
-        review, rating, systemAdmins } = state;
+    const { _id, name,contactPerson, phoneNumber, website, address, zipCode, city, country, status,
+        shippingTerms, rating } = state;
 
     const onChangeValue = ((e)=>{ 
         dispatch({field: e.target.name, value: e.target.value});
     });
 
     function validateForm() {
-        // return buPrice && batchNo && batchNo.length > 0;
-        return true;
+        return name.length > 0 && contactPerson.length > 0;
     }
 
     const [comingFor, setcomingFor] = useState('');
@@ -66,7 +59,8 @@ function AddEditVendor(props) {
 
     const [errorMsg, setErrorMsg] = useState("");
     const [openNotification, setOpenNotification] = useState(false);
-  
+
+    const ws = new WebSocket(socketUrl);
 
 
     useEffect(() => {
@@ -82,9 +76,6 @@ function AddEditVendor(props) {
                 }
             })
         }
-        if(props.history.location.state.systemAdmin){
-            dispatch({field: 'systemAdmins', value: props.history.location.state.systemAdmin});
-        }
     }, []);
 
     const handleCancel = () => {
@@ -93,64 +84,64 @@ function AddEditVendor(props) {
 
     const handleAdd = () => {
         setIsFormSubmitted(true);
-        // if (buPrice && batchNo && batchNo.length > 0) {
-        const params = {
-            name, 
-            phoneNumber,
-            status, 
-            address,
-            fax, 
-            email, 
-            contactPerson, 
-            createdBySystemAdminStaffId, 
-            timeStamp,
-            review,
-            rating
-        };
-        axios.post(addVendorUrl, params).then(res => {
-            if (res.data.success) {
-                props.history.goBack();
-            } else if (!res.data.success) {
-                setOpenNotification(true);
-            }
-            })
-            .catch(e => {
-                console.log('error after adding bu inventory', e);
-                setOpenNotification(true);
-                setErrorMsg('Error while adding the item');
-        });
+        if (validateForm()) {
+            const params = {
+                name,
+                contactPerson,
+                phoneNumber,
+                website, 
+                address,
+                zipCode, 
+                city, 
+                country,
+                status,
+                rating
+            };
+            axios.post(addVendorUrl, params).then(res => {
+                if (res.data.success) {
+                    ws.send("add_vendor");
+                    props.history.goBack();
+                } else if (!res.data.success) {
+                    setOpenNotification(true);
+                }
+                })
+                .catch(e => {
+                    console.log('error after adding vendor', e);
+                    setOpenNotification(true);
+                    setErrorMsg('Error while adding the vendor');
+            });
+        }
     };
 
     const handleEdit = () => {
         setIsFormSubmitted(true);
-        // if (buPrice && batchNo && batchNo.length > 0) {
-        const params = {
-            _id,
-            name, 
-            phoneNumber,
-            status, 
-            address,
-            fax, 
-            email, 
-            contactPerson, 
-            createdBySystemAdminStaffId, 
-            timeStamp,
-            review,
-            rating
-        };
-        axios.put(updateVendorUrl, params).then(res => {
-            if (res.data.success) {
-                props.history.goBack();
-            } else if (!res.data.success) {
-                setOpenNotification(true);
-            }
-            })
-            .catch(e => {
-                console.log('error after adding bu inventory', e);
-                setOpenNotification(true);
-                setErrorMsg('Error while editing the item');
+        if(validateForm()) {
+            const params = {
+                _id,
+                name,
+                contactPerson,
+                phoneNumber,
+                website, 
+                address,
+                zipCode, 
+                city, 
+                country,
+                status,
+                rating
+            };
+            axios.put(updateVendorUrl, params).then(res => {
+                if (res.data.success) {
+                    props.history.goBack();
+                } else if (!res.data.success) {
+                    setOpenNotification(true);
+                }
+                })
+                .catch(e => {
+                    console.log('error after updating vendor', e);
+                    setOpenNotification(true);
+                    setErrorMsg('Error while editing the vendor');
             });
-        // }
+        }
     };
 
     if (openNotification) {
@@ -160,17 +151,13 @@ function AddEditVendor(props) {
         }, 2000);
     }
 
-    const onChangeDate = value => {
-        dispatch({ field: 'timeStamp', value });
-    };
-
     return (
         <div className="container">
             <h1>
                 <span> {comingFor === 'add' ? 'Add' : 'Edit'}</span>
             </h1>
             <div className="row">
-                <div className="col-md-4" style={styles.inputContainer}>
+                <div className="col-md-12" style={styles.inputContainer}>
                     <TextField
                         fullWidth
                         id="name"
@@ -183,76 +170,9 @@ function AddEditVendor(props) {
                         error={!name && isFormSubmitted}
                     />
                 </div>
-
-                <div className="col-md-4" style={styles.inputContainer}>
-                    <TextField
-                        fullWidth
-                        id="phoneNumber"
-                        name="phoneNumber"
-                        label="Phone Number"
-                        type="text"
-                        variant="outlined"
-                        value={phoneNumber}
-                        onChange={onChangeValue}
-                    />
-                </div>
-
-                <div className="col-md-4" style={styles.inputContainer}>
-                    <TextField
-                        fullWidth
-                        id="status"
-                        name="status"
-                        label="Status"
-                        type="text"
-                        variant="outlined"
-                        value={status}
-                        onChange={onChangeValue}
-                    />
-                </div>
             </div>
-
+            
             <div className="row">
-                <div className="col-md-8" style={styles.inputContainer}>
-                    <TextField
-                        fullWidth
-                        id="address"
-                        name="address"
-                        label="Address"
-                        type="text"
-                        variant="outlined"
-                        value={address}
-                        onChange={onChangeValue}
-                    />
-                </div>
-
-                <div className="col-md-4" style={styles.inputContainer}>
-                    <TextField
-                        fullWidth
-                        id="fax"
-                        name="fax"
-                        label="Fax"
-                        type="text"
-                        variant="outlined"
-                        value={fax}
-                        onChange={onChangeValue}
-                    />
-                </div>
-            </div>
-
-            <div className="row">
-                <div className="col-md-4" style={styles.inputContainer}>
-                    <TextField
-                        fullWidth
-                        id="email"
-                        name="email"
-                        label="Email"
-                        type="text"
-                        variant="outlined"
-                        value={email}
-                        onChange={onChangeValue}
-                    />
-                </div>
-
                 <div className="col-md-4" style={styles.inputContainer}>
                     <TextField
                         fullWidth
@@ -265,53 +185,92 @@ function AddEditVendor(props) {
                         onChange={onChangeValue}
                     />
                 </div>
-
                 <div className="col-md-4" style={styles.inputContainer}>
-                    <MuiPickersUtilsProvider fullWidth utils={DateFnsUtils}>
-                        <DateTimePicker
+                    <TextField
                         fullWidth
-                        inputVariant="outlined"
-                        onChange={onChangeDate}
-                        value={timeStamp ? timeStamp : new Date()}
-                        />
-                    </MuiPickersUtilsProvider>
-                </div>
-            </div>
-            
-            <div className="row">
-                <div className="col-md-4" style={styles.inputContainer}>
-                    <InputLabel id="createdBySystemAdminStaffId-label">Admin Staff</InputLabel>
-                    <Select
-                        fullWidth
-                        labelId="createdBySystemAdminStaffId-label"
-                        id="createdBySystemAdminStaffId"
-                        name="createdBySystemAdminStaffId"
-                        value={createdBySystemAdminStaffId}
+                        id="phoneNumber"
+                        name="phoneNumber"
+                        label="Contact Number"
+                        type="text"
+                        variant="outlined"
+                        value={phoneNumber}
                         onChange={onChangeValue}
-                        label="Admin Staff"
-                    >
-                        <MenuItem value="">
-                            <em>None</em>
-                        </MenuItem>
-                        {systemAdmins.map((val)=>{
-                            return <MenuItem key={val._id} value={val._id}>{val.username}</MenuItem>
-                        })}
-                    </Select>  
+                    />
                 </div>
 
                 <div className="col-md-4" style={styles.inputContainer}>
                     <TextField
                         fullWidth
-                        id="review"
-                        name="review"
-                        label="Review"
+                        id="website"
+                        name="website"
+                        label="Website"
                         type="text"
                         variant="outlined"
-                        value={review}
+                        value={website}
+                        onChange={onChangeValue}
+                    />
+                </div>
+            </div>
+
+            <div className="row">
+                <div className="col-md-12" style={styles.inputContainer}>
+                    <TextField
+                        fullWidth
+                        id="address"
+                        name="address"
+                        label="Address"
+                        type="text"
+                        variant="outlined"
+                        value={address}
+                        onChange={onChangeValue}
+                    />
+                </div>
+            </div>
+
+            <div className="row">
+                <div className="col-md-4" style={styles.inputContainer}>
+                    <TextField
+                        fullWidth
+                        id="zipCode"
+                        name="zipCode"
+                        label="Zip Code"
+                        type="text"
+                        variant="outlined"
+                        value={zipCode}
                         onChange={onChangeValue}
                     />
                 </div>
                 <div className="col-md-4" style={styles.inputContainer}>
+                    <TextField
+                        fullWidth
+                        id="city"
+                        name="city"
+                        label="City"
+                        type="text"
+                        variant="outlined"
+                        value={city}
+                        onChange={onChangeValue}
+                    />
+                </div>
+                <div className="col-md-4" style={styles.inputContainer}>
+                    <TextField
+                        fullWidth
+                        id="country"
+                        name="country"
+                        label="Country"
+                        type="text"
+                        variant="outlined"
+                        value={country}
+                        onChange={onChangeValue}
+                    />
+                </div>
+            </div>
+
+            {/* <div className="row">
+            </div> */}
+            
+            <div className="row">
+                <div className="col-md-6" style={styles.inputContainer}>
                     <TextField
                         fullWidth
                         id="rating"
@@ -320,6 +279,19 @@ function AddEditVendor(props) {
                         type="text"
                         variant="outlined"
                         value={rating}
+                        onChange={onChangeValue}
+                    />
+                </div>
+
+                <div className="col-md-6" style={styles.inputContainer}>
+                    <TextField
+                        fullWidth
+                        id="status"
+                        name="status"
+                        label="Status"
+                        type="text"
+                        variant="outlined"
+                        value={status}
                         onChange={onChangeValue}
                     />
                 </div>
