@@ -30,7 +30,7 @@ const tableDataKeys = [
 ];
 
 
-export default function BuReturn(props) {
+export default function Vendor(props) {
 
     const classes = useStyles();
     const [vendors, setVendor] = useState('');

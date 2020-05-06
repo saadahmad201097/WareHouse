@@ -7,20 +7,20 @@ import rootSaga from '../sagas/index';
 
 import { persistStore, persistCombineReducers } from 'redux-persist';
 import storage from 'redux-persist/es/storage';
-//import rootReducers from 'app/reducers'; 
+// import rootReducers from 'app/reducers'; 
 
 const config = {
   key: 'root',
   storage,
   whitelist: ['auth']
-  //debug: true //to get useful logging
+  // debug: true //to get useful logging
 }
-//-----------------------FROM PREVIOUS-------------------------------//
+// -----------------------FROM PREVIOUS-------------------------------//
 const history = createBrowserHistory();
 
 
 
-//-----------------------FROM PREVIOUS-------------------------------//
+// -----------------------FROM PREVIOUS-------------------------------//
 const middleware = [];
 const sagaMiddleware = createSagaMiddleware();
 const routeMiddleware = routerMiddleware(history);
