@@ -31,7 +31,6 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import axios from 'axios';
 import cookie from 'react-cookies';
-import Check from './New';
 import Login from './layouts/Login';
 import configureStore, { history } from './store';
 

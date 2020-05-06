@@ -7,6 +7,7 @@ import Button from '@material-ui/core/Button';
 import axios from 'axios';
 import Notification from 'components/Snackbar/Notification.js';
 import { addVendorUrl, updateVendorUrl, socketUrl } from '../../public/endpoins';
+import ws from '../../variables/websocket';
 
 
 const useStyles = makeStyles(styles);
@@ -60,7 +61,7 @@ function AddEditVendor(props) {
     const [errorMsg, setErrorMsg] = useState("");
     const [openNotification, setOpenNotification] = useState(false);
 
-    const ws = new WebSocket(socketUrl);
+    // const ws = new WebSocket(socketUrl);
 
 
     useEffect(() => {

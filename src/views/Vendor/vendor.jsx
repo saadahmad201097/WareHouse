@@ -10,6 +10,7 @@ import CustomTable from '../../components/Table/Table';
 import ConfirmationModal  from '../../components/Modal/confirmationModal';
 import axios from 'axios';
 import { getVendorUrl, deleteVendorUrl, socketUrl } from '../../public/endpoins';
+import ws from '../../variables/websocket';
 
 import Loader from 'react-loader-spinner';
 
@@ -38,7 +39,7 @@ export default function Vendor(props) {
     const [modalVisible, setModalVisible] = useState(false);
     const [errorMsg, setErrorMsg] = useState("");
     const [openNotification, setOpenNotification] = useState(false);
-    const ws = new WebSocket(socketUrl);
+    // const ws = new WebSocket(socketUrl);
 
     ws.onmessage = message => {
         if(message.data == 'add_vendor'){
