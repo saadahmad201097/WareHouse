@@ -15,26 +15,22 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useEffect } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import { createBrowserHistory } from 'history';
-import { Router, Route, Switch, Redirect } from 'react-router-dom';
+import { Router, Route, Redirect } from 'react-router-dom';
 
 // core components
 import Admin from 'layouts/Admin.js';
-import RTL from 'layouts/RTL.js';
-
 import 'assets/css/material-dashboard-react.css?v=1.8.0';
-
 import { ConnectedRouter } from 'connected-react-router';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import axios from 'axios';
 import cookie from 'react-cookies';
+import { ToastsContainer, ToastsStore } from 'react-toasts';
 import Login from './layouts/Login';
 import configureStore, { history } from './store';
-
-import NotFound from './components/NotFound/NotFound';
 
 export const { persistor, store } = configureStore();
 
@@ -120,6 +116,7 @@ const MainApp = () => {
 
             {/* <SecuredRoute path="/" component={Login} /> */}
           </Router>
+          <ToastsContainer store={ToastsStore} />
         </ConnectedRouter>
       </PersistGate>
     </Provider>

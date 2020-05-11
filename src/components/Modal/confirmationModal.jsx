@@ -8,12 +8,10 @@ export default function ConfirmationModal(props) {
     const modalStyle = {
         backgroundColor: '#72101e',
         borderRadius: 10,
-        // width: '60%',
         height: '40%',
         marginLeft: '15%',
         marginRight: '15%',
         marginTop: '10%',
-        // marginBottom:"10%",
         display: 'flex',
         justifyContent: 'center',
         flexDirection: 'column',
@@ -25,9 +23,7 @@ export default function ConfirmationModal(props) {
         color: 'white',
         textAlign: 'center',
         fontWeight: 'bold',
-        fontFamily: 'Ubuntu',
-        // fontSize: 25,
-        textAlign: 'center'
+        fontFamily: 'Ubuntu'
     }
 
     const innerDivStyle = {

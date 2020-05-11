@@ -514,12 +514,58 @@ footer ul li a:hover {
 .ml-10{
   margin-left: 10px !important;
 }
+.ml5{
+  margin-left: 5px !important;
+}
+.ml10{
+  margin-left: 10px !important;
+}
+.mr10{
+  margin-right: 10px !important;
+}
 .ml20{
   margin-left: 20px !important;
 }
 .mt25{
   margin-top: 25px !important;
 }
-.active{
+.pl30{
+  padding-left: 30px !important;
+}
+.pr30{
+  padding-right: 30px !important;
+}
+.selected{
   background-color:  #b2c791 !important;
+}
+.addEditBtnDiv{
+  display: 'flex';
+  justify-content: 'flex-end';
+  margin-top: 2%;
+}
+.loader{
+  width: 70%;
+  height: 100%;
+  position: 'fixed';
+  display: 'flex';
+  justify-content: 'center'
+}
+.modal{
+  background-color: #72101e;
+  border-radius: 10;
+  height: 40%;
+  margin-left: 15%;
+  margin-right: 15%;
+  margin-top: 10%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  flex: 1;
+  position: fixed;
+}
+.modal-heading{
+  color: white;
+  text-align: center;
+  font-weight: bold;
+  font-family: 'Ubuntu';
 }

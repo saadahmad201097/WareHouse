@@ -3,17 +3,14 @@
 /* eslint-disable react/jsx-indent */
 import React, { useEffect, useState, useReducer } from 'react';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import { makeStyles } from '@material-ui/core/styles';
+import Modal from '@material-ui/core/Modal';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
-import Notification from 'components/Snackbar/Notification.js';
-import { addVendorUrl, updateVendorUrl, socketUrl } from '../../public/endpoins';
+import { ToastsStore } from 'react-toasts';
+import { addVendorUrl, updateVendorUrl} from '../../public/endpoins';
 import ws from '../../variables/websocket';
-
-
-const useStyles = makeStyles(styles);
+import ShippingTerm from '../ShippingTerm/shippingTerm';
 
 const styles = {
   inputContainer: {
@@ -22,6 +19,19 @@ const styles = {
 };
 
 function AddEditVendor(props) {
+    const modalStyle = {
+        backgroundColor: 'rgb(118, 133, 156)',
+        borderRadius: 10,
+        height: '80%',
+        marginLeft: '15%',
+        marginRight: '15%',
+        marginTop: '5%',
+        display: 'flex',
+        justifyContent: 'center',
+        flexDirection: 'column',
+        flex: 1,
+        position: 'fixed'
+    }
 
     const initialState ={
         _id: "",
@@ -33,52 +43,24 @@ function AddEditVendor(props) {
         zipCode: "",
         city: "",
         country:"",
-        // shippingTerms: [{label:'Term 1', key:'term1', value: false},{label:'Term 2', key:'term2', value: false},
-        // {label:'Term 3', key:'term3', value: false},{label:'Term 4', key:'term4',value: false},{label:'Term 5', key:'term5',value: false}],
         rating: "",
         status: ""
     }
 
-    function reducer(state, { field, value, type, index}){
-        switch (type) {
-            case 'updateShippingTerms':
-
-                return {
-                    ...state,
-                    // shippingTerms: [...state.shippingTerms[index], { label: 'Term 1', key: field, value}]
-                    // shippingTerms: [...state.shippingTerms.filter( function(term){
-                    //     if(term.key === field){debugger
-                    //         term = { label: 'Term 1', key: field, value}
-                    //     }
-                    //     return true;
-                    // })]
-                }
-            default:
-                return{
-                    ...state,
-                    [field] : value
-                }
+    function reducer(state, { field, value}){
+        return{
+            ...state,
+            [field] : value
         }
     }
 
     const [state, dispatch] = useReducer(reducer, initialState);
 
     const { _id, name,contactPerson, phoneNumber, website, address, zipCode, city, country, status,
-        shippingTerms, rating } = state;
+        rating } = state;
 
     const onChangeValue = ((e)=>{ 
         dispatch({field: e.target.name, value: e.target.value});
-    });
-
-    const onChangeCheckValue = ((e, index)=>{
-        // let v2 = shippingTerms[0].term1;debugger
-        // if(e.target.checked){
-            dispatch({ type: 'updateShippingTerms', field: e.target.name, value: e.target.checked });
-            // dispatch({field: e.target.name, value: e.target.checked});
-        // }
-        // else{
-
-        // }
     });
 
     function validateForm() {
@@ -87,12 +69,7 @@ function AddEditVendor(props) {
 
     const [comingFor, setcomingFor] = useState('');
     const [isFormSubmitted, setIsFormSubmitted] = useState(false);
-
-    const [errorMsg, setErrorMsg] = useState("");
-    const [openNotification, setOpenNotification] = useState(false);
-
-    // const ws = new WebSocket(socketUrl);
-
+    const [openShippingTermModal, setOpenShippingTermModal] = useState(false);
 
     useEffect(() => {
         setcomingFor(props.history.location.state.comingFor);
@@ -126,7 +103,6 @@ function AddEditVendor(props) {
                 city, 
                 country,
                 status,
-                // shippingTerms,
                 rating
             };
             axios.post(addVendorUrl, params).then(res => {
@@ -134,13 +110,11 @@ function AddEditVendor(props) {
                     ws.send("add_vendor");
                     props.history.goBack();
                 } else if (!res.data.success) {
-                    setOpenNotification(true);
+                    ToastsStore.error(res.data.error);
                 }
-                })
-                .catch(e => {
-                    console.log('error after adding vendor', e);
-                    setOpenNotification(true);
-                    setErrorMsg('Error while adding the vendor');
+            })
+            .catch(e => {
+                console.log('error after adding vendor', e);
             });
         }
     };
@@ -159,29 +133,27 @@ function AddEditVendor(props) {
                 city, 
                 country,
                 status,
-                // shippingTerms,
                 rating
             };
             axios.put(updateVendorUrl, params).then(res => {
                 if (res.data.success) {
                     props.history.goBack();
                 } else if (!res.data.success) {
-                    setOpenNotification(true);
+                    ToastsStore.error(res.data.error);
                 }
-                })
-                .catch(e => {
-                    console.log('error after updating vendor', e);
-                    setOpenNotification(true);
-                    setErrorMsg('Error while editing the vendor');
+            })
+            .catch(e => {
+                console.log('error after updating vendor', e);
             });
         }
     };
 
-    if (openNotification) {
-        setTimeout(() => {
-        setOpenNotification(false);
-        setErrorMsg('');
-        }, 2000);
+    const addShippingTerm = () => {
+        setOpenShippingTermModal(true);
+    }
+
+    const addPaymetTerm = () =>{
+
     }
 
     return (
@@ -298,43 +270,6 @@ function AddEditVendor(props) {
                     />
                 </div>
             </div>
-
-            <div className="row">
-                <div className="col-md-12" style={styles.inputContainer}>
-                    {/* <label>Shipping Terms</label> */}
-                    {/* {shippingTerms.map((term, index) => {
-                        console.log('term: ', term);
-                        return(
-                            <div className="col-md-2" key={index} style={styles.inputContainer}>
-                                <FormControlLabel
-                                    control={
-                                        <Checkbox
-                                            checked={term.value}
-                                            onChange={(event)=>onChangeCheckValue(event, index)}
-                                            name={term.key}
-                                            color="primary"
-                                        />
-                                    }
-                                    label={term.label}
-                                />
-                            </div>
-                        );
-                    })}; */}
-                    {/* <div className="col-md-2" style={styles.inputContainer}>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    checked={shippingTerms[0].value}
-                                    onChange={(event)=>onChangeCheckValue(event)}
-                                    name={shippingTerms[0].key}
-                                    color="primary"
-                                />
-                            }
-                            label={shippingTerms[0].label}
-                        />
-                    </div> */}
-                </div>
-            </div>
             
             <div className="row">
                 <div className="col-md-6" style={styles.inputContainer}>
@@ -364,47 +299,72 @@ function AddEditVendor(props) {
                 </div>
             </div>
 
+            {/* shipping terms modal */}
+            <Modal
+                open={openShippingTermModal}
+                style={modalStyle}
+                onClose={() => setOpenShippingTermModal(false)}
+                aria-labelledby="simple-modal-title"
+                aria-describedby="simple-modal-description"
+            >
+                <div>
+                    <h4 className="modal-heading">
+                        Shipping Term(s)
+                    </h4>
+
+                    <div className="modal-heading">
+                        <ShippingTerm />
+                    </div>
+                </div>
+            </Modal>
+
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <div style={styles.inputContainer}>
-            <Button onClick={handleCancel} variant="contained">
-                Cancel
-            </Button>
+                <Button onClick={handleCancel} variant="contained">
+                    Cancel
+                </Button>
             </div>
 
-            <div
-            style={{
-                display: 'flex',
-                justifyContent: 'flex-end',
-                marginTop: '2%'
-            }}
-            >
+            <div className="addEditBtnDiv">
             {comingFor === 'add' ? (
-                <Button
-                style={{ paddingLeft: 30, paddingRight: 30 }}
-                disabled={!validateForm()}
-                onClick={handleAdd}
-                variant="contained"
-                color="primary"
-                >
-                {' '}
-                Add{' '}
-                </Button>
+                <>
+                    <Button className="mr10" onClick={addShippingTerm} variant="contained">
+                        Add Shipping Term(s)
+                    </Button>
+                    <Button className="mr10" onClick={addPaymetTerm} variant="contained">
+                        Add Payment Term(s)
+                    </Button>
+                    <Button
+                    className="pl30 pr30"
+                    disabled={!validateForm()}
+                    onClick={handleAdd}
+                    variant="contained"
+                    color="primary"
+                    >
+                        Add
+                    </Button>
+                </>
             ) : (
-                <Button
-                style={{ paddingLeft: 30, paddingRight: 30 }}
-                disabled={!validateForm()}
-                onClick={handleEdit}
-                variant="contained"
-                color="primary"
-                >
-                {' '}
-                Edit{' '}
-                </Button>
+                <>
+                    <Button className="mr10" onClick={addShippingTerm} variant="contained">
+                        Edit Shipping Term(s)
+                    </Button>
+                    <Button className="mr10" onClick={addPaymetTerm} variant="contained">
+                        Edit Payment Term(s)
+                    </Button>
+                    <Button
+                    className="pl30 pr30"
+                    disabled={!validateForm()}
+                    onClick={handleEdit}
+                    variant="contained"
+                    color="primary"
+                    >
+                        Edit
+                    </Button>
+                </>
             )}
             </div>
         </div>
-
-        <Notification msg={errorMsg} open={openNotification} />
         </div>
     );
 }

@@ -63,3 +63,9 @@ export const getPurchaseRequestUrl = `${baseUrl}/purchaserequest/getpurchaserequ
 export const addPurchaseRequestUrl= `${baseUrl}/purchaserequest/addpurchaserequest`;
 export const updatePurchaseRequestUrl= `${baseUrl}/purchaserequest/updatepurchaserequest`;
 export const deletePurchaseRequestUrl= `${baseUrl}/purchaserequest/deletepurchaserequest`;
+
+// shipping term
+export const getShippingTermUrl = `${baseUrl}/shippingterm/getshippingterms`;
+export const addShippingTermUrl= `${baseUrl}/shippingterm/addshippingterm`;
+export const updateShippingTermUrl= `${baseUrl}/shippingterm/updateShippingTerm`;
+export const deleteShippingTermUrl= `${baseUrl}/shippingterm/deleteShippingTerm`;

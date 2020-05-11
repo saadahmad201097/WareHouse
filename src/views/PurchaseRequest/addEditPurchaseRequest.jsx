@@ -295,7 +295,7 @@ function AddEditPurchaseRequest(props) {
                             {items && items
                             .map((prop, index) => {
                                 return (
-                                    <TableRow key={index} onClick={()=> { dispatch({field: 'selectedRow', value: index})}} className={`${classes.tableBodyRow} ${classes.pointer} ${ index === selectedRow ? "active" : ""}`}>
+                                    <TableRow key={index} onClick={()=> { dispatch({field: 'selectedRow', value: index})}} className={`${classes.tableBodyRow} ${classes.pointer} ${ index === selectedRow ? "selected" : ""}`}>
                                         <TableCell className={classes.tableCell}>{prop.itemCode} selected: {selectedRow}</TableCell>
                                         <TableCell className={classes.tableCell}>{prop.name}</TableCell>
                                         <TableCell className={classes.tableCell}>{prop.subClass}</TableCell>

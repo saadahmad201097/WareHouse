@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 // @material-ui/core components
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import Notification from 'components/Snackbar/Notification.js';
 import Paper from '@material-ui/core/Paper';
 import styles from "assets/jss/material-dashboard-react/components/tableStyle.js";
 import CustomTable from '../../components/Table/Table';
@@ -11,6 +10,7 @@ import ConfirmationModal  from '../../components/Modal/confirmationModal';
 import axios from 'axios';
 import { getVendorUrl, deleteVendorUrl, socketUrl } from '../../public/endpoins';
 import ws from '../../variables/websocket';
+import { ToastsStore } from 'react-toasts';
 
 import Loader from 'react-loader-spinner';
 
@@ -39,9 +39,6 @@ export default function Vendor(props) {
     const [vendors, setVendor] = useState('');
     const [deleteItem, setdeleteItem] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
-    const [errorMsg, setErrorMsg] = useState("");
-    const [openNotification, setOpenNotification] = useState(false);
-    // const ws = new WebSocket(socketUrl);
 
     ws.onmessage = message => {
         if(message.data == 'add_vendor'){
@@ -51,21 +48,13 @@ export default function Vendor(props) {
         // console.log(`Received: ${message.data}`);
     }
 
-    if(openNotification) {
-        setTimeout(() => {
-        setOpenNotification(false);
-        setErrorMsg("")
-        }, 2000);
-    }
-
     function getVendors() {
         axios.get(getVendorUrl).then(res => {
             if(res.data.success) {
                 setVendor(res.data.data.vendor);
             }
             else if (!res.data.success) {
-                setErrorMsg(res.data.error)
-                setOpenNotification(true);
+                ToastsStore.error(res.data.error);
             }
             return res;
         })
@@ -111,8 +100,7 @@ export default function Vendor(props) {
             window.location.reload(false);
             }
             else if (!res.data.success) {
-                setErrorMsg(res.data.error)
-                setOpenNotification(true);
+                ToastsStore.error(res.data.error);
             }
             return res;
         })
@@ -156,8 +144,6 @@ export default function Vendor(props) {
                     onConfirmDelete={()=> deleteVendor()}
                     setdeleteItem={()=>setdeleteItem('')}
                 />
-
-                <Notification msg={errorMsg} open={openNotification} />
             </div>
         ) : (
             <div
