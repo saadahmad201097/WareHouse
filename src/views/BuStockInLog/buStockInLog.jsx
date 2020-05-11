@@ -27,7 +27,8 @@ const tableDataKeys = [
     'buPrice',
     'salePrice',
     'batchNo'
-  ];
+];
+const actions = {edit: true, delete: true};
 
 
 export default function BuReturn(props) {
@@ -137,6 +138,7 @@ export default function BuReturn(props) {
                     tableData={buStockInLog}
                     tableDataKeys={tableDataKeys}
                     tableHeading={tableHeading}
+                    action={actions}
                     handleEdit={handleEdit}
                     handleDelete={handleDelete}
                 />                   

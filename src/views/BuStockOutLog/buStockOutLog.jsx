@@ -27,7 +27,8 @@ const tableDataKeys = [
     ['itemId', 'name'],
     'timeStamp',
     'salePrice'
-  ];
+];
+const actions = {edit: true, delete: true};
 
 
 export default function BuStockOutLog(props) {
@@ -137,18 +138,19 @@ export default function BuStockOutLog(props) {
                     tableData={buStockOutLog}
                     tableDataKeys={tableDataKeys}
                     tableHeading={tableHeading}
+                    action={actions}
                     handleEdit={handleEdit}
                     handleDelete={handleDelete}
                 />                   
             </div>
 
 
-                <ConfirmationModal modalVisible={modalVisible} 
-                    msg="Are you sure want to delete the record?"
-                    hideconfirmationModal={()=>setModalVisible(false)}
-                    onConfirmDelete={()=> deleteBuReturn()}
-                    setdeleteItem={()=>setdeleteItem('')}
-                />
+            <ConfirmationModal modalVisible={modalVisible} 
+                msg="Are you sure want to delete the record?"
+                hideconfirmationModal={()=>setModalVisible(false)}
+                onConfirmDelete={()=> deleteBuReturn()}
+                setdeleteItem={()=>setdeleteItem('')}
+            />
 
                 <Notification msg={errorMsg} open={openNotification} />
             </div>

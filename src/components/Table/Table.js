@@ -14,6 +14,7 @@ import TableCell from '@material-ui/core/TableCell';
 // core components
 import styles from 'assets/jss/material-dashboard-react/components/tableStyle.js';
 import TablePagination from '@material-ui/core/TablePagination';
+import RcIf from 'rc-if';
 
 
 const useStyles = makeStyles(styles);
@@ -82,12 +83,20 @@ export default function CustomTable(props) {
                     className={classes.tableCell}
                     colSpan="2"
                   >
-                    <span onClick={() => props.handleEdit(prop)}>
-                      <i className="zmdi zmdi-edit zmdi-hc-2x" />
-                    </span>
-                    <span onClick={() => props.handleDelete(prop._id)}>
-                      <i className=" ml-10 zmdi zmdi-delete zmdi-hc-2x" />
-                    </span>
+                    {props.action ? (
+                      <>
+                        <RcIf if={props.action.edit}> 
+                          <span onClick={() => props.handleEdit(prop)}>
+                            <i className="zmdi zmdi-edit zmdi-hc-2x" />
+                          </span>
+                        </RcIf>
+                        <RcIf if={props.action.delete}> 
+                          <span onClick={() => props.handleDelete(prop._id)}>
+                            <i className=" ml-10 zmdi zmdi-delete zmdi-hc-2x" />
+                          </span>
+                        </RcIf>
+                      </>
+                    ) : null}
                   </TableCell>
                 </TableRow>
               );

@@ -30,6 +30,8 @@ const tableDataKeys = [
     'status'
 ];
 
+const actions = {edit: true, delete: true};
+
 
 export default function Vendor(props) {
 
@@ -141,6 +143,7 @@ export default function Vendor(props) {
                     tableData={vendors}
                     tableDataKeys={tableDataKeys}
                     tableHeading={tableHeading}
+                    action={actions}
                     handleEdit={handleEdit}
                     handleDelete={handleDelete}
                 />                   

@@ -26,10 +26,9 @@ import Login from '../layouts/Login';
 
 import NotFound from '../components/NotFound/NotFound.js';
 
-import DashboardRoutes from '.././subRoutes/dashboard.js';
-
-import ItemsRoutes from '.././subRoutes/items.js';
-import BusinessUnitRoutes from '.././subRoutes/business_unit.js';
+import DashboardRoutes from '../subRoutes/dashboard.js';
+import ItemsRoutes from '../subRoutes/items';
+import BusinessUnitRoutes from '../subRoutes/business_unit.js';
 import BuInventoryRoutes from '../subRoutes/buInvetory';
 import BuRepRequestRoutes from '../subRoutes/buRepRequest';
 import BuRepRequestDetailsRoutes from '../subRoutes/buRepRequestDetails';
@@ -39,6 +38,7 @@ import BuStockOutLogRoutes from '../subRoutes/buStockOutLog';
 import FunctionalUnitRoutes from '../subRoutes/FunctionalUnitRoutes';
 import VendorRoutes from '../subRoutes/vendor';
 import WareHouseInventoryRoutes from '../subRoutes/warehouseInventory.js';
+import PurchaseRequestRoutes from '../subRoutes/purchaseRequest';
 
 let ps;
 
@@ -70,6 +70,7 @@ const switchRoutes = (
     <Route path="/admin/functionalunit/next" component={FunctionalUnitRoutes} />
     <Route path="/admin/vendor/next" component={VendorRoutes} />
     <Route path="/admin/warehouseinventory/next" component={WareHouseInventoryRoutes} />
+    <Route path="/admin/purchaserequest/next" component={PurchaseRequestRoutes} />
 
     {/* <Route path={'/admin/dashboard/details/login'} component={Login} /> */}
 

@@ -1,49 +1,39 @@
 /*eslint-disable*/
 import React, { useState, useEffect } from 'react';
 // @material-ui/core components
-import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Notification from 'components/Snackbar/Notification.js';
 import Paper from '@material-ui/core/Paper';
-import styles from "assets/jss/material-dashboard-react/components/tableStyle.js";
 import CustomTable from '../../components/Table/Table';
 import ConfirmationModal  from '../../components/Modal/confirmationModal';
 import axios from 'axios';
-import { getBuReturnUrl, deleteBuReturnUrl } from '../../public/endpoins';
-
+import { getPurchaseRequestUrl, deletePurchaseRequestUrl } from '../../public/endpoins';
 import Loader from 'react-loader-spinner';
 
-const useStyles = makeStyles(styles);
 
 const tableHeading = [
-  'Bu Name',
-  'Item Name',
-  'Quantity',
-  'Time Stamp',
-  'Return Reason',
-  'Batch Number',
-  'Staff Name',
+  'Name',
+  'Vendor',
+  'Date',
+  'Status',
   'Action'
 ];
 const tableDataKeys = [
-    ['buId', 'buName'],
-    ['itemId', 'name'],
-    'qty',
-    'timeStamp',
-    'returnReason',
-    'batchNo',
-    ['staffId', 'firstName']
+    'name',
+    ['vendorId', 'name'],
+    'date',
+    'status'
 ];
+
 const actions = {edit: true, delete: true};
 
 
-export default function BuReturn(props) {
+export default function PurchaseRequest(props) {
 
-    const classes = useStyles();
-    const [buReturn, setBuReturn] = useState('');
+    const [purchaseRequests, setPurchaseRequest] = useState('');
+    const [vendors, setVendor] = useState('');
+    const [statues, setStatus] = useState('');
     const [items, setItems] = useState('');
-    const [staff, setStaff] = useState('');
-    const [businessUnit, setBusinessUnit] = useState('');
     const [deleteItem, setdeleteItem] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
     const [errorMsg, setErrorMsg] = useState("");
@@ -56,13 +46,13 @@ export default function BuReturn(props) {
         }, 2000);
     }
 
-    function getBuReturn() {
-        axios.get(getBuReturnUrl).then(res => {
+    function getPurchaseRequests() {
+        axios.get(getPurchaseRequestUrl).then(res => {
             if(res.data.success) {
-                setBuReturn(res.data.data.buReturn);
+                setPurchaseRequest(res.data.data.purchaseRequest);
+                setVendor(res.data.data.vendor);
+                setStatus(res.data.data.status);
                 setItems(res.data.data.items);
-                setStaff(res.data.data.staff);
-                setBusinessUnit(res.data.data.businessUnit);
             }
             else if (!res.data.success) {
                 setErrorMsg(res.data.error)
@@ -76,22 +66,22 @@ export default function BuReturn(props) {
     }
 
     useEffect(() => {
-        getBuReturn();
+        getPurchaseRequests();
     }, []);
 
     const addNewItem = () => {
-        let path = `bureturn/next/add`;
+        let path = `purchaserequest/next/add`;
         props.history.push({
             pathname: path,
-            state: { comingFor: 'add', items, staff, businessUnit }
+            state: { comingFor: 'add', vendors, statues, items }
         });
     };
 
     function handleEdit(rec) {
-        let path = `bureturn/next/edit`;
+        let path = `purchaserequest/next/edit`;
         props.history.push({
             pathname: path,
-            state: { comingFor: 'edit', selectedItem: rec, items, staff, businessUnit }
+            state: { comingFor: 'edit', selectedItem: rec, vendors, statues, items }
         });
     }
 
@@ -100,16 +90,16 @@ export default function BuReturn(props) {
         setdeleteItem(id);
     }
 
-    function deleteBuReturn() {
+    function deleteVendor() {
         const params = {
-        _id: deleteItem
+            _id: deleteItem
         };
 
-        axios.delete(deleteBuReturnUrl + '/' + params._id).then(res => {
-            if(res.data.success) {
-            setdeleteItem('');
-            setModalVisible(false);
-            window.location.reload(false);
+        axios.delete(deletePurchaseRequestUrl + '/' + params._id).then(res => {
+            if (res.data.success) {
+                setdeleteItem('');
+                setModalVisible(false);
+                window.location.reload(false);
             }
             else if (!res.data.success) {
                 setErrorMsg(res.data.error)
@@ -124,7 +114,7 @@ export default function BuReturn(props) {
 
     return (
         <div>
-        {buReturn ? (
+        {vendors ? (
             <div>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -141,7 +131,7 @@ export default function BuReturn(props) {
 
             <div>
                 <CustomTable 
-                    tableData={buReturn}
+                    tableData={purchaseRequests}
                     tableDataKeys={tableDataKeys}
                     tableHeading={tableHeading}
                     action={actions}
@@ -154,7 +144,7 @@ export default function BuReturn(props) {
                 <ConfirmationModal modalVisible={modalVisible} 
                     msg="Are you sure want to delete the record?"
                     hideconfirmationModal={()=>setModalVisible(false)}
-                    onConfirmDelete={()=> deleteBuReturn()}
+                    onConfirmDelete={()=> deleteVendor()}
                     setdeleteItem={()=>setdeleteItem('')}
                 />
 

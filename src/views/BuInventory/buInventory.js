@@ -55,8 +55,8 @@ const styles = {
 };
 
 const tableHeading = ['Business Unit', 'Item Name', 'Qty', 'Actions'];
-
 const tableDataKeys = [ ['buId', 'buName'], [ 'itemId', 'name'], 'qty'];
+const actions = {edit: true, delete: true};
 
 export default function BuInventory(props) {
   const classes = useStyles();
@@ -163,6 +163,7 @@ export default function BuInventory(props) {
               tableData={buInventories}
               tableDataKeys={tableDataKeys}
               tableHeading={tableHeading}
+              action={actions}
               handleEdit={handleEdit}
               handleDelete={handleDelete}
             />

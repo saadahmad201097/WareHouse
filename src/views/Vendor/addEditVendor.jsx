@@ -1,7 +1,10 @@
+/* eslint-disable react/jsx-wrap-multilines */
 /* eslint-disable array-callback-return */
 /* eslint-disable react/jsx-indent */
 import React, { useEffect, useState, useReducer } from 'react';
 import TextField from '@material-ui/core/TextField';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
@@ -30,15 +33,31 @@ function AddEditVendor(props) {
         zipCode: "",
         city: "",
         country:"",
-        shippingTerms: [],
+        // shippingTerms: [{label:'Term 1', key:'term1', value: false},{label:'Term 2', key:'term2', value: false},
+        // {label:'Term 3', key:'term3', value: false},{label:'Term 4', key:'term4',value: false},{label:'Term 5', key:'term5',value: false}],
         rating: "",
         status: ""
     }
 
-    function reducer(state, { field, value}){
-        return{
-            ...state,
-            [field] : value
+    function reducer(state, { field, value, type, index}){
+        switch (type) {
+            case 'updateShippingTerms':
+
+                return {
+                    ...state,
+                    // shippingTerms: [...state.shippingTerms[index], { label: 'Term 1', key: field, value}]
+                    // shippingTerms: [...state.shippingTerms.filter( function(term){
+                    //     if(term.key === field){debugger
+                    //         term = { label: 'Term 1', key: field, value}
+                    //     }
+                    //     return true;
+                    // })]
+                }
+            default:
+                return{
+                    ...state,
+                    [field] : value
+                }
         }
     }
 
@@ -49,6 +68,17 @@ function AddEditVendor(props) {
 
     const onChangeValue = ((e)=>{ 
         dispatch({field: e.target.name, value: e.target.value});
+    });
+
+    const onChangeCheckValue = ((e, index)=>{
+        // let v2 = shippingTerms[0].term1;debugger
+        // if(e.target.checked){
+            dispatch({ type: 'updateShippingTerms', field: e.target.name, value: e.target.checked });
+            // dispatch({field: e.target.name, value: e.target.checked});
+        // }
+        // else{
+
+        // }
     });
 
     function validateForm() {
@@ -96,6 +126,7 @@ function AddEditVendor(props) {
                 city, 
                 country,
                 status,
+                // shippingTerms,
                 rating
             };
             axios.post(addVendorUrl, params).then(res => {
@@ -128,6 +159,7 @@ function AddEditVendor(props) {
                 city, 
                 country,
                 status,
+                // shippingTerms,
                 rating
             };
             axios.put(updateVendorUrl, params).then(res => {
@@ -267,8 +299,42 @@ function AddEditVendor(props) {
                 </div>
             </div>
 
-            {/* <div className="row">
-            </div> */}
+            <div className="row">
+                <div className="col-md-12" style={styles.inputContainer}>
+                    {/* <label>Shipping Terms</label> */}
+                    {/* {shippingTerms.map((term, index) => {
+                        console.log('term: ', term);
+                        return(
+                            <div className="col-md-2" key={index} style={styles.inputContainer}>
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            checked={term.value}
+                                            onChange={(event)=>onChangeCheckValue(event, index)}
+                                            name={term.key}
+                                            color="primary"
+                                        />
+                                    }
+                                    label={term.label}
+                                />
+                            </div>
+                        );
+                    })}; */}
+                    {/* <div className="col-md-2" style={styles.inputContainer}>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={shippingTerms[0].value}
+                                    onChange={(event)=>onChangeCheckValue(event)}
+                                    name={shippingTerms[0].key}
+                                    color="primary"
+                                />
+                            }
+                            label={shippingTerms[0].label}
+                        />
+                    </div> */}
+                </div>
+            </div>
             
             <div className="row">
                 <div className="col-md-6" style={styles.inputContainer}>

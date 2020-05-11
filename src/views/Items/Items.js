@@ -12,32 +12,29 @@ import SearchBar from '../../components/SearchBar/Searchbar.js';
 
 const tableHeading = [
   'Name',
-  'Description',
   'Sub Class',
-  'Unit',
   'Vendor Name',
   'Purchase Price',
-  'BU Price',
-  'Sale Price',
-  'Bar Code',
+  'Minimum Level',
+  'Maximum Level',
   'Actions'
 ];
 
 const tableDataKeys = [
   'name',
-  'description',
   'subClass',
-  'unit',
   ['vendorId', 'name'],
   'purchasePrice',
-  'buPrice',
-  'salePrice',
-  'barCode'
+  'minimumLevel',
+  'maximumLevel'
 ];
+
+const actions = {edit: true, delete: true};
 
 export default function Items(props) {
   const [itemsArray, setItem] = useState('');
   const [vendors, setVendors] = useState('');
+  const [units, setUnits] = useState('');
   const [deleteItem, setdeleteItem] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -45,12 +42,12 @@ export default function Items(props) {
     axios.get(getItemsUrl).then(res => {
         if (res.data.success) {
           setItem(res.data.data.items);
-          setVendors(res.data.data.vendors)
+          setVendors(res.data.data.vendors);
+          setUnits(res.data.data.functionalUnit);
         }
         // else if (!res.data.success) {
         //   this.setState({ tr: true });
         // }
-        return res;
       })
       .catch(e => {
         console.log('error is ', e);
@@ -65,7 +62,7 @@ export default function Items(props) {
     let path = `items/next/add`;
     props.history.push({
       pathname: path,
-      state: { comingFor: 'AddItems', vendors }
+      state: { comingFor: 'AddItems', vendors, units }
     });
   };
 
@@ -73,7 +70,7 @@ export default function Items(props) {
     let path = `items/next/edit`;
     props.history.push({
       pathname: path,
-      state: { comingFor: 'EditItems', selectedItem: item, vendors }
+      state: { comingFor: 'EditItems', selectedItem: item, vendors, units }
     });
   }
 
@@ -145,6 +142,7 @@ export default function Items(props) {
             tableData={itemsArray}
             tableDataKeys={tableDataKeys}
             tableHeading={tableHeading}
+            action={actions}
             handleEdit={handleEdit}
             handleDelete={handleDelete}
           />

@@ -69,6 +69,7 @@ const tableDataKeys = [
   ['itemId', 'name'],
   'qty'
 ];
+const actions = {edit: true, delete: true};
 
 export default function BuRepRequest(props) {
   const classes = useStyles();
@@ -177,6 +178,7 @@ export default function BuRepRequest(props) {
                 tableData={buRepRequestDetails}
                 tableDataKeys={tableDataKeys}
                 tableHeading={tableHeading}
+                action={actions}
                 handleEdit={handleEdit}
                 handleDelete={handleDelete}
               />

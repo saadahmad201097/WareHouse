@@ -17,6 +17,7 @@ const useStyles = makeStyles(styles);
 
 const tableHeading = ['Item Name', 'Quantity', 'Action'];
 const tableDataKeys = [['itemId', 'name'], 'qty'];
+const actions = {edit: true, delete: true};
 
 const dummyData = [
   {
@@ -150,6 +151,7 @@ export default function WareHouseInventory(props) {
               tableData={dummyData}
               tableDataKeys={tableDataKeys}
               tableHeading={tableHeading}
+              action={actions}
               handleEdit={handleEdit}
               handleDelete={handleDelete}
             />

@@ -23,7 +23,7 @@ const tableHeading = [
   'Action'
 ];
 const tableDataKeys = ['fuName', ['fuHead', 'value'], ['buName', 'value'], ['status', 'value']];
-
+const actions = {edit: true, delete: true};
 const dummyData = [
   {
     fuName: 'FU Name',
@@ -175,6 +175,7 @@ export default function BuReturn(props) {
               tableData={dummyData}
               tableDataKeys={tableDataKeys}
               tableHeading={tableHeading}
+              action={actions}
               handleEdit={handleEdit}
               handleDelete={handleDelete}
             />

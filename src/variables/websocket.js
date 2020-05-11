@@ -53,7 +53,7 @@ import { socketUrl } from '../public/endpoins';
      * utilited by the @function connect to check if the connection is close, if so attempts to reconnect
      */
     function check(){
-        if (!ws || ws.readyState === WebSocket.CLOSED) this.connect(); // check if websocket instance is closed, if so call `connect` function.
+        if (!ws || ws.readyState === WebSocket.CLOSED) connect(); // check if websocket instance is closed, if so call `connect` function.
     };
 
     connect();

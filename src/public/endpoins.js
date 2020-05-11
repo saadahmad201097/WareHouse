@@ -57,3 +57,9 @@ export const getVendorUrl = `${baseUrl}/vendor/getvendors`;
 export const addVendorUrl= `${baseUrl}/vendor/addvendor`;
 export const updateVendorUrl= `${baseUrl}/vendor/updatevendor`;
 export const deleteVendorUrl= `${baseUrl}/vendor/deletevendor`;
+
+// purchase request
+export const getPurchaseRequestUrl = `${baseUrl}/purchaserequest/getpurchaserequests`;
+export const addPurchaseRequestUrl= `${baseUrl}/purchaserequest/addpurchaserequest`;
+export const updatePurchaseRequestUrl= `${baseUrl}/purchaserequest/updatepurchaserequest`;
+export const deletePurchaseRequestUrl= `${baseUrl}/purchaserequest/deletepurchaserequest`;

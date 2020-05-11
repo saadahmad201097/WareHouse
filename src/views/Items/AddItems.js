@@ -1,20 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useReducer } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import { Redirect } from 'react-router-dom';
-
 import axios from 'axios';
+import Notification from 'components/Snackbar/Notification.js';
 import { addItemUrl, updateItemUrl } from '../../public/endpoins';
 
-import Loader from 'react-loader-spinner';
-
-import Notification from 'components/Snackbar/Notification.js';
-
-const useStyles = makeStyles(styles);
 
 const styles = {
   inputContainer: {
@@ -23,209 +16,143 @@ const styles = {
 };
 
 function AddItems(props) {
-  const classes = useStyles();
+  const initialState ={
+    _id: "",
+    name: "",
+    description: "",
+    subClass: "",
+    itemCode: "",
+    receiptUnit: "",
+    issueUnit: "",
+    vendorId: "",
+    purchasePrice:"",
+    minimumLevel: "",
+    maximumLevel: "",
+    reorderLevel: "",
+    vendors: [],
+    units: []
+  }
+
+  function reducer(state, { field, value}){
+    return{
+      ...state,
+      [field] : value
+    }
+  }
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  const { _id, name, description, subClass, itemCode, receiptUnit, issueUnit, vendorId, purchasePrice, maximumLevel,
+    minimumLevel, reorderLevel, vendors, units } = state;
 
   const [comingFor, setcomingFor] = useState('');
-
-  const [name, setName] = useState('');
-  const [subClass, setSubClass] = useState('');
-  const [unit, setUnit] = useState('');
-  const [vendorId, setVendorId] = useState('');
-  const [purchasePrice, setPurchasePrice] = useState('');
-  const [buPrice, setBUPrice] = useState('');
-  const [salePrice, setSalePrice] = useState('');
-  const [barCode, setBarcode] = useState('');
-  const [description, setDesc] = useState('');
-  const [vendors, setVendors] = useState('');
-
-  const [selectedItemToEdit, setSelectedItem] = useState('');
-
-  const [null_name, setNullName] = useState(false);
-  const [null_subClass, setNullSubClass] = useState(false);
-  const [null_unit, setNullUnit] = useState(false);
-  const [null_vendorId, setNullVendorId] = useState(false);
-  const [null_purchasePrice, setNullPurchasePrice] = useState(false);
-  const [null_buPrice, setNullBUPrice] = useState(false);
-  const [null_salePrice, setNullSalePrice] = useState(false);
-  const [null_barCode, setNullBarcode] = useState(false);
-  const [null_description, setNullDesc] = useState(false);
+  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 
   const [msg, setMsg] = useState('');
   const [tr, setTr] = useState(false);
 
   useEffect(() => {
     setcomingFor(props.history.location.state.comingFor);
-    if (props.history.location.state.selectedItem) {
-      const temp = props.history.location.state.selectedItem;
-
-      setSelectedItem(temp);
-      setName(temp.name);
-      setSubClass(temp.subClass);
-      setDesc(temp.description);
-      setUnit(temp.unit);
-      setVendorId(temp.vendorId._id);
-      setPurchasePrice(temp.purchasePrice);
-      setBUPrice(temp.buPrice);
-      setSalePrice(temp.salePrice);
-      setBarcode(temp.barCode);
+    const selectedRec = props.history.location.state.selectedItem;
+    if(selectedRec){
+      Object.entries(selectedRec).map(([key,val])=>{
+          if(val && typeof val === 'object'){
+            dispatch({field: key, value: val._id});
+          }
+          else{
+            dispatch({field: key, value: val});
+          }
+      })
     }
 
     if(props.history.location.state.vendors){
-      setVendors(props.history.location.state.vendors);
+      dispatch({field: 'vendors', value: props.history.location.state.vendors});
+    }
+    if(props.history.location.state.units){
+      dispatch({field: 'units', value: props.history.location.state.units});
     }
   }, []);
 
+  const onChangeValue = ((e)=>{ 
+    dispatch({field: e.target.name, value: e.target.value});
+  });
+
+  function validateForm() {
+    const res = (name.length > 0 && description.length > 0 && subClass.length > 0 && itemCode.length > 0
+    && receiptUnit.length > 0 && issueUnit.length > 0 && vendorId.length > 0 && purchasePrice > 0
+    && maximumLevel.length > 0 && minimumLevel.length > 0 && reorderLevel.length > 0);
+    return res;
+  }
   const handleCancel = () => {
     props.history.goBack();
   };
 
-  function handleInput(key, value) {
-    if ('name' === key) {
-      setName(value);
-    } else if ('subClass' === key) {
-      setSubClass(value);
-    } else if ('unit' === key) {
-      setUnit(value);
-    } else if ('vendorId' === key) {
-      setVendorId(value);
-    } else if ('purchaseId' === key) {
-      setPurchasePrice(value);
-    } else if ('BUPrice' === key) {
-      setBUPrice(value);
-    } else if ('salePrice' === key) {
-      setSalePrice(value);
-    } else if ('barcode' === key) {
-      setBarcode(value);
-    } else if ('desc') {
-      setDesc(value);
-    }
-  }
-
-  const emptyFields = () => {
-    if (name === '') {
-      setNullName(true);
-    }
-    if (purchasePrice === '') {
-      setNullPurchasePrice(true);
-    }
-    if (description === '') {
-      setNullDesc(true);
-    }
-    if (vendorId === '') {
-      setNullVendorId(true);
-    }
-    if (unit === '') {
-      setNullUnit(true);
-    }
-    if (barCode === '') {
-      setNullBarcode(true);
-    }
-    if (buPrice === '') {
-      setNullBUPrice(true);
-    }
-    if (salePrice === '') {
-      setNullSalePrice(true);
-    }
-    if (subClass === '') {
-      setNullSubClass(true);
-    }
-  };
-
-  const addNewItemFun = () => {
-    const params = {
-      name: name,
-      description: description,
-      subClass: subClass,
-      unit: unit,
-      vendorId: vendorId,
-      purchasePrice: purchasePrice,
-      buPrice: buPrice,
-      salePrice: salePrice,
-      barCode: barCode
-    };
-    axios
-      .post(addItemUrl, params)
-      .then(res => {
-        if (res.data.success) {
-          console.log('response after adding item', res);
-          props.history.goBack();
-        }
-        // else if (!res.data.success) {
-        //   this.setState({ tr: true });
-        // }
-      })
-      .catch(e => {
-        console.log('error after adding item', e);
-        setTr(true);
-        setMsg('Error while adding the item');
-      });
-  };
-
   const handleAdd = () => {
-    if (
-      name === '' ||
-      purchasePrice === '' ||
-      vendorId === '' ||
-      description === '' ||
-      barCode === '' ||
-      buPrice === '' ||
-      salePrice === '' ||
-      subClass === '' ||
-      unit === ''
-    ) {
-      emptyFields();
-    } else {
-      addNewItemFun();
+    setIsFormSubmitted(true);
+    if(validateForm()){
+      const params = {
+        name,
+        description,
+        subClass,
+        itemCode,
+        receiptUnit,
+        issueUnit,
+        vendorId,
+        purchasePrice,
+        maximumLevel,
+        minimumLevel,
+        reorderLevel
+      };
+      axios
+        .post(addItemUrl, params)
+        .then(res => {
+          if (res.data.success) {
+            console.log('response after adding item', res);
+            props.history.goBack();
+          }
+          else if (!res.data.success) {
+            setTr(true);
+          }
+        })
+        .catch(e => {
+          console.log('error after adding item', e);
+          setTr(true);
+          setMsg('Error while adding the item');
+        });
     }
+    
   };
 
-  const editItemFun = () => {
-    const params = {
-      ...selectedItemToEdit,
-      name: name,
-      description: description,
-      subClass: subClass,
-      unit: unit,
-      vendorId: vendorId,
-      purchasePrice: purchasePrice,
-      buPrice: buPrice,
-      salePrice: salePrice,
-      barCode: barCode
-    };
-    console.log(params);
-    axios
-      .put(updateItemUrl, params)
-      .then(res => {
-        if (res.data.success) {
-          console.log('response after adding item', res);
-          props.history.goBack();
-        }
-        // else if (!res.data.success) {
-        //   this.setState({ tr: true });
-        // }
+  const handleEdit = () => {
+    setIsFormSubmitted(true);
+    if(validateForm()){
+      const params = {
+        _id,
+        name,
+        description,
+        subClass,
+        itemCode,
+        receiptUnit,
+        issueUnit,
+        vendorId,
+        purchasePrice,
+        maximumLevel,
+        minimumLevel,
+        reorderLevel
+      };
+      axios.put(updateItemUrl, params).then(res => {
+          if (res.data.success) {
+            console.log('response after adding item', res);
+            props.history.goBack();
+          }
+          else if (!res.data.success) {
+            setTr(true);
+          }
       })
       .catch(e => {
         console.log('error after adding item', e);
         setTr(true);
         setMsg('Error while updating the item');
       });
-  };
-
-  const handleEdit = () => {
-    if (
-      name === '' ||
-      purchasePrice === '' ||
-      vendorId === '' ||
-      description === '' ||
-      barCode === '' ||
-      buPrice === '' ||
-      salePrice === '' ||
-      subClass === '' ||
-      unit === ''
-    ) {
-      emptyFields();
-    } else {
-      editItemFun();
     }
   };
 
@@ -246,10 +173,11 @@ function AddItems(props) {
             fullWidth
             id="outlined-basic"
             label="Name"
+            name="name"
             variant="outlined"
             value={name}
-            onChange={e => handleInput('name', e.target.value)}
-            error={!name && null_name}
+            onChange={onChangeValue}
+            error={!name && isFormSubmitted}
           />
         </div>
       </div>
@@ -263,9 +191,10 @@ function AddItems(props) {
             id="outlined-basic"
             label="Description"
             variant="outlined"
+            name="description"
             value={description}
-            onChange={e => handleInput('desc', e.target.value)}
-            error={!description && null_description}
+            onChange={onChangeValue}
+            error={!description && isFormSubmitted}
           />
         </div>
       </div>
@@ -277,41 +206,94 @@ function AddItems(props) {
             id="outlined-basic"
             label="Sub Class"
             variant="outlined"
+            name="subClass"
             value={subClass}
-            onChange={e => handleInput('subClass', e.target.value)}
-            error={!subClass && null_subClass}
+            onChange={onChangeValue}
+            error={!subClass && isFormSubmitted}
           />
         </div>
         <div className="col-md-6" style={styles.inputContainer}>
           <TextField
             fullWidth
             id="outlined-basic"
-            label="Barcode"
+            label="Item Code"
             variant="outlined"
-            value={barCode}
+            name="itemCode"
+            value={itemCode}
             type='text'
-            onChange={e => handleInput('barcode', e.target.value)}
-            error={!barCode && null_barCode}
+            onChange={onChangeValue}
+            error={!itemCode && isFormSubmitted}
           />
+        </div>
+      </div>
+      <div className="row">
+        <div className="col-md-6" style={styles.inputContainer}>
+          <InputLabel id="receiptUnit-label">Receipt Unit</InputLabel>
+          <Select
+            fullWidth
+            labelId="receiptUnit-label"
+            id="receiptUnit"
+            name="receiptUnit"
+            value={receiptUnit}
+            onChange={onChangeValue}
+            label="Receipt Unit"
+            error={!receiptUnit && isFormSubmitted}
+          >
+            <MenuItem value="">
+              <em>None</em>
+            </MenuItem>
+            {units.map((val) => {
+              return (
+                <MenuItem key={val._id} value={val._id}>
+                  {val.fuName}
+                </MenuItem>
+              );
+            })}
+          </Select>
+        </div>
+        <div className="col-md-6" style={styles.inputContainer}>
+          <InputLabel id="issueUnit-label">Issue Unit</InputLabel>
+          <Select
+            fullWidth
+            labelId="issueUnit-label"
+            id="issueUnit"
+            name="issueUnit"
+            value={issueUnit}
+            onChange={onChangeValue}
+            label="Issue Unit"
+            error={!issueUnit && isFormSubmitted}
+          >
+            <MenuItem value="">
+              <em>None</em>
+            </MenuItem>
+            {units.map((val) => {
+              return (
+                <MenuItem key={val._id} value={val._id}>
+                  {val.fuName}
+                </MenuItem>
+              );
+            })}
+          </Select>
         </div>
       </div>
 
       <div className="row">
-        <div className="col-md-4" style={styles.inputContainer}>
-          <InputLabel id="vendorId-label">Vendors</InputLabel>
+        <div className="col-md-6" style={styles.inputContainer}>
+          <InputLabel id="vendorId-label">Vendor</InputLabel>
           <Select
             fullWidth
             labelId="vendorId-label"
             id="vendorId"
             name="vendorId"
             value={vendorId}
-            onChange={e => handleInput('vendorId', e.target.value)}
-            label="Vendors"
+            onChange={onChangeValue}
+            label="Vendor"
+            error={!vendorId && isFormSubmitted}
           >
             <MenuItem value="">
               <em>None</em>
             </MenuItem>
-            {vendors && vendors.map((val, key) => {
+            {vendors && vendors.map((val) => {
               return (
                 <MenuItem key={val._id} value={val._id}>
                   {val.name}
@@ -321,56 +303,58 @@ function AddItems(props) {
           </Select>
         </div>
 
-        <div className="col-md-4" style={styles.inputContainer}>
+        <div className="col-md-6" style={styles.inputContainer}>
           <TextField
             fullWidth
-            id="outlined-basic"
             label="Puschase Price"
-            type={'number'}
+            type='number'
             variant="outlined"
+            name="purchasePrice"
             value={purchasePrice}
-            onChange={e => handleInput('purchaseId', e.target.value)}
-            error={!purchasePrice && null_purchasePrice}
-          />
-        </div>
-
-        <div className="col-md-4" style={styles.inputContainer}>
-          <TextField
-            fullWidth
-            id="outlined-basic"
-            label="Business Unit Price"
-            variant="outlined"
-            type={'number'}
-            value={buPrice}
-            onChange={e => handleInput('BUPrice', e.target.value)}
-            error={!buPrice && null_buPrice}
+            InputProps={{ inputProps: { min: 0} }}
+            onChange={onChangeValue}
+            error={(!purchasePrice || purchasePrice < 0)&& isFormSubmitted}
           />
         </div>
       </div>
-
       <div className="row">
-        <div className="col-md-6" style={styles.inputContainer}>
+        <div className="col-md-4" style={styles.inputContainer}>
           <TextField
             fullWidth
-            id="outlined-basic"
-            label="Sale Price"
+            label="Minimum Level"
             variant="outlined"
-            value={salePrice}
-            type={'number'}
-            onChange={e => handleInput('salePrice', e.target.value)}
-            error={!salePrice && null_salePrice}
+            type='text'
+            name="minimumLevel"
+            value={minimumLevel}
+            onChange={onChangeValue}
+            error={!minimumLevel && isFormSubmitted}
           />
         </div>
 
-        <div className="col-md-6" style={styles.inputContainer}>
+        <div className="col-md-4" style={styles.inputContainer}>
           <TextField
             fullWidth
-            id="outlined-basic"
-            label="Unit"
+            id="maximumLevel"
+            label="Maximum Level"
             variant="outlined"
-            value={unit}
-            onChange={e => handleInput('unit', e.target.value)}
-            error={!unit && null_unit}
+            name="maximumLevel"
+            value={maximumLevel}
+            type='text'
+            onChange={onChangeValue}
+            error={!maximumLevel && isFormSubmitted}
+          />
+        </div>
+
+        <div className="col-md-4" style={styles.inputContainer}>
+          <TextField
+            fullWidth
+            id="reorderLevel"
+            label="Reorder Level"
+            variant="outlined"
+            name="reorderLevel"
+            value={reorderLevel}
+            onChange={onChangeValue}
+            error={!reorderLevel && isFormSubmitted}
           />
         </div>
       </div>

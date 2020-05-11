@@ -13,16 +13,15 @@ const tableHeading = [
   'BU Name',
   'Description',
   "Bu Head",
-  "Time Stamp",
   "Actions"
 ];
 
 const tableDataKeys = [
   'buName',
   'description',
-  'buHead',
-  'timeStamp'
+  'buHead'
 ];
+const actions = {edit: true, delete: true};
 
 export default function Items(props) {
 
@@ -118,6 +117,7 @@ export default function Items(props) {
             tableData={businessUnits}
             tableDataKeys={tableDataKeys}
             tableHeading={tableHeading}
+            action={actions}
             handleEdit={handleEdit}
             handleDelete={handleDelete}
           />

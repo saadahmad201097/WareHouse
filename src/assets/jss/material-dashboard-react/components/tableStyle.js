@@ -82,6 +82,9 @@ const tableStyle = theme => ({
     fontSize: '0.8125rem',
     fontWeight: '400',
     fontFamily: 'Ubuntu'
+  },
+  pointer: {
+    cursor: 'pointer'
   }
 });
 

@@ -39,6 +39,7 @@ import BuReturn from "views/BuReturn/buReturn";
 import BuStockInLog from "views/BuStockInLog/buStockInLog";
 import BuStockOutLog from "views/BuStockOutLog/buStockOutLog";
 import Vendor from "views/Vendor/vendor";
+import PurchaseRequest from "views/PurchaseRequest/purchaseRequest";
 // core components/views for RTL layout
 import RTLPage from "views/RTLPage/RTLPage.js";
 
@@ -159,6 +160,14 @@ const dashboardRoutes = [
     rtlName: "قائمة الجدول",
     icon: "content_paste",
     component: Vendor,
+    layout: "/admin"
+  },
+  {
+    path: "/purchaserequest",
+    name: "Purchase Request",
+    rtlName: "قائمة الجدول",
+    icon: "content_paste",
+    component: PurchaseRequest,
     layout: "/admin"
   }
 
