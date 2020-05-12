@@ -5,39 +5,41 @@ import GridItem from 'components/Grid/GridItem.js';
 import GridContainer from 'components/Grid/GridContainer.js';
 import Button from '@material-ui/core/Button';
 import Table from '../../components/Table/Table.js';
-import ConfirmationModal  from '../../components/Modal/confirmationModal';
+import ConfirmationModal from '../../components/Modal/confirmationModal';
 import axios from 'axios';
 import { ToastsStore } from 'react-toasts';
-import { getBusinessUnitUrl, deleteBusinessUnitUrl } from '../../public/endpoins';
+import {
+  getBusinessUnitUrl,
+  deleteBusinessUnitUrl
+} from '../../public/endpoins';
 
-const tableHeading = [
-  'BU Name',
-  'Description',
-  "Bu Head",
-  "Actions"
-];
-const tableDataKeys = [
-  'buName',
-  'description',
-  'buHead'
-];
-const actions = {edit: true, delete: true};
+const tableHeading = ['BU Name', 'Description', 'Bu Head', 'Actions'];
+const tableDataKeys = ['buName', 'description', 'buHead'];
+const actions = { edit: true, delete: false };
 
 export default function Items(props) {
-
   const [businessUnits, setBusinessUnits] = useState('');
   const [systemAdmins, setSystemAdmins] = useState(false);
   const [deleteItem, setdeleteItem] = useState('');
 
+  const [buHeads, setBUHeads] = useState('');
+
+  const [status, setStatus] = useState('');
+
   const [modalVisible, setModalVisible] = useState(false);
 
   function getBusinessUnits() {
-    axios.get(getBusinessUnitUrl).then(res => {
+    axios
+      .get(getBusinessUnitUrl)
+      .then(res => {
         if (res.data.success) {
+          // console.log('res', res.data.data);
           setBusinessUnits(res.data.data.businessUnit);
-          setSystemAdmins(res.data.data.systemAdmin)
-        }
-        else if (!res.data.success) {
+          setBUHeads(res.data.data.buHeads);
+          setStatus(res.data.data.statues);
+
+          setSystemAdmins(res.data.data.systemAdmin);
+        } else if (!res.data.success) {
           ToastsStore.error(res.data.error);
         }
         return res;
@@ -51,13 +53,16 @@ export default function Items(props) {
     getBusinessUnits();
   }, []);
 
-
-
   const addNewItem = () => {
     let path = `businessunit/next/add`;
     props.history.push({
       pathname: path,
-      state: { comingFor: 'add', systemAdmins }
+      state: {
+        comingFor: 'add',
+        systemAdmins,
+        status: status,
+        buHeads: buHeads
+      }
     });
   };
 
@@ -65,7 +70,13 @@ export default function Items(props) {
     let path = `businessunit/next/edit`;
     props.history.push({
       pathname: path,
-      state: { comingFor: 'edit', selectedItem: rec, systemAdmins }
+      state: {
+        comingFor: 'edit',
+        selectedItem: rec,
+        systemAdmins,
+        status: status,
+        buHeads: buHeads
+      }
     });
   }
 
@@ -76,23 +87,24 @@ export default function Items(props) {
 
   function deleteBusinessUnit() {
     const params = {
-    _id: deleteItem
+      _id: deleteItem
     };
 
-    axios.delete(deleteBusinessUnitUrl + '/' + params._id).then(res => {
+    axios
+      .delete(deleteBusinessUnitUrl + '/' + params._id)
+      .then(res => {
         if (res.data.success) {
           setdeleteItem('');
           setModalVisible(false);
           window.location.reload(false);
-        }
-        else if (!res.data.success) {
+        } else if (!res.data.success) {
           ToastsStore.error(res.data.error);
         }
         return res;
-    })
-    .catch(e => {
-      console.log('error while deletion ', e);
-    });
+      })
+      .catch(e => {
+        console.log('error while deletion ', e);
+      });
   }
 
   return (
@@ -111,26 +123,29 @@ export default function Items(props) {
           </div>
         </div>
 
-        {businessUnits?
+        {businessUnits ? (
           <Table
             tableData={businessUnits}
             tableDataKeys={tableDataKeys}
             tableHeading={tableHeading}
+            status={status}
+            buHeads={buHeads}
             action={actions}
             handleEdit={handleEdit}
             handleDelete={handleDelete}
           />
-        :undefined}
+        ) : (
+          undefined
+        )}
       </GridItem>
 
-
-      <ConfirmationModal modalVisible={modalVisible} 
+      <ConfirmationModal
+        modalVisible={modalVisible}
         msg="Are you sure want to delete the record?"
-        hideconfirmationModal={()=>setModalVisible(false)}
-        onConfirmDelete={()=> deleteBusinessUnit()}
-        setdeleteItem={()=>setdeleteItem('')}
+        hideconfirmationModal={() => setModalVisible(false)}
+        onConfirmDelete={() => deleteBusinessUnit()}
+        setdeleteItem={() => setdeleteItem('')}
       />
-    
     </GridContainer>
   );
 }
