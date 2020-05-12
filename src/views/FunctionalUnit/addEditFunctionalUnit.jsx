@@ -33,13 +33,16 @@ const BUName = [
 const statusArray = [{ _id: 1, name: 'Active' }, { _id: 2, name: 'In Active' }];
 
 function AddEditBuReturn(props) {
+  const [statusArray, setStatusArray] = useState('');
+
   const initialState = {
     _id: '',
     fuHead: '',
     fuName: '',
     desc: '',
     status: '',
-    buName: ''
+    buName: '',
+    reason: ''
   };
 
   function reducer(state, { field, value }) {
@@ -51,7 +54,7 @@ function AddEditBuReturn(props) {
 
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const { fuName, desc, fuHead, status, buName } = state;
+  const { fuName, desc, fuHead, status, buName, reason } = state;
 
   const onChangeValue = e => {
     dispatch({ field: e.target.name, value: e.target.value });
@@ -66,6 +69,7 @@ function AddEditBuReturn(props) {
 
   useEffect(() => {
     setcomingFor(props.history.location.state.comingFor);
+    setStatusArray(props.history.location.state.status);
     const selectedRec = props.history.location.state.selectedItem;
     if (selectedRec) {
       Object.entries(selectedRec).map(([key, val]) => {
@@ -200,7 +204,7 @@ function AddEditBuReturn(props) {
             <MenuItem value="">
               <em>None</em>
             </MenuItem>
-            {FUHead.map((val) => {
+            {FUHead.map(val => {
               return (
                 <MenuItem key={val._id} value={val._id}>
                   {val.buName}
@@ -223,7 +227,7 @@ function AddEditBuReturn(props) {
             <MenuItem value="">
               <em>None</em>
             </MenuItem>
-            {BUName.map((val) => {
+            {BUName.map(val => {
               return (
                 <MenuItem key={val._id} value={val._id}>
                   {val.buName}
@@ -248,7 +252,7 @@ function AddEditBuReturn(props) {
             <MenuItem value="">
               <em>None</em>
             </MenuItem>
-            {statusArray.map((val) => {
+            {statusArray.map(val => {
               return (
                 <MenuItem key={val._id} value={val._id}>
                   {val.name}
@@ -258,6 +262,26 @@ function AddEditBuReturn(props) {
           </Select>
         </div>
       </div>
+
+      {status === 'in_active' ? (
+        <div className="row">
+          <div className="col-md-12" style={styles.inputContainer}>
+            <TextField
+              fullWidth
+              id="reason"
+              name="reason"
+              label="Resaon"
+              variant="outlined"
+              value={reason}
+              // multiline
+              // rows={5}
+              onChange={onChangeValue}
+            />
+          </div>
+        </div>
+      ) : (
+        undefined
+      )}
 
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <div style={styles.inputContainer}>
@@ -296,7 +320,6 @@ function AddEditBuReturn(props) {
           )}
         </div>
       </div>
-
     </div>
   );
 }

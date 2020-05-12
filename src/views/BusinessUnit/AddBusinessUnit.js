@@ -4,12 +4,17 @@ import React, { useEffect, useState, useReducer } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem'
+import MenuItem from '@material-ui/core/MenuItem';
 // import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
 import { ToastsStore } from 'react-toasts';
-import { addBusinessUnitUrl, updateBusinessUnitUrl } from '../../public/endpoins';
+import {
+  addBusinessUnitUrl,
+  updateBusinessUnitUrl
+} from '../../public/endpoins';
+
+import cookie from 'react-cookies';
 
 const styles = {
   inputContainer: {
@@ -18,38 +23,63 @@ const styles = {
 };
 
 function AddBusinessUnit(props) {
+  const initialState = {
+    _id: '',
+    buName: '',
+    description: '',
+    buHead: '',
+    status: '',
+    statues: [],
+    reason: '',
+    buLogsId: ''
+  };
 
-  const initialState ={
-    _id: "",
-    buName: "",
-    description:"",
-    buHead: "",
-    status: "",
-    statues: []
-  }
-
-  function reducer(state, { field, value}){
-    return{...state, [field] : value}
+  function reducer(state, { field, value }) {
+    return { ...state, [field]: value };
   }
 
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const { _id, buName, description, buHead, status, statues } = state;
+  const {
+    _id,
+    buName,
+    description,
+    buHead,
+    status,
+    statues,
+    reason,
+    buLogsId
+  } = state;
+
   const [comingFor, setcomingFor] = useState('');
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
+  const [statusArray, setStatusArray] = useState('');
+
+  const [buHeads, setBUHeads] = useState('');
+  const [currentUser, setCurrentUser] = useState('');
 
   useEffect(() => {
+    setCurrentUser(cookie.load('current_user'));
+
     setcomingFor(props.history.location.state.comingFor);
+    setStatusArray(props.history.location.state.status);
+    setBUHeads(props.history.location.state.buHeads);
+
     const selectedRec = props.history.location.state.selectedItem;
-    if(selectedRec){
-        Object.entries(selectedRec).map(([key,val])=>{
-            if(val && typeof val === 'object'){
-                dispatch({field: key, value: val._id});
-            }
-            else{
-                dispatch({field: key, value: val});
-            }
-        })
+    if (selectedRec) {
+      Object.entries(selectedRec).map(([key, val]) => {
+        if (val && typeof val === 'object') {
+          dispatch({ field: key, value: val });
+        } else {
+          if (key === 'status' && selectedRec.status === 'in_active') {
+            dispatch({ field: 'reason', value: selectedRec.buLogsId.reason });
+            dispatch({ field: 'status', value: selectedRec.status });
+            // dispatch({ field: 'buLogsId', value: selectedRec.buLogsId });
+          } else {
+            dispatch({ field: key, value: val });
+          }
+        }
+      });
     }
     // if(props.history.location.state.systemAdmins){
     //     dispatch({field: 'systemAdmins', value: props.history.location.state.systemAdmins});
@@ -62,61 +92,77 @@ function AddBusinessUnit(props) {
 
   const handleAdd = () => {
     setIsFormSubmitted(true);
-    if(validateForm()) {
+    if (validateForm()) {
       const params = {
         buName,
         description,
-        buHead, 
-        status
+        buHead,
+        status,
+        reason,
+        updatedBy: currentUser.name
       };
-      axios.post(addBusinessUnitUrl, params).then(res => {
-        if (res.data.success) {
+      axios
+        .post(addBusinessUnitUrl, params)
+        .then(res => {
+          if (res.data.success) {
             props.history.goBack();
-        } else if (!res.data.success) {
-          ToastsStore.error(res.data.error);
-        }
+          } else if (!res.data.success) {
+            ToastsStore.error(res.data.error);
+          }
         })
         .catch(e => {
           console.log('error after adding bu inventory', e);
-      });
+        });
     }
-  }
+  };
 
-  const onChangeValue = ((e)=>{ 
-    dispatch({field: e.target.name, value: e.target.value});
-  });
+  const onChangeValue = e => {
+    dispatch({ field: e.target.name, value: e.target.value });
+  };
 
   function validateForm() {
-    return buName.length > 0 && description.length > 0 && buHead.length > 0 && status.length > 0;
+    return (
+      buName.length > 0 &&
+      description.length > 0 &&
+      buHead.length > 0 &&
+      status.length > 0
+    );
   }
 
   const handleEdit = () => {
     setIsFormSubmitted(true);
-    if(validateForm()) {
+    if (validateForm()) {
       const params = {
         _id,
         buName,
         description,
-        buHead, 
-        status
+        buHead,
+        status,
+        updatedBy: currentUser.name,
+        buLogsId: buLogsId._id,
+        reason
       };
 
-      axios.put(updateBusinessUnitUrl, params).then(res => {
-        if(res.data.success) {
-          props.history.goBack();
-        } else if(!res.data.success) {
-          ToastsStore.error(res.data.error);
-        }
+      axios
+        .put(updateBusinessUnitUrl, params)
+        .then(res => {
+          if (res.data.success) {
+            props.history.goBack();
+          } else if (!res.data.success) {
+            ToastsStore.error(res.data.error);
+          }
         })
         .catch(e => {
           console.log('error after adding bu inventory', e);
-      });
+        });
     }
-  }
+  };
+
+  console.log(buLogsId);
 
   return (
     <div className="container">
-      <h1>{comingFor === 'add' ? 'Add' : 'Edit' }</h1>
+      <h1>{comingFor === 'add' ? 'Add' : 'Edit'}</h1>
 
       <div className="row">
         <div className="col-md-12" style={styles.inputContainer}>
@@ -151,7 +197,7 @@ function AddBusinessUnit(props) {
 
       <div className="row">
         <div className="col-md-6" style={styles.inputContainer}>
-          <TextField
+          {/* <TextField
             fullWidth
             name="buHead"
             label="Business Unit Head"
@@ -159,30 +205,71 @@ function AddBusinessUnit(props) {
             value={buHead}
             onChange={onChangeValue}
             error={!buHead && isFormSubmitted}
-          />
+          /> */}
+
+          <InputLabel id="status-label">BU Heads</InputLabel>
+          <Select
+            fullWidth
+            name="buHead"
+            value={buHead}
+            onChange={onChangeValue}
+            label="Business Unit Head"
+            error={!buHead && isFormSubmitted}
+          >
+            <MenuItem value="">
+              <em>None</em>
+            </MenuItem>
+            {buHeads &&
+              buHeads.map(val => {
+                return (
+                  <MenuItem key={val.key} value={val.key}>
+                    {val.value}
+                  </MenuItem>
+                );
+              })}
+          </Select>
         </div>
         <div className="col-md-6" style={styles.inputContainer}>
           <InputLabel id="status-label">Status</InputLabel>
-            <Select
-              fullWidth
-              name="status"
-              value={status}
-              onChange={onChangeValue}
-              label="Status"
-              error={!status && isFormSubmitted}
-            >
-              <MenuItem value="">
+          <Select
+            fullWidth
+            name="status"
+            value={status}
+            onChange={onChangeValue}
+            label="Status"
+            error={!status && isFormSubmitted}
+          >
+            <MenuItem value="">
               <em>None</em>
-              </MenuItem>
-              {statues.map((val) => {
-              return (
-                <MenuItem key={val._id} value={val._id}>
-                  {val.buName}
-                </MenuItem>
-              );
+            </MenuItem>
+            {statusArray &&
+              statusArray.map(val => {
+                return (
+                  <MenuItem key={val.key} value={val.key}>
+                    {val.value}
+                  </MenuItem>
+                );
               })}
-            </Select>
+          </Select>
         </div>
+
+        {status === 'in_active' ? (
+          <div className="col-md-12" style={styles.inputContainer}>
+            <TextField
+              fullWidth
+              id="reason"
+              name="reason"
+              label="Resaon"
+              variant="outlined"
+              value={reason}
+              // multiline
+              // rows={5}
+              onChange={onChangeValue}
+            />
+          </div>
+        ) : (
+          undefined
+        )}
       </div>
 
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -211,16 +298,27 @@ function AddBusinessUnit(props) {
             </Button>
           ) : (
             <Button
-            style={{ paddingLeft: 30, paddingRight: 30 }}
-            disabled={!validateForm()}
-            onClick={handleEdit}
-            variant="contained"
-            color="primary"
+              style={{ paddingLeft: 30, paddingRight: 30 }}
+              disabled={!validateForm()}
+              onClick={handleEdit}
+              variant="contained"
+              color="primary"
             >
               Edit
             </Button>
           )}
         </div>
+      </div>
+
+      <div>
+        {comingFor === 'edit' ? (
+          <p>
+            <strong>Last Updated by:</strong>
+            {buLogsId.updatedBy}
+          </p>
+        ) : (
+          undefined
+        )}
       </div>
     </div>
   );

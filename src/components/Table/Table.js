@@ -16,11 +16,17 @@ import styles from 'assets/jss/material-dashboard-react/components/tableStyle.js
 import TablePagination from '@material-ui/core/TablePagination';
 import RcIf from 'rc-if';
 
-
 const useStyles = makeStyles(styles);
 
 export default function CustomTable(props) {
-  const { tableHeading, tableData, tableDataKeys, tableHeaderColor } = props;
+  const {
+    tableHeading,
+    tableData,
+    tableDataKeys,
+    tableHeaderColor,
+    status,
+    buHeads
+  } = props;
 
   const classes = useStyles();
   const [page, setPage] = React.useState(0);
@@ -36,10 +42,14 @@ export default function CustomTable(props) {
   };
 
   const options = {
-    year: 'numeric', month: 'numeric', day: 'numeric',
-    hour: 'numeric', minute: 'numeric', second: 'numeric',
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    second: 'numeric',
     hour12: true,
-    timeZone: 'America/Los_Angeles' 
+    timeZone: 'America/Los_Angeles'
   };
 
   return (
@@ -62,45 +72,59 @@ export default function CustomTable(props) {
           </TableHead>
         ) : null}
         <TableBody>
-          {tableData && tableData
-            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            .map((prop, index) => {
-              return (
-                <TableRow key={index} className={classes.tableBodyRow}>
-                  {tableDataKeys
-                    ? tableDataKeys.map((val, key) => {
-                        return (
-                          <TableCell className={classes.tableCell} key={key}>
-                            { Array.isArray(val) ? ( prop[val[0]] ? prop[val[0]][val[1]] : null): ( val.toLowerCase() === 'timestamp' ? new Intl.DateTimeFormat('en-US', options).format(Date.parse(prop[val])) : prop[val] )}
-                          </TableCell>
-                        );
-                      })
-                    : null}
-                  <TableCell
-                    style={{
-                      cursor: 'pointer'
-                    }}
-                    className={classes.tableCell}
-                    colSpan="2"
-                  >
-                    {props.action ? (
-                      <>
-                        <RcIf if={props.action.edit}> 
-                          <span onClick={() => props.handleEdit(prop)}>
-                            <i className="zmdi zmdi-edit zmdi-hc-2x" />
-                          </span>
-                        </RcIf>
-                        <RcIf if={props.action.delete}> 
-                          <span onClick={() => props.handleDelete(prop._id)}>
-                            <i className=" ml-10 zmdi zmdi-delete zmdi-hc-2x" />
-                          </span>
-                        </RcIf>
-                      </>
-                    ) : null}
-                  </TableCell>
-                </TableRow>
-              );
-            })}
+          {tableData &&
+            tableData
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((prop, index) => {
+                return (
+                  <TableRow key={index} className={classes.tableBodyRow}>
+                    {tableDataKeys
+                      ? tableDataKeys.map((val, key) => {
+                          return (
+                            <TableCell className={classes.tableCell} key={key}>
+                              {Array.isArray(val)
+                                ? prop[val[0]]
+                                  ? prop[val[0]][val[1]]
+                                  : null
+                                : val.toLowerCase() === 'timestamp'
+                                ? new Intl.DateTimeFormat(
+                                    'en-US',
+                                    options
+                                  ).format(Date.parse(prop[val]))
+                                : val === 'buHead' && buHeads
+                                ? prop.buHead === 'medical_ops'
+                                  ? buHeads[0].value
+                                  : buHeads[1].value
+                                : prop[val]}
+                            </TableCell>
+                          );
+                        })
+                      : null}
+                    <TableCell
+                      style={{
+                        cursor: 'pointer'
+                      }}
+                      className={classes.tableCell}
+                      colSpan="2"
+                    >
+                      {props.action ? (
+                        <>
+                          <RcIf if={props.action.edit}>
+                            <span onClick={() => props.handleEdit(prop)}>
+                              <i className="zmdi zmdi-edit zmdi-hc-2x" />
+                            </span>
+                          </RcIf>
+                          <RcIf if={props.action.delete}>
+                            <span onClick={() => props.handleDelete(prop._id)}>
+                              <i className=" ml-10 zmdi zmdi-delete zmdi-hc-2x" />
+                            </span>
+                          </RcIf>
+                        </>
+                      ) : null}
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
         </TableBody>
       </Table>
       <TablePagination
@@ -112,7 +136,6 @@ export default function CustomTable(props) {
         onChangePage={handleChangePage}
         onChangeRowsPerPage={handleChangeRowsPerPage}
       />
-
     </div>
   );
 }
@@ -130,7 +153,7 @@ CustomTable.propTypes = {
     'info',
     'rose',
     'gray'
-  ]),
+  ])
   // tableHead: PropTypes.arrayOf(PropTypes.string),
   // tableData: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string))
 };
