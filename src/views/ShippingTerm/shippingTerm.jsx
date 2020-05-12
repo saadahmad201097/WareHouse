@@ -81,7 +81,7 @@ export default function ShippingTerm(props) {
             <div>
                 {shippingTerms.map((prop, index, arr) =>{
                     return(
-                        <div className="row ml10 mb10" key={index}>
+                        <div className="row ml10 mb10 justify-content-md-center" key={index}>
                             <div className="col-md-8" style={styles.inputContainer}>
                                 <TextField
                                     fullWidth

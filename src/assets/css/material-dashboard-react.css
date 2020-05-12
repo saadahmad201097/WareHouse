@@ -520,6 +520,9 @@ footer ul li a:hover {
 .ml10{
   margin-left: 10px !important;
 }
+.mb10{
+  margin-bottom: 10px !important;
+}
 .mr10{
   margin-right: 10px !important;
 }
@@ -568,4 +571,8 @@ footer ul li a:hover {
   text-align: center;
   font-weight: bold;
   font-family: 'Ubuntu';
+}
+.popup-body{
+    margin-top: 4%;
+    justify-content: space-evenly;
 }

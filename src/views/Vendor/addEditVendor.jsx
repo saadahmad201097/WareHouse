@@ -312,7 +312,7 @@ function AddEditVendor(props) {
                         Shipping Term(s)
                     </h4>
 
-                    <div className="modal-heading">
+                    <div className="popup-body">
                         <ShippingTerm />
                     </div>
                 </div>

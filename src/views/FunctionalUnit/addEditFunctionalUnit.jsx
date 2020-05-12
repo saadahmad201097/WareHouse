@@ -8,9 +8,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
-import Notification from 'components/Snackbar/Notification.js';
-import DateFnsUtils from '@date-io/date-fns';
-import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import { ToastsStore } from 'react-toasts';
 import { addBuReturnUrl, updateBuReturnUrl } from '../../public/endpoins';
 
 const useStyles = makeStyles(styles);
@@ -66,9 +64,6 @@ function AddEditBuReturn(props) {
   const [comingFor, setcomingFor] = useState('');
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 
-  const [errorMsg, setErrorMsg] = useState('');
-  const [openNotification, setOpenNotification] = useState(false);
-
   useEffect(() => {
     setcomingFor(props.history.location.state.comingFor);
     const selectedRec = props.history.location.state.selectedItem;
@@ -119,13 +114,11 @@ function AddEditBuReturn(props) {
     //           if (res.data.success) {
     //             props.history.goBack();
     //           } else if (!res.data.success) {
-    //             setOpenNotification(true);
+    //             ToastsStore.error(res.data.error);
     //           }
     //         })
     //         .catch(e => {
     //           console.log('error after adding bu inventory', e);
-    //           setOpenNotification(true);
-    //           setErrorMsg('Error while adding the item');
     //         });
     //     }
   };
@@ -149,23 +142,14 @@ function AddEditBuReturn(props) {
     //           if (res.data.success) {
     //             props.history.goBack();
     //           } else if (!res.data.success) {
-    //             setOpenNotification(true);
+    //             ToastsStore.error(res.data.error);
     //           }
     //         })
     //         .catch(e => {
     //           console.log('error after adding bu inventory', e);
-    //           setOpenNotification(true);
-    //           setErrorMsg('Error while editing the item');
     //         });
     //     }
   };
-
-  if (openNotification) {
-    setTimeout(() => {
-      setOpenNotification(false);
-      setErrorMsg('');
-    }, 2000);
-  }
 
   return (
     <div className="container">
@@ -173,7 +157,7 @@ function AddEditBuReturn(props) {
         <span> {comingFor === 'add' ? 'Add' : 'Edit'}</span>
       </h1>
       <div className="row">
-        <div className="col-md-6" style={styles.inputContainer}>
+        <div className="col-md-12" style={styles.inputContainer}>
           <TextField
             fullWidth
             id="fuName"
@@ -183,30 +167,6 @@ function AddEditBuReturn(props) {
             value={fuName}
             onChange={onChangeValue}
           />
-        </div>
-
-        <div className="col-md-6" style={styles.inputContainer}>
-          <InputLabel id="buName-label">BU Name</InputLabel>
-          <Select
-            fullWidth
-            labelId="buName-label"
-            id="buName"
-            name="buName"
-            value={buName}
-            onChange={onChangeValue}
-            label="BU Name"
-          >
-            <MenuItem value="">
-              <em>None</em>
-            </MenuItem>
-            {BUName.map((val, key) => {
-              return (
-                <MenuItem key={val._id} value={val._id}>
-                  {val.buName}
-                </MenuItem>
-              );
-            })}
-          </Select>
         </div>
       </div>
 
@@ -231,7 +191,6 @@ function AddEditBuReturn(props) {
           <InputLabel id="buHead-label">FU Head</InputLabel>
           <Select
             fullWidth
-            labelId="fuHead-label"
             id="fuHead"
             name="fuHead"
             value={fuHead}
@@ -241,7 +200,7 @@ function AddEditBuReturn(props) {
             <MenuItem value="">
               <em>None</em>
             </MenuItem>
-            {FUHead.map((val, key) => {
+            {FUHead.map((val) => {
               return (
                 <MenuItem key={val._id} value={val._id}>
                   {val.buName}
@@ -252,10 +211,34 @@ function AddEditBuReturn(props) {
         </div>
 
         <div className="col-md-6" style={styles.inputContainer}>
+          <InputLabel id="buName-label">BU Name</InputLabel>
+          <Select
+            fullWidth
+            id="buName"
+            name="buName"
+            value={buName}
+            onChange={onChangeValue}
+            label="BU Name"
+          >
+            <MenuItem value="">
+              <em>None</em>
+            </MenuItem>
+            {BUName.map((val) => {
+              return (
+                <MenuItem key={val._id} value={val._id}>
+                  {val.buName}
+                </MenuItem>
+              );
+            })}
+          </Select>
+        </div>
+      </div>
+
+      <div className="row">
+        <div className="col-md-12" style={styles.inputContainer}>
           <InputLabel id="buHead-label">Status</InputLabel>
           <Select
             fullWidth
-            labelId="status-label"
             id="status"
             name="status"
             value={status}
@@ -265,7 +248,7 @@ function AddEditBuReturn(props) {
             <MenuItem value="">
               <em>None</em>
             </MenuItem>
-            {statusArray.map((val, key) => {
+            {statusArray.map((val) => {
               return (
                 <MenuItem key={val._id} value={val._id}>
                   {val.name}
@@ -298,8 +281,7 @@ function AddEditBuReturn(props) {
               variant="contained"
               color="primary"
             >
-              {' '}
-              Add{' '}
+              Add
             </Button>
           ) : (
             <Button
@@ -309,64 +291,13 @@ function AddEditBuReturn(props) {
               variant="contained"
               color="primary"
             >
-              {' '}
-              Edit{' '}
+              Edit
             </Button>
           )}
         </div>
       </div>
 
-      <Notification msg={errorMsg} open={openNotification} />
     </div>
   );
 }
 export default AddEditBuReturn;
-{
-  /* <div className="col-md-4" style={styles.inputContainer}>
-          <InputLabel id="buId-label">Business Unit</InputLabel>
-          <Select
-            fullWidth
-            labelId="buId-label"
-            id="buId"
-            name="buId"
-            value={buId}
-            onChange={onChangeValue}
-            label="Business Unit"
-          >
-            <MenuItem value="">
-              <em>None</em>
-            </MenuItem>
-            {businessUnits.map((val, key) => {
-              return (
-                <MenuItem key={val._id} value={val._id}>
-                  {val.buName}
-                </MenuItem>
-              );
-            })}
-          </Select>
-        </div>
-
-        <div className="col-md-4" style={styles.inputContainer}>
-          <InputLabel id="itemId-label">Item</InputLabel>
-          <Select
-            fullWidth
-            labelId="itemId-label"
-            id="itemId"
-            name="itemId"
-            value={itemId}
-            onChange={onChangeValue}
-            label="Item"
-          >
-            <MenuItem value="">
-              <em>None</em>
-            </MenuItem>
-            {items.map((val, key) => {
-              return (
-                <MenuItem key={val._id} value={val._id}>
-                  {val.name}
-                </MenuItem>
-              );
-            })}
-          </Select>
-        </div> */
-}

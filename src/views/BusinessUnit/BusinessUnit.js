@@ -7,6 +7,7 @@ import Button from '@material-ui/core/Button';
 import Table from '../../components/Table/Table.js';
 import ConfirmationModal  from '../../components/Modal/confirmationModal';
 import axios from 'axios';
+import { ToastsStore } from 'react-toasts';
 import { getBusinessUnitUrl, deleteBusinessUnitUrl } from '../../public/endpoins';
 
 const tableHeading = [
@@ -15,7 +16,6 @@ const tableHeading = [
   "Bu Head",
   "Actions"
 ];
-
 const tableDataKeys = [
   'buName',
   'description',
@@ -37,9 +37,9 @@ export default function Items(props) {
           setBusinessUnits(res.data.data.businessUnit);
           setSystemAdmins(res.data.data.systemAdmin)
         }
-        // else if (!res.data.success) {
-        //   this.setState({ tr: true });
-        // }
+        else if (!res.data.success) {
+          ToastsStore.error(res.data.error);
+        }
         return res;
       })
       .catch(e => {
@@ -86,8 +86,7 @@ export default function Items(props) {
           window.location.reload(false);
         }
         else if (!res.data.success) {
-          setErrorMsg(res.data.error)
-          setOpenNotification(true);
+          ToastsStore.error(res.data.error);
         }
         return res;
     })

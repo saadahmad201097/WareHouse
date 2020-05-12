@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-indent */
 /* eslint-disable array-callback-return */
 import React, { useEffect, useState, useReducer } from 'react';
 import TextField from '@material-ui/core/TextField';
@@ -7,8 +8,7 @@ import MenuItem from '@material-ui/core/MenuItem'
 // import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
-import DateFnsUtils from '@date-io/date-fns';
-import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import { ToastsStore } from 'react-toasts';
 import { addBusinessUnitUrl, updateBusinessUnitUrl } from '../../public/endpoins';
 
 const styles = {
@@ -24,9 +24,8 @@ function AddBusinessUnit(props) {
     buName: "",
     description:"",
     buHead: "",
-    createBySystemAdminStaffId: "",
-    timeStamp: new Date(),
-    systemAdmins: []
+    status: "",
+    statues: []
   }
 
   function reducer(state, { field, value}){
@@ -35,11 +34,9 @@ function AddBusinessUnit(props) {
 
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const { _id, buName, description, buHead, createBySystemAdminStaffId, timeStamp, systemAdmins } = state;
+  const { _id, buName, description, buHead, status, statues } = state;
   const [comingFor, setcomingFor] = useState('');
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
-  const [openNotification, setOpenNotification] = useState(false);
 
   useEffect(() => {
     setcomingFor(props.history.location.state.comingFor);
@@ -54,17 +51,10 @@ function AddBusinessUnit(props) {
             }
         })
     }
-    if(props.history.location.state.systemAdmins){
-        dispatch({field: 'systemAdmins', value: props.history.location.state.systemAdmins});
-    }
+    // if(props.history.location.state.systemAdmins){
+    //     dispatch({field: 'systemAdmins', value: props.history.location.state.systemAdmins});
+    // }
   }, []);
-
-  if (openNotification) {
-    setTimeout(() => {
-    setOpenNotification(false);
-    setErrorMsg('');
-    }, 2000);
-  }
 
   const handleCancel = () => {
     props.history.goBack();
@@ -72,26 +62,24 @@ function AddBusinessUnit(props) {
 
   const handleAdd = () => {
     setIsFormSubmitted(true);
-    // if (buPrice && batchNo && batchNo.length > 0) {
-    const params = {
-      buName,
-      description,
-      buHead, 
-      createBySystemAdminStaffId, 
-      timeStamp
-    };
-    axios.post(addBusinessUnitUrl, params).then(res => {
-      if (res.data.success) {
-          props.history.goBack();
-      } else if (!res.data.success) {
-          setOpenNotification(true);
-      }
-      })
-      .catch(e => {
-        console.log('error after adding bu inventory', e);
-        setOpenNotification(true);
-        setErrorMsg('Error while adding the item');
-    });
+    if(validateForm()) {
+      const params = {
+        buName,
+        description,
+        buHead, 
+        status
+      };
+      axios.post(addBusinessUnitUrl, params).then(res => {
+        if (res.data.success) {
+            props.history.goBack();
+        } else if (!res.data.success) {
+          ToastsStore.error(res.data.error);
+        }
+        })
+        .catch(e => {
+          console.log('error after adding bu inventory', e);
+      });
+    }
   }
 
   const onChangeValue = ((e)=>{ 
@@ -99,46 +87,39 @@ function AddBusinessUnit(props) {
   });
 
   function validateForm() {
-    // return buPrice && batchNo && batchNo.length > 0;
-    return true;
+    return buName.length > 0 && description.length > 0 && buHead.length > 0 && status.length > 0;
   }
 
   const handleEdit = () => {
     setIsFormSubmitted(true);
-    // if (buPrice && batchNo && batchNo.length > 0) {
-    const params = {
-      _id,
-      buName,
-      description,
-      buHead, 
-      createBySystemAdminStaffId, 
-      timeStamp
-    };
+    if(validateForm()) {
+      const params = {
+        _id,
+        buName,
+        description,
+        buHead, 
+        status
+      };
 
-    axios.put(updateBusinessUnitUrl, params).then(res => {
-      if (res.data.success) {
+      axios.put(updateBusinessUnitUrl, params).then(res => {
+        if(res.data.success) {
           props.history.goBack();
-      } else if (!res.data.success) {
-          setOpenNotification(true);
-      }
-      })
-      .catch(e => {
-        console.log('error after adding bu inventory', e);
-        setOpenNotification(true);
-        setErrorMsg('Error while editing the item');
-    });
+        } else if(!res.data.success) {
+          ToastsStore.error(res.data.error);
+        }
+        })
+        .catch(e => {
+          console.log('error after adding bu inventory', e);
+      });
+    }
   }
-
-  const onChangeDate = ((value) => {
-    dispatch({field: 'timeStamp', value});
-  });
 
   return (
     <div className="container">
       <h1>{comingFor === 'add' ? 'Add' : 'Edit' }</h1>
 
       <div className="row">
-        <div className="col-md-6" style={styles.inputContainer}>
+        <div className="col-md-12" style={styles.inputContainer}>
           <TextField
             fullWidth
             name="buName"
@@ -146,48 +127,8 @@ function AddBusinessUnit(props) {
             variant="outlined"
             value={buName}
             onChange={onChangeValue}
+            error={!buName && isFormSubmitted}
           />
-        </div>
-
-        <div className="col-md-6" style={styles.inputContainer}>
-          <TextField
-            fullWidth
-            name="buHead"
-            label="Business Unit Head"
-            variant="outlined"
-            value={buHead}
-            onChange={onChangeValue}
-          />
-        </div>
-      </div>
-
-      <div className="row">
-        <div className="col-md-6" style={styles.inputContainer}>
-          <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <DateTimePicker
-              inputVariant="outlined"
-              onChange={onChangeDate}
-              fullWidth
-              value={timeStamp}
-            />
-          </MuiPickersUtilsProvider>
-        </div>
-        <div className="col-md-6" style={styles.inputContainer}>
-          <InputLabel id="createdBySystemAdminStaffId-label">Admin Staff</InputLabel>
-          <Select
-            fullWidth
-            name="createBySystemAdminStaffId"
-            value={createBySystemAdminStaffId}
-            onChange={onChangeValue}
-            label="Admin Staff"
-          >
-            <MenuItem value="">
-              <em>Select</em>
-            </MenuItem>
-            {systemAdmins.map((val)=>{
-              return <MenuItem key={val._id} value={val._id}>{val.username}</MenuItem>
-            })}
-          </Select>
         </div>
       </div>
 
@@ -203,7 +144,44 @@ function AddBusinessUnit(props) {
             variant="outlined"
             value={description}
             onChange={onChangeValue}
+            error={!description && isFormSubmitted}
           />
+        </div>
+      </div>
+
+      <div className="row">
+        <div className="col-md-6" style={styles.inputContainer}>
+          <TextField
+            fullWidth
+            name="buHead"
+            label="Business Unit Head"
+            variant="outlined"
+            value={buHead}
+            onChange={onChangeValue}
+            error={!buHead && isFormSubmitted}
+          />
+        </div>
+        <div className="col-md-6" style={styles.inputContainer}>
+          <InputLabel id="status-label">Status</InputLabel>
+            <Select
+              fullWidth
+              name="status"
+              value={status}
+              onChange={onChangeValue}
+              label="Status"
+              error={!status && isFormSubmitted}
+            >
+              <MenuItem value="">
+              <em>None</em>
+              </MenuItem>
+              {statues.map((val) => {
+              return (
+                <MenuItem key={val._id} value={val._id}>
+                  {val.buName}
+                </MenuItem>
+              );
+              })}
+            </Select>
         </div>
       </div>
 

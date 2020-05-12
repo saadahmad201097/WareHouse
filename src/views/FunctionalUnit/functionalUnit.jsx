@@ -3,12 +3,12 @@ import React, { useState, useEffect } from 'react';
 // @material-ui/core components
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import Notification from 'components/Snackbar/Notification.js';
 import Paper from '@material-ui/core/Paper';
 import styles from 'assets/jss/material-dashboard-react/components/tableStyle.js';
 import CustomTable from '../../components/Table/Table';
 import ConfirmationModal from '../../components/Modal/confirmationModal';
 import axios from 'axios';
+import { ToastsStore } from 'react-toasts';
 import { getBuReturnUrl, deleteBuReturnUrl } from '../../public/endpoins';
 
 import Loader from 'react-loader-spinner';
@@ -70,15 +70,7 @@ export default function BuReturn(props) {
   const [businessUnit, setBusinessUnit] = useState('');
   const [deleteItem, setdeleteItem] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
-  const [errorMsg, setErrorMsg] = useState('');
-  const [openNotification, setOpenNotification] = useState(false);
 
-  if (openNotification) {
-    setTimeout(() => {
-      setOpenNotification(false);
-      setErrorMsg('');
-    }, 2000);
-  }
 
   // function getFunctionalUnit() {
   //     axios.get(getBuReturnUrl).then(res => {
@@ -89,10 +81,8 @@ export default function BuReturn(props) {
   //             setBusinessUnit(res.data.data.businessUnit);
   //         }
   //         else if (!res.data.success) {
-  //             setErrorMsg(res.data.error)
-  //             setOpenNotification(true);
+                // ToastsStore.error(res.data.error);
   //         }
-  //         return res;
   //     })
   //     .catch(e => {
   //         console.log('error: ', e);
@@ -143,10 +133,8 @@ export default function BuReturn(props) {
           setModalVisible(false);
           window.location.reload(false);
         } else if (!res.data.success) {
-          setErrorMsg(res.data.error);
-          setOpenNotification(true);
+          ToastsStore.error(res.data.error);
         }
-        return res;
       })
       .catch(e => {
         console.log('error while deletion ', e);
@@ -189,7 +177,6 @@ export default function BuReturn(props) {
             setdeleteItem={() => setdeleteItem('')}
           />
 
-          <Notification msg={errorMsg} open={openNotification} />
         </div>
       ) : (
         <div
