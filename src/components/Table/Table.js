@@ -30,6 +30,17 @@ export default function CustomTable(props) {
     setPage(newPage);
   };
 
+  const replaceSlugToTitle = (val) =>{
+    if(val === 'in_active'){
+      return 'In Active';
+    }
+    else if(val === 'active'){
+      return 'Active';
+    }
+
+    return val;
+  }
+
   const handleChangeRowsPerPage = event => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
@@ -71,7 +82,7 @@ export default function CustomTable(props) {
                     ? tableDataKeys.map((val, key) => {
                         return (
                           <TableCell className={classes.tableCell} key={key}>
-                            { Array.isArray(val) ? ( prop[val[0]] ? prop[val[0]][val[1]] : null): ( val.toLowerCase() === 'timestamp' ? new Intl.DateTimeFormat('en-US', options).format(Date.parse(prop[val])) : prop[val] )}
+                            { Array.isArray(val) ? ( prop[val[0]] ? prop[val[0]][val[1]] : null): ( val.toLowerCase() === 'timestamp' ? new Intl.DateTimeFormat('en-US', options).format(Date.parse(prop[val])) : `${replaceSlugToTitle(prop[val])}` )}
                           </TableCell>
                         );
                       })
@@ -93,6 +104,11 @@ export default function CustomTable(props) {
                         <RcIf if={props.action.delete}> 
                           <span onClick={() => props.handleDelete(prop._id)}>
                             <i className=" ml-10 zmdi zmdi-delete zmdi-hc-2x" />
+                          </span>
+                        </RcIf>
+                        <RcIf if={props.action.active && prop.status === 'in_active'}> 
+                          <span onClick={() => props.handleStatus(prop._id)} title="Active">
+                            <i className=" ml-10 zmdi zmdi-check zmdi-hc-2x" />
                           </span>
                         </RcIf>
                       </>

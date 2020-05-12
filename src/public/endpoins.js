@@ -40,6 +40,12 @@ export const addBusinessUnitUrl = `${baseUrl}/businessunit/addbusinessunit`;
 export const updateBusinessUnitUrl = `${baseUrl}/businessunit/updatebusinessunit`;
 export const deleteBusinessUnitUrl = `${baseUrl}/businessunit/deletebusinessunit`;
 
+// functional unit
+export const getFunctionalUnitUrl = `${baseUrl}/functionalunit/getfunctionalunits`;
+export const addFunctionalUnitUrl = `${baseUrl}/functionalunit/addfunctionalunit`;
+export const updateFunctionalUnitUrl = `${baseUrl}/functionalunit/updatefunctionalunit`;
+export const deleteFunctionalUnitUrl = `${baseUrl}/functionalunit/deletefunctionalunit`;
+
 // bu stock in log
 export const getBuStockInLogUrl = `${baseUrl}/bustockinlog/getbustockinlog`;
 export const addBuStockInLogUrl = `${baseUrl}/bustockinlog/addbustockinlog`;

@@ -9,7 +9,7 @@ import CustomTable from '../../components/Table/Table';
 import ConfirmationModal from '../../components/Modal/confirmationModal';
 import axios from 'axios';
 import { ToastsStore } from 'react-toasts';
-import { getBuReturnUrl, deleteBuReturnUrl } from '../../public/endpoins';
+import { getFunctionalUnitUrl, updateFunctionalUnitUrl } from '../../public/endpoins';
 
 import Loader from 'react-loader-spinner';
 
@@ -22,82 +22,45 @@ const tableHeading = [
   'Status',
   'Action'
 ];
-const tableDataKeys = ['fuName', ['fuHead', 'value'], ['buName', 'value'], ['status', 'value']];
-const actions = {edit: true, delete: true};
-const dummyData = [
-  {
-    fuName: 'FU Name',
-    fuHead: 'FU Head Name',
-    buName:  {_id:1, value:"First BU"},
-    status: {_id:1, value:"Active"},
-    desc: 'No desc',
-    fuHead:  {_id:1, value:"First"},
-  },
-  {
-    fuName: 'FU Name',
-    fuHead: 'FU Head Name',
-    buName: {_id:2, value:"Second BU"},
-    status: {_id:2, value:"In Active"},
-    desc: 'No desc',
-    fuHead:    {_id:2, value:"Second"},
-  },
-  {
-    fuName: 'FU Name',
-    fuHead: 'FU Head Name',
-    buName: {_id:1, value:"First BU"},
-    status: {_id:2, value:"In Active"},
-    desc: 'No desc',
-    fuHead:    {_id:2, value:"Second"}
+const tableDataKeys = ['fuName', ['fuHead', 'firstName'], ['buName', 'value'], 'status'];
+const actions = {edit: true, active: true};
 
-  },
-  {
-    fuName: 'FU Name',
-    fuHead: 'FU Head Name',
-    buName: {_id:2, value:"Second BU"},
-    status: {_id:1, value:"Active"},
-    desc: 'No desc',
-    fuHead:    {_id:3, value:"Third"}
-
-  },
-
-];
-
-export default function BuReturn(props) {
+export default function FunctionalUnit(props) {
   const classes = useStyles();
-  const [buReturn, setBuReturn] = useState('');
-  const [items, setItems] = useState('');
+  const [functionalUnits, setFunctionalUnits] = useState('');
+  const [businessUnits, setBusinessUnits] = useState('');
   const [staff, setStaff] = useState('');
-  const [businessUnit, setBusinessUnit] = useState('');
+  const [statues, setStatues] = useState('');
   const [deleteItem, setdeleteItem] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
 
 
-  // function getFunctionalUnit() {
-  //     axios.get(getBuReturnUrl).then(res => {
-  //         if(res.data.success) {
-  //             setBuReturn(res.data.data.buReturn);
-  //             setItems(res.data.data.items);
-  //             setStaff(res.data.data.staff);
-  //             setBusinessUnit(res.data.data.businessUnit);
-  //         }
-  //         else if (!res.data.success) {
-                // ToastsStore.error(res.data.error);
-  //         }
-  //     })
-  //     .catch(e => {
-  //         console.log('error: ', e);
-  //     });
-  // }
+  function getFunctionalUnit() {
+      axios.get(getFunctionalUnitUrl).then(res => {
+          if(res.data.success) {
+            setFunctionalUnits(res.data.data.functionalUnits);
+            setBusinessUnits(res.data.data.businessUnit);
+            setStaff(res.data.data.staff);
+            setStatues(res.data.data.statues);
+          }
+          else if (!res.data.success) {
+            ToastsStore.error(res.data.error);
+          }
+      })
+      .catch(e => {
+          console.log('error: ', e);
+      });
+  }
 
-  // useEffect(() => {
-  //     getFunctionalUnit();
-  // }, []);
+  useEffect(() => {
+      getFunctionalUnit();
+  }, []);
 
   const addNewItem = () => {
     let path = `functionalunit/next/add`;
     props.history.push({
       pathname: path,
-      state: { comingFor: 'add', items, staff, businessUnit }
+      state: { comingFor: 'add', statues, staff, businessUnits }
     });
   };
 
@@ -105,17 +68,11 @@ export default function BuReturn(props) {
     let path = `functionalunit/next/edit`;
     props.history.push({
       pathname: path,
-      state: {
-        comingFor: 'edit',
-        selectedItem: rec,
-        items,
-        staff,
-        businessUnit
-      }
+      state: { comingFor: 'edit', selectedItem: rec, statues, staff, businessUnits }
     });
   }
 
-  function handleDelete(id) {
+  function handleStatus(id) {
     setModalVisible(true);
     setdeleteItem(id);
   }
@@ -126,7 +83,7 @@ export default function BuReturn(props) {
     };
 
     axios
-      .delete(deleteBuReturnUrl + '/' + params._id)
+      .delete(updateFunctionalUnitUrl + '/' + params._id)
       .then(res => {
         if (res.data.success) {
           setdeleteItem('');
@@ -143,7 +100,7 @@ export default function BuReturn(props) {
 
   return (
     <div>
-      {dummyData ? (
+      {functionalUnits ? (
         <div>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -160,18 +117,18 @@ export default function BuReturn(props) {
 
           <div>
             <CustomTable
-              tableData={dummyData}
+              tableData={functionalUnits}
               tableDataKeys={tableDataKeys}
               tableHeading={tableHeading}
               action={actions}
               handleEdit={handleEdit}
-              handleDelete={handleDelete}
+              handleStatus={handleStatus}
             />
           </div>
 
           <ConfirmationModal
             modalVisible={modalVisible}
-            msg="Are you sure want to delete the record?"
+            msg="Are you sure want to in active the record?"
             hideconfirmationModal={() => setModalVisible(false)}
             onConfirmDelete={() => deleteBuReturn()}
             setdeleteItem={() => setdeleteItem('')}
