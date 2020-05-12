@@ -16,6 +16,15 @@ import {
 
 import cookie from 'react-cookies';
 
+import { makeStyles } from '@material-ui/core/styles';
+import Table from '@material-ui/core/Table';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+// core components
+import TablePagination from '@material-ui/core/TablePagination';
+
 const styles = {
   inputContainer: {
     marginTop: '2%'
@@ -158,8 +167,11 @@ function AddBusinessUnit(props) {
     }
   };
 
-  console.log(buLogsId);
-
+  if (buLogsId.updatedAt) {
+    var d = new Date(buLogsId.updatedAt);
+    var n = new Date(buLogsId.updatedAt).getFullYear();
+    console.log(n);
+  }
   return (
     <div className="container">
       <h1>{comingFor === 'add' ? 'Add' : 'Edit'}</h1>
@@ -312,10 +324,29 @@ function AddBusinessUnit(props) {
 
       <div>
         {comingFor === 'edit' ? (
-          <p>
-            <strong>Last Updated by:</strong>
-            {buLogsId.updatedBy}
-          </p>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Last Updated By</TableCell>
+                <TableCell>Last Updated at</TableCell>
+                <TableCell>Reason</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <TableCell>{buLogsId.updatedBy}</TableCell>
+              <TableCell>
+                {new Date(buLogsId.updatedAt).getDate()}/
+                {new Date(buLogsId.updatedAt).getMonth() + 1}/
+                {new Date(buLogsId.updatedAt).getFullYear()}{' '}
+                {new Date(buLogsId.updatedAt).getHours()}
+                {':'}
+                {new Date(buLogsId.updatedAt).getMinutes()}
+              </TableCell>
+              <TableCell>
+                {buLogsId.reason ? buLogsId.reason : 'none'}
+              </TableCell>
+            </TableBody>
+          </Table>
         ) : (
           undefined
         )}

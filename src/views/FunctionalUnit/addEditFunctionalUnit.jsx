@@ -9,7 +9,20 @@ import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
 import { ToastsStore } from 'react-toasts';
-import { addBuReturnUrl, updateBuReturnUrl } from '../../public/endpoins';
+import {
+  addFunctionalUnitUrl,
+  updateFunctionalUnitUrl
+} from '../../public/endpoins';
+
+import cookie from 'react-cookies';
+
+import Table from '@material-ui/core/Table';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+// core components
+import TablePagination from '@material-ui/core/TablePagination';
 
 const useStyles = makeStyles(styles);
 
@@ -34,15 +47,20 @@ const statusArray = [{ _id: 1, name: 'Active' }, { _id: 2, name: 'In Active' }];
 
 function AddEditBuReturn(props) {
   const [statusArray, setStatusArray] = useState('');
+  const [businessUnits, setBusinessUnits] = useState('');
+  const [staffArray, setStaffArray] = useState('');
+  const [comingFor, setcomingFor] = useState('');
+  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 
   const initialState = {
     _id: '',
     fuHead: '',
     fuName: '',
-    desc: '',
+    description: '',
     status: '',
-    buName: '',
-    reason: ''
+    buId: '',
+    reason: '',
+    fuLogId: ''
   };
 
   function reducer(state, { field, value }) {
@@ -54,28 +72,47 @@ function AddEditBuReturn(props) {
 
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const { fuName, desc, fuHead, status, buName, reason } = state;
+  const {
+    _id,
+    fuName,
+    description,
+    fuHead,
+    status,
+    buId,
+    reason,
+    fuLogId
+  } = state;
 
   const onChangeValue = e => {
     dispatch({ field: e.target.name, value: e.target.value });
   };
 
   function validateForm() {
-    return fuHead !== '' && fuName !== '' && status !== '' && desc !== '';
+    return (
+      fuHead !== '' && fuName !== '' && status !== '' && description !== ''
+    );
   }
-
-  const [comingFor, setcomingFor] = useState('');
-  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 
   useEffect(() => {
     setcomingFor(props.history.location.state.comingFor);
     setStatusArray(props.history.location.state.status);
+    setBusinessUnits(props.history.location.state.businessUnits);
+    setStaffArray(props.history.location.state.staff);
+
     const selectedRec = props.history.location.state.selectedItem;
     if (selectedRec) {
       Object.entries(selectedRec).map(([key, val]) => {
         if (val && typeof val === 'object') {
-          dispatch({ field: key, value: val._id });
+          if (key === 'fuLogId') {
+            dispatch({ field: key, value: val });
+          } else {
+            dispatch({ field: key, value: val._id });
+          }
         } else {
+          if (key === 'status' && selectedRec.status === 'in_active') {
+            dispatch({ field: 'reason', value: selectedRec.fuLogId.reason });
+            dispatch({ field: 'status', value: selectedRec.status });
+          }
           dispatch({ field: key, value: val });
         }
       });
@@ -99,60 +136,62 @@ function AddEditBuReturn(props) {
   };
 
   const handleAdd = () => {
-    props.history.goBack();
-    //     setIsFormSubmitted(true);
-    //     if (qty && returnReason && returnReason.length > 0) {
-    //       const params = {
-    //         buId,
-    //         itemId,
-    //         qty,
-    //         timeStamp,
-    //         returnReason,
-    //         batchNo,
-    //         staffId
-    //       };
-    //       console.log(params, params);
-    //       axios
-    //         .post(addBuReturnUrl, params)
-    //         .then(res => {
-    //           if (res.data.success) {
-    //             props.history.goBack();
-    //           } else if (!res.data.success) {
-    //             ToastsStore.error(res.data.error);
-    //           }
-    //         })
-    //         .catch(e => {
-    //           console.log('error after adding bu inventory', e);
-    //         });
-    //     }
+    // props.history.goBack();
+    const currentUser = cookie.load('current_user');
+
+    setIsFormSubmitted(true);
+
+    const params = {
+      fuName: fuName,
+      description: description,
+      fuHead: fuHead,
+      buId: buId,
+      status: status,
+      reason: reason,
+      updatedBy: currentUser.name
+    };
+    console.log('objact for FU', params);
+    axios
+      .post(addFunctionalUnitUrl, params)
+      .then(res => {
+        if (res.data.success) {
+          props.history.goBack();
+        } else if (!res.data.success) {
+          ToastsStore.error(res.data.error);
+        }
+      })
+      .catch(e => {
+        console.log('error after adding bu inventory', e);
+      });
   };
 
   const handleEdit = () => {
-    //     setIsFormSubmitted(true);
-    //     if (qty && returnReason && returnReason.length > 0) {
-    //       const params = {
-    //         _id,
-    //         buId,
-    //         itemId,
-    //         qty,
-    //         timeStamp,
-    //         returnReason,
-    //         batchNo,
-    //         staffId
-    //       };
-    //       axios
-    //         .put(updateBuReturnUrl, params)
-    //         .then(res => {
-    //           if (res.data.success) {
-    //             props.history.goBack();
-    //           } else if (!res.data.success) {
-    //             ToastsStore.error(res.data.error);
-    //           }
-    //         })
-    //         .catch(e => {
-    //           console.log('error after adding bu inventory', e);
-    //         });
-    //     }
+    // setIsFormSubmitted(true);
+    const currentUser = cookie.load('current_user');
+
+    const params = {
+      _id,
+      fuName: fuName,
+      description: description,
+      fuHead: fuHead,
+      buId: buId,
+      status: status,
+      reason: reason,
+      updatedBy: currentUser.name,
+      fuLogId: fuLogId._id
+    };
+    axios
+      .put(updateFunctionalUnitUrl, params)
+      .then(res => {
+        if (res.data.success) {
+          props.history.goBack();
+        } else if (!res.data.success) {
+          ToastsStore.error(res.data.error);
+        }
+      })
+      .catch(e => {
+        console.log('error after adding bu inventory', e);
+      });
   };
 
   return (
@@ -178,11 +217,11 @@ function AddEditBuReturn(props) {
         <div className="col-md-12" style={styles.inputContainer}>
           <TextField
             fullWidth
-            id="desc"
-            name="desc"
+            id="description"
+            name="description"
             label="Description"
             variant="outlined"
-            value={desc}
+            value={description}
             multiline
             rows={5}
             onChange={onChangeValue}
@@ -204,13 +243,14 @@ function AddEditBuReturn(props) {
             <MenuItem value="">
               <em>None</em>
             </MenuItem>
-            {FUHead.map(val => {
-              return (
-                <MenuItem key={val._id} value={val._id}>
-                  {val.buName}
-                </MenuItem>
-              );
-            })}
+            {staffArray &&
+              staffArray.map(val => {
+                return (
+                  <MenuItem key={val._id} value={val._id}>
+                    {val.firstName} {val.lastName}
+                  </MenuItem>
+                );
+              })}
           </Select>
         </div>
 
@@ -218,22 +258,23 @@ function AddEditBuReturn(props) {
           <InputLabel id="buName-label">BU Name</InputLabel>
           <Select
             fullWidth
-            id="buName"
-            name="buName"
-            value={buName}
+            id="buId"
+            name="buId"
+            value={buId}
             onChange={onChangeValue}
             label="BU Name"
           >
             <MenuItem value="">
               <em>None</em>
             </MenuItem>
-            {BUName.map(val => {
-              return (
-                <MenuItem key={val._id} value={val._id}>
-                  {val.buName}
-                </MenuItem>
-              );
-            })}
+            {businessUnits &&
+              businessUnits.map(val => {
+                return (
+                  <MenuItem key={val._id} value={val._id}>
+                    {val.buName}
+                  </MenuItem>
+                );
+              })}
           </Select>
         </div>
       </div>
@@ -252,13 +293,14 @@ function AddEditBuReturn(props) {
             <MenuItem value="">
               <em>None</em>
             </MenuItem>
-            {statusArray.map(val => {
-              return (
-                <MenuItem key={val._id} value={val._id}>
-                  {val.name}
-                </MenuItem>
-              );
-            })}
+            {statusArray &&
+              statusArray.map(val => {
+                return (
+                  <MenuItem key={val.key} value={val.key}>
+                    {val.value}
+                  </MenuItem>
+                );
+              })}
           </Select>
         </div>
       </div>
@@ -319,6 +361,34 @@ function AddEditBuReturn(props) {
             </Button>
           )}
         </div>
+      </div>
+
+      <div>
+        {comingFor === 'edit' ? (
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Last Updated By</TableCell>
+                <TableCell>Last Updated at</TableCell>
+                <TableCell>Reason</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <TableCell>{fuLogId.updatedBy}</TableCell>
+              <TableCell>
+                {new Date(fuLogId.updatedAt).getDate()}/
+                {new Date(fuLogId.updatedAt).getMonth() + 1}/
+                {new Date(fuLogId.updatedAt).getFullYear()}{' '}
+                {new Date(fuLogId.updatedAt).getHours()}
+                {':'}
+                {new Date(fuLogId.updatedAt).getMinutes()}
+              </TableCell>
+              <TableCell>{fuLogId.reason ? fuLogId.reason : 'none'}</TableCell>
+            </TableBody>
+          </Table>
+        ) : (
+          undefined
+        )}
       </div>
     </div>
   );

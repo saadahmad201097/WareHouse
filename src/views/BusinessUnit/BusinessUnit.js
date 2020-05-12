@@ -10,12 +10,15 @@ import axios from 'axios';
 import { ToastsStore } from 'react-toasts';
 import {
   getBusinessUnitUrl,
-  deleteBusinessUnitUrl
+  deleteBusinessUnitUrl,
+  updateBusinessUnitUrl
 } from '../../public/endpoins';
 
-const tableHeading = ['BU Name', 'Description', 'Bu Head', 'Actions'];
-const tableDataKeys = ['buName', 'description', 'buHead'];
-const actions = { edit: true, delete: false };
+import cookie from 'react-cookies';
+
+const tableHeading = ['BU Name', 'Description', 'Bu Head', 'Status', 'Actions'];
+const tableDataKeys = ['buName', 'description', 'buHead', 'status'];
+const actions = { edit: true, active: true };
 
 export default function Items(props) {
   const [businessUnits, setBusinessUnits] = useState('');
@@ -107,6 +110,49 @@ export default function Items(props) {
       });
   }
 
+  function handleStatus(id) {
+    setModalVisible(true);
+    setdeleteItem(id);
+  }
+
+  function activeBuReturn() {
+    let t = businessUnits.filter(item => {
+      return item._id === deleteItem;
+    });
+
+    console.log(t[0]);
+
+    const temp = t[0];
+
+    const currentUser = cookie.load('current_user');
+
+    const params = {
+      _id: temp._id,
+      buName: temp.buName,
+      description: temp.description,
+      buHead: temp.buHead,
+      status: 'active',
+      updatedBy: currentUser.name,
+      buLogsId: temp.buLogsId._id,
+      reason: ''
+    };
+
+    axios
+      .put(updateBusinessUnitUrl, params)
+      .then(res => {
+        if (res.data.success) {
+          setdeleteItem('');
+          setModalVisible(false);
+          window.location.reload(false);
+        } else if (!res.data.success) {
+          ToastsStore.error(res.data.error);
+        }
+      })
+      .catch(e => {
+        console.log('error while deletion ', e);
+      });
+  }
+
   return (
     <GridContainer>
       <GridItem xs={12} sm={12} md={12}>
@@ -132,18 +178,26 @@ export default function Items(props) {
             buHeads={buHeads}
             action={actions}
             handleEdit={handleEdit}
-            handleDelete={handleDelete}
+            handleStatus={handleStatus}
           />
         ) : (
           undefined
         )}
       </GridItem>
 
-      <ConfirmationModal
+      {/* <ConfirmationModal
         modalVisible={modalVisible}
         msg="Are you sure want to delete the record?"
         hideconfirmationModal={() => setModalVisible(false)}
         onConfirmDelete={() => deleteBusinessUnit()}
+        setdeleteItem={() => setdeleteItem('')}
+      /> */}
+
+      <ConfirmationModal
+        modalVisible={modalVisible}
+        msg="Are you sure want to in active the record?"
+        hideconfirmationModal={() => setModalVisible(false)}
+        onConfirmDelete={() => activeBuReturn()}
         setdeleteItem={() => setdeleteItem('')}
       />
     </GridContainer>

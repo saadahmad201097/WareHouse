@@ -9,9 +9,14 @@ import CustomTable from '../../components/Table/Table';
 import ConfirmationModal from '../../components/Modal/confirmationModal';
 import axios from 'axios';
 import { ToastsStore } from 'react-toasts';
-import { getFunctionalUnitUrl, updateFunctionalUnitUrl } from '../../public/endpoins';
+import {
+  getFunctionalUnitUrl,
+  updateFunctionalUnitUrl
+} from '../../public/endpoins';
 
 import Loader from 'react-loader-spinner';
+
+import cookie from 'react-cookies';
 
 const useStyles = makeStyles(styles);
 
@@ -22,8 +27,13 @@ const tableHeading = [
   'Status',
   'Action'
 ];
-const tableDataKeys = ['fuName', ['fuHead', 'firstName'], ['buName', 'value'], 'status'];
-const actions = {edit: true, active: true};
+const tableDataKeys = [
+  'fuName',
+  ['fuHead', 'firstName'],
+  ['buId', 'buName'],
+  'status'
+];
+const actions = { edit: true, active: true };
 
 export default function FunctionalUnit(props) {
   const classes = useStyles();
@@ -34,33 +44,39 @@ export default function FunctionalUnit(props) {
   const [deleteItem, setdeleteItem] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
 
-
   function getFunctionalUnit() {
-      axios.get(getFunctionalUnitUrl).then(res => {
-          if(res.data.success) {
-            setFunctionalUnits(res.data.data.functionalUnits);
-            setBusinessUnits(res.data.data.businessUnit);
-            setStaff(res.data.data.staff);
-            setStatues(res.data.data.statues);
-          }
-          else if (!res.data.success) {
-            ToastsStore.error(res.data.error);
-          }
+    axios
+      .get(getFunctionalUnitUrl)
+      .then(res => {
+        if (res.data.success) {
+          setFunctionalUnits(res.data.data.functionalUnits);
+          setBusinessUnits(res.data.data.businessUnit);
+          setStaff(res.data.data.staff);
+          setStatues(res.data.data.statues);
+        } else if (!res.data.success) {
+          ToastsStore.error(res.data.error);
+        }
       })
       .catch(e => {
-          console.log('error: ', e);
+        console.log('error: ', e);
       });
   }
 
   useEffect(() => {
-      getFunctionalUnit();
+    getFunctionalUnit();
   }, []);
 
   const addNewItem = () => {
     let path = `functionalunit/next/add`;
     props.history.push({
       pathname: path,
-      state: { comingFor: 'add', statues, staff, businessUnits }
+      state: {
+        comingFor: 'add',
+        statues,
+        staff,
+        businessUnits,
+        status: statues
+      }
     });
   };
 
@@ -68,7 +84,13 @@ export default function FunctionalUnit(props) {
     let path = `functionalunit/next/edit`;
     props.history.push({
       pathname: path,
-      state: { comingFor: 'edit', selectedItem: rec, statues, staff, businessUnits }
+      state: {
+        comingFor: 'edit',
+        selectedItem: rec,
+        status: statues,
+        staff,
+        businessUnits
+      }
     });
   }
 
@@ -98,6 +120,43 @@ export default function FunctionalUnit(props) {
       });
   }
 
+  function activeBuReturn() {
+    let t = functionalUnits.filter(item => {
+      return item._id === deleteItem;
+    });
+
+    console.log(t[0]);
+
+    const temp = t[0];
+
+    const currentUser = cookie.load('current_user');
+
+    const params = {
+      _id: temp._id,
+      fuName: temp.fuName,
+      description: temp.description,
+      fuHead: temp.fuHead,
+      buId: temp.buId,
+      status: 'active',
+      reason: '',
+      updatedBy: currentUser.name,
+      fuLogId: temp.fuLogId._id
+    };
+    axios
+      .put(updateFunctionalUnitUrl, params)
+      .then(res => {
+        if (res.data.success) {
+          setdeleteItem('');
+          setModalVisible(false);
+          window.location.reload(false);
+        } else if (!res.data.success) {
+          ToastsStore.error(res.data.error);
+        }
+      })
+      .catch(e => {
+        console.log('error while deletion ', e);
+      });
+  }
   return (
     <div>
       {functionalUnits ? (
@@ -130,10 +189,9 @@ export default function FunctionalUnit(props) {
             modalVisible={modalVisible}
             msg="Are you sure want to in active the record?"
             hideconfirmationModal={() => setModalVisible(false)}
-            onConfirmDelete={() => deleteBuReturn()}
+            onConfirmDelete={() => activeBuReturn()}
             setdeleteItem={() => setdeleteItem('')}
           />
-
         </div>
       ) : (
         <div
