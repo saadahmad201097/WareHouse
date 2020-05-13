@@ -23,12 +23,11 @@ const actions = { edit: true, active: true };
 export default function Items(props) {
   const [businessUnits, setBusinessUnits] = useState('');
   const [systemAdmins, setSystemAdmins] = useState(false);
+  const [buLogs, setBuLogs] = useState('');
   const [deleteItem, setdeleteItem] = useState('');
 
   const [buHeads, setBUHeads] = useState('');
-
   const [status, setStatus] = useState('');
-
   const [modalVisible, setModalVisible] = useState(false);
 
   function getBusinessUnits() {
@@ -40,7 +39,7 @@ export default function Items(props) {
           setBusinessUnits(res.data.data.businessUnit);
           setBUHeads(res.data.data.buHeads);
           setStatus(res.data.data.statues);
-
+          setBuLogs(res.data.data.buLogs);
           setSystemAdmins(res.data.data.systemAdmin);
         } else if (!res.data.success) {
           ToastsStore.error(res.data.error);
@@ -77,8 +76,9 @@ export default function Items(props) {
         comingFor: 'edit',
         selectedItem: rec,
         systemAdmins,
-        status: status,
-        buHeads: buHeads
+        status,
+        buHeads,
+        buLogs
       }
     });
   }

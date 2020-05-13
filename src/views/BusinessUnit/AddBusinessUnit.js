@@ -22,8 +22,6 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-// core components
-import TablePagination from '@material-ui/core/TablePagination';
 
 const styles = {
   inputContainer: {
@@ -38,9 +36,11 @@ function AddBusinessUnit(props) {
     description: '',
     buHead: '',
     status: '',
-    statues: [],
     reason: '',
-    buLogsId: ''
+    buLogsId: '',
+    statues: [],
+    buLogs: [],
+    buHeads: []
   };
 
   function reducer(state, { field, value }) {
@@ -55,44 +55,42 @@ function AddBusinessUnit(props) {
     description,
     buHead,
     status,
-    statues,
     reason,
-    buLogsId
+    buLogsId,
+    statues,
+    buLogs,
+    buHeads
   } = state;
 
   const [comingFor, setcomingFor] = useState('');
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
-  const [statusArray, setStatusArray] = useState('');
-
-  const [buHeads, setBUHeads] = useState('');
   const [currentUser, setCurrentUser] = useState('');
 
   useEffect(() => {
     setCurrentUser(cookie.load('current_user'));
 
     setcomingFor(props.history.location.state.comingFor);
-    setStatusArray(props.history.location.state.status);
-    setBUHeads(props.history.location.state.buHeads);
 
     const selectedRec = props.history.location.state.selectedItem;
     if (selectedRec) {
       Object.entries(selectedRec).map(([key, val]) => {
         if (val && typeof val === 'object') {
-          dispatch({ field: key, value: val });
+          dispatch({ field: key, value: val._id });
+          dispatch({ field: 'reason', value: val.reason });
         } else {
-          if (key === 'status' && selectedRec.status === 'in_active') {
-            dispatch({ field: 'reason', value: selectedRec.buLogsId.reason });
-            dispatch({ field: 'status', value: selectedRec.status });
-            // dispatch({ field: 'buLogsId', value: selectedRec.buLogsId });
-          } else {
-            dispatch({ field: key, value: val });
-          }
+          dispatch({field: key, value: val});
         }
       });
     }
-    // if(props.history.location.state.systemAdmins){
-    //     dispatch({field: 'systemAdmins', value: props.history.location.state.systemAdmins});
-    // }
+    if(props.history.location.state.buLogs){
+      dispatch({field: 'buLogs', value: props.history.location.state.buLogs});
+    }
+    if(props.history.location.state.buHeads){
+      dispatch({field: 'buHeads', value: props.history.location.state.buHeads});
+    }
+    if(props.history.location.state.status){
+      dispatch({field: 'statues', value: props.history.location.state.status});
+    }
   }, []);
 
   const handleCancel = () => {
@@ -148,10 +146,10 @@ function AddBusinessUnit(props) {
         buHead,
         status,
         updatedBy: currentUser.name,
-        buLogsId: buLogsId._id,
+        buLogsId,
         reason
       };
-
+      
       axios
         .put(updateBusinessUnitUrl, params)
         .then(res => {
@@ -167,11 +165,6 @@ function AddBusinessUnit(props) {
     }
   };
 
-  if (buLogsId.updatedAt) {
-    var d = new Date(buLogsId.updatedAt);
-    var n = new Date(buLogsId.updatedAt).getFullYear();
-    console.log(n);
-  }
   return (
     <div className="container">
       <h1>{comingFor === 'add' ? 'Add' : 'Edit'}</h1>
@@ -209,17 +202,7 @@ function AddBusinessUnit(props) {
 
       <div className="row">
         <div className="col-md-6" style={styles.inputContainer}>
-          {/* <TextField
-            fullWidth
-            name="buHead"
-            label="Business Unit Head"
-            variant="outlined"
-            value={buHead}
-            onChange={onChangeValue}
-            error={!buHead && isFormSubmitted}
-          /> */}
-
-          <InputLabel id="status-label">BU Heads</InputLabel>
+          <InputLabel id="buHead-label">BU Heads</InputLabel>
           <Select
             fullWidth
             name="buHead"
@@ -254,8 +237,8 @@ function AddBusinessUnit(props) {
             <MenuItem value="">
               <em>None</em>
             </MenuItem>
-            {statusArray &&
-              statusArray.map(val => {
+            {statues &&
+              statues.map(val => {
                 return (
                   <MenuItem key={val.key} value={val.key}>
                     {val.value}
@@ -274,8 +257,6 @@ function AddBusinessUnit(props) {
               label="Resaon"
               variant="outlined"
               value={reason}
-              // multiline
-              // rows={5}
               onChange={onChangeValue}
             />
           </div>
@@ -324,27 +305,32 @@ function AddBusinessUnit(props) {
 
       <div>
         {comingFor === 'edit' ? (
-          <Table>
+          <Table className="mt20">
             <TableHead>
               <TableRow>
+              <TableCell>Status</TableCell>
+                <TableCell>Reason</TableCell>
                 <TableCell>Last Updated By</TableCell>
                 <TableCell>Last Updated at</TableCell>
-                <TableCell>Reason</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              <TableCell>{buLogsId.updatedBy}</TableCell>
-              <TableCell>
-                {new Date(buLogsId.updatedAt).getDate()}/
-                {new Date(buLogsId.updatedAt).getMonth() + 1}/
-                {new Date(buLogsId.updatedAt).getFullYear()}{' '}
-                {new Date(buLogsId.updatedAt).getHours()}
-                {':'}
-                {new Date(buLogsId.updatedAt).getMinutes()}
-              </TableCell>
-              <TableCell>
-                {buLogsId.reason ? buLogsId.reason : 'none'}
-              </TableCell>
+              {buLogs && buLogs.map((prop, index) => {
+                return(
+                  <TableRow key={index}>
+                    <TableCell>{prop.status === 'active' ? 'Active' : 'In Active'}</TableCell>
+                    <TableCell>{prop.reason ? prop.reason : 'N/A'}</TableCell>
+                    <TableCell>{prop.updatedBy}</TableCell>
+                    <TableCell>
+                      {new Date(prop.updatedAt).getDate()}/
+                      {new Date(prop.updatedAt).getMonth() + 1}/
+                      {new Date(prop.updatedAt).getFullYear()}{' '}
+                      {new Date(prop.updatedAt).getHours()}
+                      {':'}
+                      {new Date(prop.updatedAt).getMinutes()}
+                    </TableCell>
+                  </TableRow>
+              )})}
             </TableBody>
           </Table>
         ) : (
