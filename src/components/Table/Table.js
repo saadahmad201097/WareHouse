@@ -15,6 +15,7 @@ import TableCell from '@material-ui/core/TableCell';
 import styles from 'assets/jss/material-dashboard-react/components/tableStyle.js';
 import TablePagination from '@material-ui/core/TablePagination';
 import RcIf from 'rc-if';
+import { dateOptions } from '../../variables/public';
 
 const useStyles = makeStyles(styles);
 
@@ -23,9 +24,7 @@ export default function CustomTable(props) {
     tableHeading,
     tableData,
     tableDataKeys,
-    tableHeaderColor,
-    status,
-    buHeads
+    tableHeaderColor
   } = props;
 
   const classes = useStyles();
@@ -50,17 +49,6 @@ export default function CustomTable(props) {
   const handleChangeRowsPerPage = event => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
-  };
-
-  const options = {
-    year: 'numeric',
-    month: 'numeric',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: 'numeric',
-    second: 'numeric',
-    hour12: true,
-    timeZone: 'America/Los_Angeles'
   };
 
   return (
@@ -92,7 +80,7 @@ export default function CustomTable(props) {
                     ? tableDataKeys.map((val, key) => {
                         return (
                           <TableCell className={classes.tableCell} key={key}>
-                            { Array.isArray(val) ? ( prop[val[0]] ? prop[val[0]][val[1]] : null): ( val.toLowerCase() === 'timestamp' ? new Intl.DateTimeFormat('en-US', options).format(Date.parse(prop[val])) : `${replaceSlugToTitle(prop[val])}` )}
+                            { Array.isArray(val) ? ( prop[val[0]] ? prop[val[0]][val[1]] : null): ( val.toLowerCase() === 'timestamp' ? new Intl.DateTimeFormat('en-US', dateOptions).format(Date.parse(prop[val])) : `${replaceSlugToTitle(prop[val])}` )}
                           </TableCell>
                         );
                       })

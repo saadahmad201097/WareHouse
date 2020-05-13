@@ -36,12 +36,14 @@ export const deleteBuReturnUrl = `${baseUrl}/bureturn/deletebureturn`;
 
 // business unit
 export const getBusinessUnitUrl = `${baseUrl}/businessunit/getbusinessunit`;
+export const getBusinessUnitLogsUrl = `${baseUrl}/businessunit/getbusinessunitlogs`;
 export const addBusinessUnitUrl = `${baseUrl}/businessunit/addbusinessunit`;
 export const updateBusinessUnitUrl = `${baseUrl}/businessunit/updatebusinessunit`;
 export const deleteBusinessUnitUrl = `${baseUrl}/businessunit/deletebusinessunit`;
 
 // functional unit
 export const getFunctionalUnitUrl = `${baseUrl}/functionalunit/getfunctionalunits`;
+export const getFunctionalUnitLogsUrl = `${baseUrl}/functionalunit/getfunctionalunitlogs`;
 export const addFunctionalUnitUrl = `${baseUrl}/functionalunit/addfunctionalunit`;
 export const updateFunctionalUnitUrl = `${baseUrl}/functionalunit/updatefunctionalunit`;
 export const deleteFunctionalUnitUrl = `${baseUrl}/functionalunit/deletefunctionalunit`;
