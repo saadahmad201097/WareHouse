@@ -17,13 +17,13 @@ import {
 import cookie from 'react-cookies';
 
 const tableHeading = ['BU Name', 'Description', 'Bu Head', 'Status', 'Actions'];
-const tableDataKeys = ['buName', 'description', 'buHead', 'status'];
+const tableDataKeys = ['buName', 'description', ['buHead', 'firstName'], 'status'];
 const actions = { edit: true, active: true };
 
 export default function Items(props) {
   const [businessUnits, setBusinessUnits] = useState('');
-  const [systemAdmins, setSystemAdmins] = useState(false);
   const [buLogs, setBuLogs] = useState('');
+  const [divisions, setDivisions] = useState('');
   const [deleteItem, setdeleteItem] = useState('');
 
   const [buHeads, setBUHeads] = useState('');
@@ -40,7 +40,7 @@ export default function Items(props) {
           setBUHeads(res.data.data.buHeads);
           setStatus(res.data.data.statues);
           setBuLogs(res.data.data.buLogs);
-          setSystemAdmins(res.data.data.systemAdmin);
+          setDivisions(res.data.data.divisions);
         } else if (!res.data.success) {
           ToastsStore.error(res.data.error);
         }
@@ -61,9 +61,9 @@ export default function Items(props) {
       pathname: path,
       state: {
         comingFor: 'add',
-        systemAdmins,
-        status: status,
-        buHeads: buHeads
+        divisions,
+        status,
+        buHeads
       }
     });
   };
@@ -75,7 +75,7 @@ export default function Items(props) {
       state: {
         comingFor: 'edit',
         selectedItem: rec,
-        systemAdmins,
+        divisions,
         status,
         buHeads,
         buLogs

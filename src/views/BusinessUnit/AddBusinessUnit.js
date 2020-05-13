@@ -30,12 +30,14 @@ function AddBusinessUnit(props) {
     buName: '',
     description: '',
     buHead: '',
+    division:'',
     status: '',
     reason: '',
     buLogsId: '',
     statues: [],
     buLogs: [],
-    buHeads: []
+    buHeads: [],
+    divisions: []
   };
 
   function reducer(state, { field, value }) {
@@ -49,12 +51,14 @@ function AddBusinessUnit(props) {
     buName,
     description,
     buHead,
+    division,
     status,
     reason,
     buLogsId,
     statues,
     buLogs,
-    buHeads
+    buHeads,
+    divisions
   } = state;
 
   const [comingFor, setcomingFor] = useState('');
@@ -85,6 +89,9 @@ function AddBusinessUnit(props) {
     if(props.history.location.state.status){
       dispatch({field: 'statues', value: props.history.location.state.status});
     }
+    if(props.history.location.state.divisions){
+      dispatch({field: 'divisions', value: props.history.location.state.divisions});
+    }
   }, []);
 
   const handleCancel = () => {
@@ -98,6 +105,7 @@ function AddBusinessUnit(props) {
         buName,
         description,
         buHead,
+        division,
         status,
         reason,
         updatedBy: currentUser.name
@@ -141,6 +149,7 @@ function AddBusinessUnit(props) {
         buName,
         description,
         buHead,
+        division,
         status,
         updatedBy: currentUser.name,
         buLogsId,
@@ -199,7 +208,7 @@ function AddBusinessUnit(props) {
 
       <div className="row">
         <div className="col-md-6" style={styles.inputContainer}>
-          <InputLabel id="buHead-label">BU Heads</InputLabel>
+          <InputLabel id="buHead-label">BU Head</InputLabel>
           <Select
             fullWidth
             name="buHead"
@@ -214,6 +223,30 @@ function AddBusinessUnit(props) {
             {buHeads &&
               buHeads.map(val => {
                 return (
+                  <MenuItem key={val._id} value={val._id}>
+                    {val.firstName} {val.lastName}
+                  </MenuItem>
+                );
+              })}
+          </Select>
+        </div>
+
+        <div className="col-md-6" style={styles.inputContainer}>
+          <InputLabel id="division-label">Division</InputLabel>
+          <Select
+            fullWidth
+            name="division"
+            value={division}
+            onChange={onChangeValue}
+            label="Division"
+            error={!division && isFormSubmitted}
+          >
+            <MenuItem value="">
+              <em>None</em>
+            </MenuItem>
+            {divisions &&
+              divisions.map(val => {
+                return (
                   <MenuItem key={val.key} value={val.key}>
                     {val.value}
                   </MenuItem>
@@ -221,6 +254,8 @@ function AddBusinessUnit(props) {
               })}
           </Select>
         </div>
+      </div>
+      <div className="row">
         <div className="col-md-6" style={styles.inputContainer}>
           <InputLabel id="status-label">Status</InputLabel>
           <Select
@@ -246,7 +281,7 @@ function AddBusinessUnit(props) {
         </div>
 
         {status === 'in_active' ? (
-          <div className="col-md-12" style={styles.inputContainer}>
+          <div className="col-md-6" style={styles.inputContainer}>
             <TextField
               fullWidth
               id="reason"
