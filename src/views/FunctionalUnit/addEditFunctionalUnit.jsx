@@ -9,20 +9,14 @@ import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
 import { ToastsStore } from 'react-toasts';
-import {
-  addFunctionalUnitUrl,
-  updateFunctionalUnitUrl
-} from '../../public/endpoins';
-
 import cookie from 'react-cookies';
-
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-// core components
 import TablePagination from '@material-ui/core/TablePagination';
+import { addFunctionalUnitUrl, updateFunctionalUnitUrl } from '../../public/endpoins';
 
 const useStyles = makeStyles(styles);
 
@@ -32,23 +26,8 @@ const styles = {
   }
 };
 
-const FUHead = [
-  { _id: 1, buName: 'First' },
-  { _id: 2, buName: 'Second' },
-  { _id: 3, buName: 'Third' }
-];
-
-const BUName = [
-  { _id: 1, buName: 'First BU' },
-  { _id: 2, buName: 'Second BU' }
-];
-
-const statusArray = [{ _id: 1, name: 'Active' }, { _id: 2, name: 'In Active' }];
-
 function AddEditBuReturn(props) {
-  const [statusArray, setStatusArray] = useState('');
-  const [businessUnits, setBusinessUnits] = useState('');
-  const [staffArray, setStaffArray] = useState('');
+
   const [comingFor, setcomingFor] = useState('');
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 
@@ -60,7 +39,11 @@ function AddEditBuReturn(props) {
     status: '',
     buId: '',
     reason: '',
-    fuLogId: ''
+    fuLogId: '',
+    statusArray: [],
+    businessUnits: [],
+    staffArray:[],
+    fuLogs: []
   };
 
   function reducer(state, { field, value }) {
@@ -80,11 +63,18 @@ function AddEditBuReturn(props) {
     status,
     buId,
     reason,
-    fuLogId
+    fuLogId,
+    statusArray,
+    businessUnits,
+    staffArray,
+    fuLogs
   } = state;
 
   const onChangeValue = e => {
     dispatch({ field: e.target.name, value: e.target.value });
+    if(e.target.name === 'status'){
+      dispatch({ field: 'reason', value: '' });
+    }
   };
 
   function validateForm() {
@@ -94,40 +84,30 @@ function AddEditBuReturn(props) {
   }
 
   useEffect(() => {
-    setcomingFor(props.history.location.state.comingFor);
-    setStatusArray(props.history.location.state.status);
-    setBusinessUnits(props.history.location.state.businessUnits);
-    setStaffArray(props.history.location.state.staff);
 
+    setcomingFor(props.history.location.state.comingFor);
     const selectedRec = props.history.location.state.selectedItem;
     if (selectedRec) {
       Object.entries(selectedRec).map(([key, val]) => {
         if (val && typeof val === 'object') {
-          if (key === 'fuLogId') {
-            dispatch({ field: key, value: val });
-          } else {
-            dispatch({ field: key, value: val._id });
-          }
+          dispatch({ field: key, value: val._id });
+          dispatch({ field: 'reason', value: val.reason });
         } else {
-          if (key === 'status' && selectedRec.status === 'in_active') {
-            dispatch({ field: 'reason', value: selectedRec.fuLogId.reason });
-            dispatch({ field: 'status', value: selectedRec.status });
-          }
-          dispatch({ field: key, value: val });
+          dispatch({field: key, value: val});
         }
       });
     }
-    if (props.history.location.state.items) {
-      dispatch({ field: 'items', value: props.history.location.state.items });
+    if(props.history.location.state.statues){
+      dispatch({field: 'statusArray', value: props.history.location.state.statues});
     }
-    if (props.history.location.state.staff) {
-      dispatch({ field: 'staffs', value: props.history.location.state.staff });
+    if(props.history.location.state.businessUnits){
+      dispatch({field: 'businessUnits', value: props.history.location.state.businessUnits});
     }
-    if (props.history.location.state.businessUnit) {
-      dispatch({
-        field: 'businessUnits',
-        value: props.history.location.state.businessUnit
-      });
+    if(props.history.location.state.staff){
+      dispatch({field: 'staffArray', value: props.history.location.state.staff});
+    }
+    if(props.history.location.state.fuLogs){
+      dispatch({field: 'fuLogs', value: props.history.location.state.fuLogs});
     }
   }, []);
 
@@ -142,18 +122,15 @@ function AddEditBuReturn(props) {
     setIsFormSubmitted(true);
 
     const params = {
-      fuName: fuName,
-      description: description,
-      fuHead: fuHead,
-      buId: buId,
-      status: status,
-      reason: reason,
+      fuName,
+      description,
+      fuHead,
+      buId,
+      status,
+      reason,
       updatedBy: currentUser.name
     };
-    console.log('objact for FU', params);
-    axios
-      .post(addFunctionalUnitUrl, params)
-      .then(res => {
+    axios.post(addFunctionalUnitUrl, params).then(res => {
         if (res.data.success) {
           props.history.goBack();
         } else if (!res.data.success) {
@@ -166,19 +143,19 @@ function AddEditBuReturn(props) {
   };
 
   const handleEdit = () => {
-    // setIsFormSubmitted(true);
+    setIsFormSubmitted(true);
     const currentUser = cookie.load('current_user');
 
     const params = {
       _id,
-      fuName: fuName,
-      description: description,
-      fuHead: fuHead,
-      buId: buId,
-      status: status,
-      reason: reason,
+      fuName,
+      description,
+      fuHead,
+      buId,
+      status,
+      reason,
       updatedBy: currentUser.name,
-      fuLogId: fuLogId._id
+      fuLogId
     };
     axios
       .put(updateFunctionalUnitUrl, params)
@@ -280,7 +257,7 @@ function AddEditBuReturn(props) {
       </div>
 
       <div className="row">
-        <div className="col-md-12" style={styles.inputContainer}>
+        <div className="col-md-6" style={styles.inputContainer}>
           <InputLabel id="buHead-label">Status</InputLabel>
           <Select
             fullWidth
@@ -303,11 +280,9 @@ function AddEditBuReturn(props) {
               })}
           </Select>
         </div>
-      </div>
 
-      {status === 'in_active' ? (
-        <div className="row">
-          <div className="col-md-12" style={styles.inputContainer}>
+        {status === 'in_active' ? (
+          <div className="col-md-6" style={styles.inputContainer}>
             <TextField
               fullWidth
               id="reason"
@@ -315,15 +290,13 @@ function AddEditBuReturn(props) {
               label="Resaon"
               variant="outlined"
               value={reason}
-              // multiline
-              // rows={5}
               onChange={onChangeValue}
             />
           </div>
-        </div>
-      ) : (
-        undefined
-      )}
+        ) : (
+          undefined
+        )}
+      </div>
 
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <div style={styles.inputContainer}>
@@ -365,25 +338,35 @@ function AddEditBuReturn(props) {
 
       <div>
         {comingFor === 'edit' ? (
-          <Table>
+          <Table className="mt20">
             <TableHead>
               <TableRow>
+              <TableCell>Status</TableCell>
+                <TableCell>Reason</TableCell>
                 <TableCell>Last Updated By</TableCell>
                 <TableCell>Last Updated at</TableCell>
-                <TableCell>Reason</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              <TableCell>{fuLogId.updatedBy}</TableCell>
-              <TableCell>
-                {new Date(fuLogId.updatedAt).getDate()}/
-                {new Date(fuLogId.updatedAt).getMonth() + 1}/
-                {new Date(fuLogId.updatedAt).getFullYear()}{' '}
-                {new Date(fuLogId.updatedAt).getHours()}
-                {':'}
-                {new Date(fuLogId.updatedAt).getMinutes()}
-              </TableCell>
-              <TableCell>{fuLogId.reason ? fuLogId.reason : 'none'}</TableCell>
+              {fuLogs && fuLogs.map((prop, index)=>{
+                if(prop.fuId === _id){
+                  return(
+                    <TableRow key={index}>
+                      <TableCell>{prop.status === 'active' ? 'Active' : 'In Active'}</TableCell>
+                      <TableCell>{prop.reason ? prop.reason : 'N/A'}</TableCell>
+                      <TableCell>{prop.updatedBy}</TableCell>
+                      <TableCell>
+                        {new Date(prop.updatedAt).getDate()}/
+                        {new Date(prop.updatedAt).getMonth() + 1}/
+                        {new Date(prop.updatedAt).getFullYear()}{' '}
+                        {new Date(prop.updatedAt).getHours()}
+                        {':'}
+                        {new Date(prop.updatedAt).getMinutes()}
+                      </TableCell>
+                    </TableRow>
+                  )
+                }
+              })}
             </TableBody>
           </Table>
         ) : (

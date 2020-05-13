@@ -41,6 +41,7 @@ export default function FunctionalUnit(props) {
   const [businessUnits, setBusinessUnits] = useState('');
   const [staff, setStaff] = useState('');
   const [statues, setStatues] = useState('');
+  const [fuLogs, setFuLogs] = useState('');
   const [deleteItem, setdeleteItem] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -53,6 +54,7 @@ export default function FunctionalUnit(props) {
           setBusinessUnits(res.data.data.businessUnit);
           setStaff(res.data.data.staff);
           setStatues(res.data.data.statues);
+          setFuLogs(res.data.data.fuLogs);
         } else if (!res.data.success) {
           ToastsStore.error(res.data.error);
         }
@@ -74,8 +76,7 @@ export default function FunctionalUnit(props) {
         comingFor: 'add',
         statues,
         staff,
-        businessUnits,
-        status: statues
+        businessUnits
       }
     });
   };
@@ -87,9 +88,10 @@ export default function FunctionalUnit(props) {
       state: {
         comingFor: 'edit',
         selectedItem: rec,
-        status: statues,
+        statues,
         staff,
-        businessUnits
+        businessUnits,
+        fuLogs
       }
     });
   }
@@ -125,10 +127,7 @@ export default function FunctionalUnit(props) {
       return item._id === deleteItem;
     });
 
-    console.log(t[0]);
-
     const temp = t[0];
-
     const currentUser = cookie.load('current_user');
 
     const params = {

@@ -9,19 +9,14 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
 import { ToastsStore } from 'react-toasts';
-import {
-  addBusinessUnitUrl,
-  updateBusinessUnitUrl
-} from '../../public/endpoins';
-
 import cookie from 'react-cookies';
-
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
+import { addBusinessUnitUrl, updateBusinessUnitUrl} from '../../public/endpoins';
 
 const styles = {
   inputContainer: {
@@ -68,7 +63,6 @@ function AddBusinessUnit(props) {
 
   useEffect(() => {
     setCurrentUser(cookie.load('current_user'));
-
     setcomingFor(props.history.location.state.comingFor);
 
     const selectedRec = props.history.location.state.selectedItem;
