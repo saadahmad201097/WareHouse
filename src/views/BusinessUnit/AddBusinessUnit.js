@@ -125,6 +125,9 @@ function AddBusinessUnit(props) {
 
   const onChangeValue = e => {
     dispatch({ field: e.target.name, value: e.target.value });
+    if(e.target.name === 'status'){
+      dispatch({ field: 'reason', value: '' });
+    }
   };
 
   function validateForm() {
@@ -316,21 +319,24 @@ function AddBusinessUnit(props) {
             </TableHead>
             <TableBody>
               {buLogs && buLogs.map((prop, index) => {
-                return(
-                  <TableRow key={index}>
-                    <TableCell>{prop.status === 'active' ? 'Active' : 'In Active'}</TableCell>
-                    <TableCell>{prop.reason ? prop.reason : 'N/A'}</TableCell>
-                    <TableCell>{prop.updatedBy}</TableCell>
-                    <TableCell>
-                      {new Date(prop.updatedAt).getDate()}/
-                      {new Date(prop.updatedAt).getMonth() + 1}/
-                      {new Date(prop.updatedAt).getFullYear()}{' '}
-                      {new Date(prop.updatedAt).getHours()}
-                      {':'}
-                      {new Date(prop.updatedAt).getMinutes()}
-                    </TableCell>
-                  </TableRow>
-              )})}
+                if(prop.buId === _id){
+                  return(
+                    <TableRow key={index}>
+                      <TableCell>{prop.status === 'active' ? 'Active' : 'In Active'}</TableCell>
+                      <TableCell>{prop.reason ? prop.reason : 'N/A'}</TableCell>
+                      <TableCell>{prop.updatedBy}</TableCell>
+                      <TableCell>
+                        {new Date(prop.updatedAt).getDate()}/
+                        {new Date(prop.updatedAt).getMonth() + 1}/
+                        {new Date(prop.updatedAt).getFullYear()}{' '}
+                        {new Date(prop.updatedAt).getHours()}
+                        {':'}
+                        {new Date(prop.updatedAt).getMinutes()}
+                      </TableCell>
+                    </TableRow>
+                  )
+                }
+              })}
             </TableBody>
           </Table>
         ) : (
