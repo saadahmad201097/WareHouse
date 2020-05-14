@@ -16,10 +16,7 @@ import TableRow from '@material-ui/core/TableRow';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TablePagination from '@material-ui/core/TablePagination';
-import {
-  addFunctionalUnitUrl,
-  updateFunctionalUnitUrl
-} from '../../public/endpoins';
+import { addFunctionalUnitUrl, updateFunctionalUnitUrl, getFunctionalUnitLogsUrl } from '../../public/endpoins';
 
 const useStyles = makeStyles(styles);
 
@@ -32,6 +29,18 @@ const styles = {
 function AddEditBuReturn(props) {
   const [comingFor, setcomingFor] = useState('');
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
+  const [fuLogs, setFuLogs] = useState([]);
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = event => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   const initialState = {
     _id: '',
@@ -44,8 +53,7 @@ function AddEditBuReturn(props) {
     fuLogId: '',
     statusArray: [],
     businessUnits: [],
-    staffArray: [],
-    fuLogs: []
+    staffArray:[]
   };
 
   function reducer(state, { field, value }) {
@@ -68,8 +76,7 @@ function AddEditBuReturn(props) {
     fuLogId,
     statusArray,
     businessUnits,
-    staffArray,
-    fuLogs
+    staffArray
   } = state;
 
   const onChangeValue = e => {
@@ -80,9 +87,24 @@ function AddEditBuReturn(props) {
   };
 
   function validateForm() {
-    return (
-      fuHead !== '' && fuName !== '' && status !== '' && description !== ''
-    );
+    return fuHead.length> 0 && fuName.length> 0 && status.length> 0 && description.length > 0;
+  }
+
+  function getFunctionalUnitLogs(id){
+    const param ={
+      _id: id
+    } 
+    
+    axios.get(getFunctionalUnitLogsUrl+'/'+param._id).then(res => {
+      if(res.data.success){
+        setFuLogs(res.data.data);
+      } else if (!res.data.success) {
+        ToastsStore.error(res.data.error);
+      }
+    })
+    .catch(e => {
+      console.log('error is ', e);
+    });
   }
 
   useEffect(() => {
@@ -94,7 +116,10 @@ function AddEditBuReturn(props) {
           dispatch({ field: key, value: val._id });
           dispatch({ field: 'reason', value: val.reason });
         } else {
-          dispatch({ field: key, value: val });
+          dispatch({field: key, value: val});
+          if(key === "_id"){ // get all logs related to this id
+            getFunctionalUnitLogs(val);
+          }
         }
       });
     }
@@ -115,9 +140,6 @@ function AddEditBuReturn(props) {
         field: 'staffArray',
         value: props.history.location.state.staff
       });
-    }
-    if (props.history.location.state.fuLogs) {
-      dispatch({ field: 'fuLogs', value: props.history.location.state.fuLogs });
     }
   }, []);
 
@@ -230,6 +252,7 @@ function AddEditBuReturn(props) {
             value={fuHead}
             onChange={onChangeValue}
             label="FU Head"
+            error={!fuHead && isFormSubmitted}
           >
             <MenuItem value="">
               <em>None</em>
@@ -295,8 +318,8 @@ function AddEditBuReturn(props) {
           </Select>
         </div>
 
-        {status === 'in_active' ? (
-          <div className="col-md-6" style={styles.inputContainer}>
+        <div className="col-md-6" style={styles.inputContainer}>
+          {status === 'in_active' ? (
             <TextField
               fullWidth
               id="reason"
@@ -306,10 +329,10 @@ function AddEditBuReturn(props) {
               value={reason}
               onChange={onChangeValue}
             />
-          </div>
-        ) : (
-          undefined
-        )}
+          ) : (
+            undefined
+          )}
+        </div>
       </div>
 
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -352,27 +375,23 @@ function AddEditBuReturn(props) {
 
       <div>
         {comingFor === 'edit' ? (
-          <Table className="mt20">
-            <TableHead>
-              <TableRow>
+          <>
+            <Table className="mt20">
+              <TableHead>
+                <TableRow>
                 <TableCell>Status</TableCell>
-                <TableCell>Reason</TableCell>
-                <TableCell>Last Updated By</TableCell>
-                <TableCell>Last Updated at</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {fuLogs &&
-                fuLogs.map((prop, index) => {
-                  if (prop.fuId === _id) {
-                    return (
+                  <TableCell>Reason</TableCell>
+                  <TableCell>Last Updated By</TableCell>
+                  <TableCell>Last Updated at</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {fuLogs && fuLogs.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((prop, index)=>{
+                    return(
                       <TableRow key={index}>
-                        <TableCell>
-                          {prop.status === 'active' ? 'Active' : 'In Active'}
-                        </TableCell>
-                        <TableCell>
-                          {prop.reason ? prop.reason : 'N/A'}
-                        </TableCell>
+                        <TableCell>{prop.status === 'active' ? 'Active' : 'In Active'}</TableCell>
+                        <TableCell>{prop.reason ? prop.reason : 'N/A'}</TableCell>
                         <TableCell>{prop.updatedBy}</TableCell>
                         <TableCell>
                           {new Date(prop.updatedAt).getDate()}/
@@ -383,11 +402,20 @@ function AddEditBuReturn(props) {
                           {new Date(prop.updatedAt).getMinutes()}
                         </TableCell>
                       </TableRow>
-                    );
-                  }
+                    )
                 })}
-            </TableBody>
-          </Table>
+              </TableBody>
+            </Table>
+            <TablePagination
+              rowsPerPageOptions={[5, 10]}
+              component="div"
+              count={fuLogs && fuLogs.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onChangePage={handleChangePage}
+              onChangeRowsPerPage={handleChangeRowsPerPage}
+            />
+          </>
         ) : (
           undefined
         )}

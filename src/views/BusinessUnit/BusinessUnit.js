@@ -22,10 +22,8 @@ const actions = { edit: true, active: true };
 
 export default function Items(props) {
   const [businessUnits, setBusinessUnits] = useState('');
-  const [buLogs, setBuLogs] = useState('');
   const [divisions, setDivisions] = useState('');
   const [deleteItem, setdeleteItem] = useState('');
-
   const [buHeads, setBUHeads] = useState('');
   const [status, setStatus] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
@@ -35,11 +33,9 @@ export default function Items(props) {
       .get(getBusinessUnitUrl)
       .then(res => {
         if (res.data.success) {
-          console.log('res', res.data.data);
           setBusinessUnits(res.data.data.businessUnit);
           setBUHeads(res.data.data.buHeads);
           setStatus(res.data.data.statues);
-          setBuLogs(res.data.data.buLogs);
           setDivisions(res.data.data.divisions);
         } else if (!res.data.success) {
           ToastsStore.error(res.data.error);
@@ -77,8 +73,7 @@ export default function Items(props) {
         selectedItem: rec,
         divisions,
         status,
-        buHeads,
-        buLogs
+        buHeads
       }
     });
   }
