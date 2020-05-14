@@ -205,7 +205,6 @@ function AddEditBuReturn(props) {
       });
   };
 
-  console.log(fuLogs);
 
   return (
     <div className="container">

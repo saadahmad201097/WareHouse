@@ -96,21 +96,34 @@ function AddEditVendor(props) {
   };
 
   function validateForm() {
-    return (
+    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+    let x =
       englishName.length > 0 &&
-      telephone1.length > 0 &&
+      telephone1.length > 10 &&
       address.length > 0 &&
       pobox.length > 0 &&
       zipcode.length > 0 &&
       taxno.length > 0 &&
       contactPersonName.length > 0 &&
-      contactPersonTelephone.length > 0
-    );
+      contactPersonTelephone.length > 10;
+
+    if (contactEmail && contactPersonEmail === '') {
+      return x && re.test(contactEmail);
+    } else if (contactPersonEmail && contactEmail === '') {
+      return x && re.test(contactPersonEmail);
+    } else if (contactPersonEmail && contactEmail) {
+      return x && re.test(contactPersonEmail) && re.test(contactEmail);
+    } else if (telephone2) {
+      return x && telephone2.length > 10;
+    } else {
+      return x;
+    }
   }
 
   const [comingFor, setcomingFor] = useState('');
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
-  const [openShippingTermModal, setOpenShippingTermModal] = useState(true);
+  const [openShippingTermModal, setOpenShippingTermModal] = useState(false);
   const [shippingTermsData, setShippingTermsData] = useState([]);
   const [modeForShippingTerms, setModeForShippingTerms] = useState('add');
 
