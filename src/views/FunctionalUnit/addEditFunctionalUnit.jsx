@@ -16,7 +16,10 @@ import TableRow from '@material-ui/core/TableRow';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TablePagination from '@material-ui/core/TablePagination';
-import { addFunctionalUnitUrl, updateFunctionalUnitUrl } from '../../public/endpoins';
+import {
+  addFunctionalUnitUrl,
+  updateFunctionalUnitUrl
+} from '../../public/endpoins';
 
 const useStyles = makeStyles(styles);
 
@@ -27,7 +30,6 @@ const styles = {
 };
 
 function AddEditBuReturn(props) {
-
   const [comingFor, setcomingFor] = useState('');
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 
@@ -42,7 +44,7 @@ function AddEditBuReturn(props) {
     fuLogId: '',
     statusArray: [],
     businessUnits: [],
-    staffArray:[],
+    staffArray: [],
     fuLogs: []
   };
 
@@ -72,7 +74,7 @@ function AddEditBuReturn(props) {
 
   const onChangeValue = e => {
     dispatch({ field: e.target.name, value: e.target.value });
-    if(e.target.name === 'status'){
+    if (e.target.name === 'status') {
       dispatch({ field: 'reason', value: '' });
     }
   };
@@ -84,7 +86,6 @@ function AddEditBuReturn(props) {
   }
 
   useEffect(() => {
-
     setcomingFor(props.history.location.state.comingFor);
     const selectedRec = props.history.location.state.selectedItem;
     if (selectedRec) {
@@ -93,21 +94,30 @@ function AddEditBuReturn(props) {
           dispatch({ field: key, value: val._id });
           dispatch({ field: 'reason', value: val.reason });
         } else {
-          dispatch({field: key, value: val});
+          dispatch({ field: key, value: val });
         }
       });
     }
-    if(props.history.location.state.statues){
-      dispatch({field: 'statusArray', value: props.history.location.state.statues});
+    if (props.history.location.state.statues) {
+      dispatch({
+        field: 'statusArray',
+        value: props.history.location.state.statues
+      });
     }
-    if(props.history.location.state.businessUnits){
-      dispatch({field: 'businessUnits', value: props.history.location.state.businessUnits});
+    if (props.history.location.state.businessUnits) {
+      dispatch({
+        field: 'businessUnits',
+        value: props.history.location.state.businessUnits
+      });
     }
-    if(props.history.location.state.staff){
-      dispatch({field: 'staffArray', value: props.history.location.state.staff});
+    if (props.history.location.state.staff) {
+      dispatch({
+        field: 'staffArray',
+        value: props.history.location.state.staff
+      });
     }
-    if(props.history.location.state.fuLogs){
-      dispatch({field: 'fuLogs', value: props.history.location.state.fuLogs});
+    if (props.history.location.state.fuLogs) {
+      dispatch({ field: 'fuLogs', value: props.history.location.state.fuLogs });
     }
   }, []);
 
@@ -130,7 +140,9 @@ function AddEditBuReturn(props) {
       reason,
       updatedBy: currentUser.name
     };
-    axios.post(addFunctionalUnitUrl, params).then(res => {
+    axios
+      .post(addFunctionalUnitUrl, params)
+      .then(res => {
         if (res.data.success) {
           props.history.goBack();
         } else if (!res.data.success) {
@@ -170,6 +182,8 @@ function AddEditBuReturn(props) {
         console.log('error after adding bu inventory', e);
       });
   };
+
+  console.log(fuLogs);
 
   return (
     <div className="container">
@@ -341,32 +355,37 @@ function AddEditBuReturn(props) {
           <Table className="mt20">
             <TableHead>
               <TableRow>
-              <TableCell>Status</TableCell>
+                <TableCell>Status</TableCell>
                 <TableCell>Reason</TableCell>
                 <TableCell>Last Updated By</TableCell>
                 <TableCell>Last Updated at</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {fuLogs && fuLogs.map((prop, index)=>{
-                if(prop.fuId === _id){
-                  return(
-                    <TableRow key={index}>
-                      <TableCell>{prop.status === 'active' ? 'Active' : 'In Active'}</TableCell>
-                      <TableCell>{prop.reason ? prop.reason : 'N/A'}</TableCell>
-                      <TableCell>{prop.updatedBy}</TableCell>
-                      <TableCell>
-                        {new Date(prop.updatedAt).getDate()}/
-                        {new Date(prop.updatedAt).getMonth() + 1}/
-                        {new Date(prop.updatedAt).getFullYear()}{' '}
-                        {new Date(prop.updatedAt).getHours()}
-                        {':'}
-                        {new Date(prop.updatedAt).getMinutes()}
-                      </TableCell>
-                    </TableRow>
-                  )
-                }
-              })}
+              {fuLogs &&
+                fuLogs.map((prop, index) => {
+                  if (prop.fuId === _id) {
+                    return (
+                      <TableRow key={index}>
+                        <TableCell>
+                          {prop.status === 'active' ? 'Active' : 'In Active'}
+                        </TableCell>
+                        <TableCell>
+                          {prop.reason ? prop.reason : 'N/A'}
+                        </TableCell>
+                        <TableCell>{prop.updatedBy}</TableCell>
+                        <TableCell>
+                          {new Date(prop.updatedAt).getDate()}/
+                          {new Date(prop.updatedAt).getMonth() + 1}/
+                          {new Date(prop.updatedAt).getFullYear()}{' '}
+                          {new Date(prop.updatedAt).getHours()}
+                          {':'}
+                          {new Date(prop.updatedAt).getMinutes()}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  }
+                })}
             </TableBody>
           </Table>
         ) : (
