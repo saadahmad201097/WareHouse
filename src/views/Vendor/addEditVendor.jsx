@@ -8,7 +8,12 @@ import Modal from '@material-ui/core/Modal';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
 import { ToastsStore } from 'react-toasts';
-import { addVendorUrl, updateVendorUrl, addShippingTermUrl } from '../../public/endpoins';
+import {
+  addVendorUrl,
+  updateVendorUrl,
+  addShippingTermUrl,
+  updateShippingTermUrl
+} from '../../public/endpoins';
 import ws from '../../variables/websocket';
 import ShippingTerm from '../ShippingTerm/shippingTerm';
 
@@ -150,41 +155,50 @@ function AddEditVendor(props) {
         rating,
         status
       };
-      axios.post(addVendorUrl, params).then(res => {
-        if(res.data.success){debugger
-          addShippingTerms(res.data._id)
-          ws.send('add_vendor');
+      axios
+        .post(addVendorUrl, params)
+        .then(res => {
+          if (res.data.success) {
+            // debugger;
+            console.log('response is', res.data.data._id);
+            if (shippingTermsData.length > 0) {
+              addShippingTerms(res.data.data._id);
+            } else {
+              props.history.goBack();
+            }
+            ws.send('add_vendor');
+          } else if (!res.data.success) {
+            ToastsStore.error(res.data.error);
+          }
+        })
+        .catch(e => {
+          console.log('error after adding vendor', e);
+        });
+    }
+  };
+
+  const addShippingTerms = (id, data = shippingTermsData) => {
+    // shippingTermsData
+    // for (let i = 0; i < shippingTermsData.length; i++) {
+    var data = {
+      shippingTermsData: data,
+      vendorId: id
+    };
+    axios
+      .post(addShippingTermUrl, data)
+      .then(res => {
+        if (res.data.success) {
+          console.log(res.data.data);
           props.history.goBack();
         } else if (!res.data.success) {
           ToastsStore.error(res.data.error);
         }
       })
       .catch(e => {
-        console.log('error after adding vendor', e);
+        console.log('error while adding shipping term ', e);
       });
-    }
   };
-  
-  const addShippingTerms = (id) => {debugger
-    // shippingTermsData
-    // for (let i = 0; i < shippingTermsData.length; i++) {
-      var data = {
-        shippingTermsData,
-        vendorId: id
-      }
-    //   axios.post(addShippingTermUrl, data)
-    //     .then(res => {
-    //       if (res.data.success) {
 
-    //       } else if (!res.data.success) {
-    //         ToastsStore.error(res.data.error);
-    //       }
-    //     })
-    //     .catch(e => {
-    //       console.log('error while adding shipping term ', e);
-    //     });
-    // }
-  }
   const handleEdit = () => {
     setIsFormSubmitted(true);
     if (validateForm()) {
@@ -213,7 +227,23 @@ function AddEditVendor(props) {
         .put(updateVendorUrl, params)
         .then(res => {
           if (res.data.success) {
-            props.history.goBack();
+            // console.log('response is', res.data.data._id);
+            if (shippingTermsData.length > 0) {
+              let withId = [];
+              let withOutId = [];
+
+              for (let i = 0; i < shippingTermsData.length; i++) {
+                if (shippingTermsData[i]._id) {
+                  withId.push(shippingTermsData[i]);
+                } else {
+                  withOutId.push(shippingTermsData[i]);
+                }
+              }
+              editShippingTerms(_id, withId);
+              addShippingTerms(_id, withOutId);
+            } else {
+              props.history.goBack();
+            }
           } else if (!res.data.success) {
             ToastsStore.error(res.data.error);
           }
@@ -222,6 +252,28 @@ function AddEditVendor(props) {
           console.log('error after updating vendor', e);
         });
     }
+  };
+
+  const editShippingTerms = (id, withId) => {
+    // shippingTermsData
+    // for (let i = 0; i < shippingTermsData.length; i++) {
+    var data = {
+      shippingTermsData: withId,
+      vendorId: id
+    };
+    axios
+      .put(updateShippingTermUrl, data)
+      .then(res => {
+        if (res.data.success) {
+          console.log(res.data.data);
+          //   props.history.goBack();
+        } else if (!res.data.success) {
+          ToastsStore.error(res.data.error);
+        }
+      })
+      .catch(e => {
+        console.log('error while adding shipping term ', e);
+      });
   };
 
   const addShippingTerm = () => {
@@ -235,7 +287,9 @@ function AddEditVendor(props) {
 
   const addPaymetTerm = () => {};
 
-  const hideShippingModel = (data) => {debugger
+  const hideShippingModel = data => {
+    // debugger;
+    console.log(data);
     setShippingTermsData(data);
     setOpenShippingTermModal(false);
   };
@@ -282,7 +336,7 @@ function AddEditVendor(props) {
             id="telephone1"
             name="telephone1"
             label="Telephone 1"
-            type="text"
+            type="number"
             variant="outlined"
             value={telephone1}
             onChange={onChangeValue}
@@ -296,7 +350,7 @@ function AddEditVendor(props) {
             id="telephone2"
             name="telephone2"
             label="Telephone 2"
-            type="text"
+            type="number"
             variant="outlined"
             value={telephone2}
             onChange={onChangeValue}
@@ -309,7 +363,7 @@ function AddEditVendor(props) {
             id="contactEmail"
             name="contactEmail"
             label="Contact Email"
-            type="text"
+            type="email"
             variant="outlined"
             value={contactEmail}
             onChange={onChangeValue}
@@ -340,7 +394,7 @@ function AddEditVendor(props) {
             id="zipcode"
             name="zipcode"
             label="Zip Code"
-            type="text"
+            type="number"
             variant="outlined"
             value={zipcode}
             onChange={onChangeValue}
@@ -380,7 +434,7 @@ function AddEditVendor(props) {
             id="pobox"
             name="pobox"
             label="PO BOX"
-            type="text"
+            type="number"
             variant="outlined"
             value={pobox}
             onChange={onChangeValue}
@@ -394,7 +448,7 @@ function AddEditVendor(props) {
             id="faxno"
             name="faxno"
             label="Fax No"
-            type="text"
+            type="number"
             variant="outlined"
             value={faxno}
             onChange={onChangeValue}
@@ -407,7 +461,7 @@ function AddEditVendor(props) {
             id="taxno"
             name="taxno"
             label="Tax No"
-            type="text"
+            type="number"
             variant="outlined"
             value={taxno}
             onChange={onChangeValue}
@@ -437,7 +491,7 @@ function AddEditVendor(props) {
             id="contactPersonTelephone"
             name="contactPersonTelephone"
             label="Contact Person TelePhone"
-            type="text"
+            type="number"
             variant="outlined"
             value={contactPersonTelephone}
             onChange={onChangeValue}
@@ -451,7 +505,7 @@ function AddEditVendor(props) {
             id="contactPersonEmail"
             name="contactPersonEmail"
             label="Contact Person Email"
-            type="text"
+            type="email"
             variant="outlined"
             value={contactPersonEmail}
             onChange={onChangeValue}
@@ -532,7 +586,8 @@ function AddEditVendor(props) {
           >
             <ShippingTerm
               hideShippingModel={hideShippingModel}
-              modeForShippingTerms={modeForShippingTerms}              
+              modeForShippingTerms={modeForShippingTerms}
+              selectedVendor={_id}
             />
           </div>
         </div>

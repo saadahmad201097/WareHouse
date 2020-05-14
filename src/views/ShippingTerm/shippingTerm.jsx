@@ -9,7 +9,11 @@ import styles from 'assets/jss/material-dashboard-react/components/tableStyle.js
 import CustomTable from '../../components/Table/Table';
 import ConfirmationModal from '../../components/Modal/confirmationModal';
 import axios from 'axios';
-import { getShippingTermUrl, deleteShippingTermUrl, addShippingTermUrl} from '../../public/endpoins';
+import {
+  getShippingTermUrl,
+  deleteShippingTermUrl,
+  addShippingTermUrl
+} from '../../public/endpoins';
 import Loader from 'react-loader-spinner';
 import { ToastsStore } from 'react-toasts';
 import RcIf from 'rc-if';
@@ -22,7 +26,7 @@ export default function ShippingTerm(props) {
 
   function getShippingTerms() {
     axios
-      .get(getShippingTermUrl)
+      .get(getShippingTermUrl + '/' + props.selectedVendor)
       .then(res => {
         if (res.data.success) {
           if (res.data.data.shippingTerm.length > 0) {
@@ -75,24 +79,27 @@ export default function ShippingTerm(props) {
   }
 
   function handleDelete(id, index) {
-
-    if(id){ // If record exist in database then remove it from database
-      axios.delete(deleteShippingTermUrl + '/' + id).then(res => {
-        if (res.data.success) {debugger
-          let temp = shippingTerms.filter(item => {
-            return item._id !== id;
-          });
-          setShippingTerms(temp);
-        } else if (!res.data.success) {
-          ToastsStore.error(res.data.error);
-        }
-        return res;
-      })
-      .catch(e => {
-        console.log('error while deletion ', e);
-      });
-    }
-    else{ // If record not exist in database then remove it locally
+    if (id) {
+      // If record exist in database then remove it from database
+      axios
+        .delete(deleteShippingTermUrl + '/' + id)
+        .then(res => {
+          if (res.data.success) {
+            // debugger;
+            let temp = shippingTerms.filter(item => {
+              return item._id !== id;
+            });
+            setShippingTerms(temp);
+          } else if (!res.data.success) {
+            ToastsStore.error(res.data.error);
+          }
+          return res;
+        })
+        .catch(e => {
+          console.log('error while deletion ', e);
+        });
+    } else {
+      // If record not exist in database then remove it locally
       let tempArr = shippingTerms;
       tempArr.splice(index, 1);
       setShippingTerms([...tempArr]);
@@ -123,6 +130,7 @@ export default function ShippingTerm(props) {
     //     });
     // }
 
+  
     props.hideShippingModel(temp);
   }
 
@@ -165,11 +173,10 @@ export default function ShippingTerm(props) {
                       error={!prop.description && isFormSubmitted}
                     />
                   </div>
-                  <div className="col-sm-3">
-                    {/* <span style={{ cursor: 'pointer' }}>
-                      <i className="ml10 zmdi zmdi-edit zmdi-hc-2x  mdc-text-amber"></i>
-                    </span> */}
-
+                  <div
+                    className="col-sm-3"
+                    style={{ display: 'flex', alignItems: 'center' }}
+                  >
                     <RcIf if={arr.length > 1}>
                       <span
                         onClick={() => handleDelete(prop._id, index)}
@@ -203,14 +210,17 @@ export default function ShippingTerm(props) {
           <div
             style={{
               display: 'flex',
-              justifyContent: 'center',
+              justifyContent: 'space-between',
+              marginLeft: 30,
+              marginRight: 30,
+
               flex: 0.5,
               alignItems: 'center'
             }}
           >
             <div style={styles.inputContainer}>
               <Button
-                onClick={() => props.hideShippingModel(shippingTerms)}
+                onClick={() => props.hideShippingModel([])}
                 variant="contained"
               >
                 Cancel
