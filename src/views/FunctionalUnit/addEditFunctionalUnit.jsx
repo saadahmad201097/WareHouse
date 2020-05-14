@@ -306,8 +306,8 @@ function AddEditBuReturn(props) {
           </Select>
         </div>
 
-        {status === 'in_active' ? (
-          <div className="col-md-6" style={styles.inputContainer}>
+        <div className="col-md-6" style={styles.inputContainer}>
+          {status === 'in_active' ? (
             <TextField
               fullWidth
               id="reason"
@@ -317,10 +317,10 @@ function AddEditBuReturn(props) {
               value={reason}
               onChange={onChangeValue}
             />
-          </div>
-        ) : (
-          undefined
-        )}
+          ) : (
+            undefined
+          )}
+        </div>
       </div>
 
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
