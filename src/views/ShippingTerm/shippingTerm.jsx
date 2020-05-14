@@ -30,7 +30,33 @@ export default function ShippingTerm(props) {
       .then(res => {
         if (res.data.success) {
           if (res.data.data.shippingTerm.length > 0) {
-            setShippingTerms(res.data.data.shippingTerm);
+            // setShippingTerms(res.data.data.shippingTerm);
+            // if (props.shippingTermsData.length > 0) {
+            //   setShippingTerms('');
+
+            let removed = [];
+
+            for (let i = 0; i < props.shippingTermsData.length; i++) {
+              let found = false;
+              for (let j = 0; j < res.data.data.shippingTerm.length; j++) {
+                if (
+                  props.shippingTermsData[i].description ===
+                  res.data.data.shippingTerm[j].description
+                ) {
+                  found = true;
+                  console.log(props.shippingTermsData[i]);
+                }
+              }
+              if (!found) {
+                console.log(props.shippingTermsData[i]);
+
+                removed.push(props.shippingTermsData[i]);
+              }
+            }
+            console.log(removed);
+            let temp = res.data.data.shippingTerm.concat(removed);
+            setShippingTerms(temp);
+            // }
           } else {
             setShippingTerms([{ description: '' }]);
           }
@@ -44,6 +70,13 @@ export default function ShippingTerm(props) {
   }
 
   useEffect(() => {
+    if (
+      props.shippingTermsData.length > 0 &&
+      props.modeForShippingTerms !== 'edit'
+    ) {
+      setShippingTerms(props.shippingTermsData);
+    }
+
     if (props.modeForShippingTerms === 'edit') {
       getShippingTerms();
     }
@@ -130,7 +163,6 @@ export default function ShippingTerm(props) {
     //     });
     // }
 
-  
     props.hideShippingModel(temp);
   }
 
@@ -161,9 +193,16 @@ export default function ShippingTerm(props) {
                   key={index}
                   style={{}}
                 >
-                  <div className="col-sm-9" style={{ marginTop: 1 }}>
+                  <div
+                    className="col-sm-9 col-xs-9 "
+                    style={{
+                      marginTop: 1,
+                      justifyContent: 'center',
+                      display: 'flex'
+                    }}
+                  >
                     <TextField
-                      fullWidth
+                      style={{ width: '85%' }}
                       name="description"
                       label=""
                       type="text"
@@ -174,7 +213,7 @@ export default function ShippingTerm(props) {
                     />
                   </div>
                   <div
-                    className="col-sm-3"
+                    className="col-xs-3 col-sm-3"
                     style={{ display: 'flex', alignItems: 'center' }}
                   >
                     <RcIf if={arr.length > 1}>
@@ -189,9 +228,9 @@ export default function ShippingTerm(props) {
                     <RcIf if={arr.length - 1 === index}>
                       <span
                         onClick={addNewShippingTerm}
-                        style={{ cursor: 'pointer' }}
+                        style={{ cursor: 'pointer', marginLeft: '10%' }}
                       >
-                        <i className="ml10 zmdi zmdi-plus zmdi-hc-2x"></i>
+                        <i className="ml10 zmdi zmdi-plus-circle zmdi-hc-2x"></i>
                       </span>
                     </RcIf>
                   </div>
@@ -219,10 +258,7 @@ export default function ShippingTerm(props) {
             }}
           >
             <div style={styles.inputContainer}>
-              <Button
-                onClick={() => props.hideShippingModel([])}
-                variant="contained"
-              >
+              <Button onClick={() => props.hideModel()} variant="contained">
                 Cancel
               </Button>
             </div>

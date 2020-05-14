@@ -26,7 +26,7 @@ const styles = {
 function AddEditVendor(props) {
   const modalStyle = {
     backgroundColor: '#5074f4',
-    borderRadius: 10,
+    borderRadius: 30,
     height: '80%',
     marginLeft: '15%',
     marginRight: '15%',
@@ -110,7 +110,7 @@ function AddEditVendor(props) {
 
   const [comingFor, setcomingFor] = useState('');
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
-  const [openShippingTermModal, setOpenShippingTermModal] = useState(false);
+  const [openShippingTermModal, setOpenShippingTermModal] = useState(true);
   const [shippingTermsData, setShippingTermsData] = useState([]);
   const [modeForShippingTerms, setModeForShippingTerms] = useState('add');
 
@@ -287,10 +287,14 @@ function AddEditVendor(props) {
 
   const addPaymetTerm = () => {};
 
-  const hideShippingModel = data => {
+  const hideShippingModel = (data = shippingTermsData) => {
     // debugger;
     console.log(data);
     setShippingTermsData(data);
+    setOpenShippingTermModal(false);
+  };
+
+  const hideModel = () => {
     setOpenShippingTermModal(false);
   };
 
@@ -574,10 +578,18 @@ function AddEditVendor(props) {
             flexDirection: 'column'
           }}
         >
-          <div style={{ display: 'flex', flex: 0.3, flexDirection: 'column' }}>
-            <h4 className="modal-heading" style={{ color: 'black' }}>
+          <div
+            style={{
+              display: 'flex',
+              flex: 1,
+              justifyContent: 'flex-start',
+              marginLeft: 40,
+              alignItems: 'center'
+            }}
+          >
+            <h3 className="modal-heading" style={{ color: 'black' }}>
               Shipping Term(s)
-            </h4>
+            </h3>
           </div>
 
           <div
@@ -588,6 +600,8 @@ function AddEditVendor(props) {
               hideShippingModel={hideShippingModel}
               modeForShippingTerms={modeForShippingTerms}
               selectedVendor={_id}
+              shippingTermsData={shippingTermsData}
+              hideModel={hideModel}
             />
           </div>
         </div>
