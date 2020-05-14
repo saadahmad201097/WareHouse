@@ -8,7 +8,7 @@ import Modal from '@material-ui/core/Modal';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
 import { ToastsStore } from 'react-toasts';
-import { addVendorUrl, updateVendorUrl } from '../../public/endpoins';
+import { addVendorUrl, updateVendorUrl, addShippingTermUrl } from '../../public/endpoins';
 import ws from '../../variables/websocket';
 import ShippingTerm from '../ShippingTerm/shippingTerm';
 
@@ -51,7 +51,6 @@ function AddEditVendor(props) {
     contactPersonTelephone: '',
     contactPersonEmail: '',
     paymentTerms: '',
-    shippingTerms: '',
     rating: '',
     status: ''
   };
@@ -83,7 +82,6 @@ function AddEditVendor(props) {
     contactPersonTelephone,
     contactPersonEmail,
     paymentTerms,
-    shippingTerms,
     rating,
     status
   } = state;
@@ -108,7 +106,7 @@ function AddEditVendor(props) {
   const [comingFor, setcomingFor] = useState('');
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
   const [openShippingTermModal, setOpenShippingTermModal] = useState(false);
-
+  const [shippingTermsData, setShippingTermsData] = useState([]);
   const [modeForShippingTerms, setModeForShippingTerms] = useState('add');
 
   useEffect(() => {
@@ -149,26 +147,44 @@ function AddEditVendor(props) {
         contactPersonTelephone,
         contactPersonEmail,
         paymentTerms,
-        shippingTerms,
         rating,
         status
       };
-      axios
-        .post(addVendorUrl, params)
-        .then(res => {
-          if (res.data) {
-            ws.send('add_vendor');
-            props.history.goBack();
-          } else if (!res.data.success) {
-            ToastsStore.error(res.data.error);
-          }
-        })
-        .catch(e => {
-          console.log('error after adding vendor', e);
-        });
+      axios.post(addVendorUrl, params).then(res => {
+        if(res.data.success){debugger
+          addShippingTerms(res.data._id)
+          ws.send('add_vendor');
+          props.history.goBack();
+        } else if (!res.data.success) {
+          ToastsStore.error(res.data.error);
+        }
+      })
+      .catch(e => {
+        console.log('error after adding vendor', e);
+      });
     }
   };
+  
+  const addShippingTerms = (id) => {debugger
+    // shippingTermsData
+    // for (let i = 0; i < shippingTermsData.length; i++) {
+      var data = {
+        shippingTermsData,
+        vendorId: id
+      }
+    //   axios.post(addShippingTermUrl, data)
+    //     .then(res => {
+    //       if (res.data.success) {
 
+    //       } else if (!res.data.success) {
+    //         ToastsStore.error(res.data.error);
+    //       }
+    //     })
+    //     .catch(e => {
+    //       console.log('error while adding shipping term ', e);
+    //     });
+    // }
+  }
   const handleEdit = () => {
     setIsFormSubmitted(true);
     if (validateForm()) {
@@ -190,7 +206,6 @@ function AddEditVendor(props) {
         contactPersonTelephone,
         contactPersonEmail,
         paymentTerms,
-        shippingTerms,
         rating,
         status
       };
@@ -220,7 +235,8 @@ function AddEditVendor(props) {
 
   const addPaymetTerm = () => {};
 
-  const hideShippingModel = () => {
+  const hideShippingModel = (data) => {debugger
+    setShippingTermsData(data);
     setOpenShippingTermModal(false);
   };
 
@@ -457,22 +473,6 @@ function AddEditVendor(props) {
             onChange={onChangeValue}
           />
         </div>
-
-        <div className="col-md-6" style={styles.inputContainer}>
-          <TextField
-            fullWidth
-            id="shippingTerms"
-            name="shippingTerms"
-            label="Shipping Terms"
-            type="text"
-            variant="outlined"
-            value={shippingTerms}
-            onChange={onChangeValue}
-          />
-        </div>
-      </div>
-
-      <div className="row">
         <div className="col-md-6" style={styles.inputContainer}>
           <TextField
             fullWidth
@@ -485,7 +485,9 @@ function AddEditVendor(props) {
             onChange={onChangeValue}
           />
         </div>
+      </div>
 
+      <div className="row">
         <div className="col-md-6" style={styles.inputContainer}>
           <TextField
             fullWidth
@@ -530,7 +532,7 @@ function AddEditVendor(props) {
           >
             <ShippingTerm
               hideShippingModel={hideShippingModel}
-              modeForShippingTerms={modeForShippingTerms}
+              modeForShippingTerms={modeForShippingTerms}              
             />
           </div>
         </div>

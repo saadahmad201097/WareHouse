@@ -9,11 +9,7 @@ import styles from 'assets/jss/material-dashboard-react/components/tableStyle.js
 import CustomTable from '../../components/Table/Table';
 import ConfirmationModal from '../../components/Modal/confirmationModal';
 import axios from 'axios';
-import {
-  getShippingTermUrl,
-  deleteShippingTermUrl,
-  addShippingTermUrl
-} from '../../public/endpoins';
+import { getShippingTermUrl, deleteShippingTermUrl, addShippingTermUrl} from '../../public/endpoins';
 import Loader from 'react-loader-spinner';
 import { ToastsStore } from 'react-toasts';
 import RcIf from 'rc-if';
@@ -57,6 +53,8 @@ export default function ShippingTerm(props) {
     // debugger;
 
     let x = '';
+    let temp = [];
+
     for (let i = 0; i < shippingTerms.length; i++) {
       if (index === i) {
         x = shippingTerms[i];
@@ -64,8 +62,6 @@ export default function ShippingTerm(props) {
     }
 
     x.description = e.target.value;
-
-    let temp = [];
 
     for (let i = 0; i < shippingTerms.length; i++) {
       if (i === index) {
@@ -78,36 +74,15 @@ export default function ShippingTerm(props) {
     setShippingTerms(temp);
   }
 
-  function handleDelete(id) {
-    // setModalVisible(true);
-    // setdeleteItem(id);
+  function handleDelete(id, index) {
 
-    if (id === 0) {
-      return;
-    }
-
-    let temp = [];
-    for (let i = 0; i < shippingTerms.length; i++) {
-      if (i !== id) {
-        temp.push(shippingTerms[i]);
-      }
-    }
-
-    setShippingTerms(temp);
-  }
-
-  function deleteShippingTerm() {
-    const params = {
-      _id: deleteItem
-    };
-
-    axios
-      .delete(deleteShippingTermUrl + '/' + params._id)
-      .then(res => {
-        if (res.data.success) {
-          setdeleteItem('');
-          setModalVisible(false);
-          window.location.reload(false);
+    if(id){ // If record exist in database then remove it from database
+      axios.delete(deleteShippingTermUrl + '/' + id).then(res => {
+        if (res.data.success) {debugger
+          let temp = shippingTerms.filter(item => {
+            return item._id !== id;
+          });
+          setShippingTerms(temp);
         } else if (!res.data.success) {
           ToastsStore.error(res.data.error);
         }
@@ -116,65 +91,40 @@ export default function ShippingTerm(props) {
       .catch(e => {
         console.log('error while deletion ', e);
       });
+    }
+    else{ // If record not exist in database then remove it locally
+      let tempArr = shippingTerms;
+      tempArr.splice(index, 1);
+      setShippingTerms([...tempArr]);
+    }
   }
 
   function addShippingTerms() {
     let temp = [];
-
-    let counter = 0;
 
     for (let i = 0; i < shippingTerms.length; i++) {
       if (shippingTerms[i].description !== '') {
         temp.push(shippingTerms[i]);
       }
     }
-    // console.log(temp);
 
-    for (let i = 0; i < temp.length; i++) {
-      axios
-        .post(addShippingTermUrl, temp[i])
-        .then(res => {
-          if (res.data.success) {
-            counter = counter + 1;
-            console.log(res.data);
-            // setModalVisible(false);
-            // window.location.reload(false);
-          } else if (!res.data.success) {
-            ToastsStore.error(res.data.error);
-          }
-          return res;
-        })
-        .catch(e => {
-          console.log('error while deletion ', e);
-        });
-    }
+    // for (let i = 0; i < temp.length; i++) {
+    //   axios.post(addShippingTermUrl, temp[i])
+    //     .then(res => {
+    //       if (res.data.success) {
 
-    // if (counter === temp.length) {
-    props.hideShippingModel();
-    //   window.location.reload(false);
+    //       } else if (!res.data.success) {
+    //         ToastsStore.error(res.data.error);
+    //       }
+    //       return res;
+    //     })
+    //     .catch(e => {
+    //       console.log('error while deletion ', e);
+    //     });
     // }
-  }
 
-  const handleDeleteDatabase = id => {
-    axios
-      .delete(deleteShippingTermUrl + '/' + id)
-      .then(res => {
-        if (res.data.success) {
-          let temp = shippingTerms.filter(item => {
-            return item._id !== id;
-          });
-          setShippingTerms(temp);
-          // setModalVisible(false);
-          // window.location.reload(false);
-        } else if (!res.data.success) {
-          ToastsStore.error(res.data.error);
-        }
-        return res;
-      })
-      .catch(e => {
-        console.log('error while deletion ', e);
-      });
-  };
+    props.hideShippingModel(temp);
+  }
 
   return (
     <div style={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
@@ -212,28 +162,22 @@ export default function ShippingTerm(props) {
                       variant="outlined"
                       value={prop.description}
                       onChange={e => onChangeValue(e, index)}
-                      // error={!prop.description && isFormSubmitted}
+                      error={!prop.description && isFormSubmitted}
                     />
                   </div>
                   <div className="col-sm-3">
-                    <span style={{ cursor: 'pointer' }}>
+                    {/* <span style={{ cursor: 'pointer' }}>
                       <i className="ml10 zmdi zmdi-edit zmdi-hc-2x  mdc-text-amber"></i>
-                    </span>
+                    </span> */}
 
-                    <span
-                      onClick={
-                        props.modeForShippingTerms === 'add'
-                          ? () => handleDeleteLocal(index)
-                          : () => handleDeleteDatabase(prop._id)
-                      }
-                      style={{
-                        cursor: 'pointer',
-                        marginLeft: 7,
-                        marginRight: 7
-                      }}
-                    >
-                      <i className="ml10 zmdi zmdi-delete zmdi-hc-2x"></i>
-                    </span>
+                    <RcIf if={arr.length > 1}>
+                      <span
+                        onClick={() => handleDelete(prop._id, index)}
+                        style={{ cursor: 'pointer' }}
+                      >
+                        <i className="ml10 zmdi zmdi-delete zmdi-hc-2x"></i>
+                      </span>
+                    </RcIf>
 
                     <RcIf if={arr.length - 1 === index}>
                       <span
@@ -266,7 +210,7 @@ export default function ShippingTerm(props) {
           >
             <div style={styles.inputContainer}>
               <Button
-                onClick={() => props.hideShippingModel()}
+                onClick={() => props.hideShippingModel(shippingTerms)}
                 variant="contained"
               >
                 Cancel
