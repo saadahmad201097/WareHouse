@@ -42,6 +42,12 @@ export default function Vendor(props) {
   const [deleteItem, setdeleteItem] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
 
+  const [mainClasses, setClasses] = useState('');
+
+  const [statues, setStatuses] = useState('');
+
+  const [subClasses, setSubClasses] = useState('');
+
   ws.onmessage = message => {
     if (message.data == 'add_vendor') {
       getVendors();
@@ -56,6 +62,9 @@ export default function Vendor(props) {
       .then(res => {
         if (res.data.success) {
           setVendor(res.data.data.vendor);
+          setStatuses(res.data.data.statues);
+          setClasses(res.data.data.classes);
+          setSubClasses(res.data.data.subClasses);
         } else if (!res.data.success) {
           ToastsStore.error(res.data.error);
         }
@@ -74,7 +83,12 @@ export default function Vendor(props) {
     let path = `vendor/next/add`;
     props.history.push({
       pathname: path,
-      state: { comingFor: 'add' }
+      state: {
+        comingFor: 'add',
+        statues: statues,
+        mainClasses: mainClasses,
+        subClasses: subClasses
+      }
     });
   };
 
@@ -82,7 +96,13 @@ export default function Vendor(props) {
     let path = `vendor/next/edit`;
     props.history.push({
       pathname: path,
-      state: { comingFor: 'edit', selectedItem: rec }
+      state: {
+        comingFor: 'edit',
+        selectedItem: rec,
+        statues: statues,
+        mainClasses: mainClasses,
+        subClasses: subClasses
+      }
     });
   }
 

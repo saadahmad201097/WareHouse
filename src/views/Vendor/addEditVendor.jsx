@@ -7,6 +7,10 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Modal from '@material-ui/core/Modal';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
+
+import Select from '@material-ui/core/Select';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
 import { ToastsStore } from 'react-toasts';
 import {
   addVendorUrl,
@@ -57,7 +61,9 @@ function AddEditVendor(props) {
     contactPersonEmail: '',
     paymentTerms: '',
     rating: '',
-    status: ''
+    status: '',
+    cls: '',
+    subClass: ''
   };
 
   function reducer(state, { field, value }) {
@@ -88,7 +94,9 @@ function AddEditVendor(props) {
     contactPersonEmail,
     paymentTerms,
     rating,
-    status
+    status,
+    subClass,
+    cls
   } = state;
 
   const onChangeValue = e => {
@@ -106,7 +114,10 @@ function AddEditVendor(props) {
       zipcode.length > 0 &&
       taxno.length > 0 &&
       contactPersonName.length > 0 &&
-      contactPersonTelephone.length > 10;
+      contactPersonTelephone.length > 10 &&
+      subClass.length > 0 &&
+      cls.length > 0 &&
+      status.length > 0;
 
     if (contactEmail && contactPersonEmail === '') {
       return x && re.test(contactEmail);
@@ -127,8 +138,18 @@ function AddEditVendor(props) {
   const [shippingTermsData, setShippingTermsData] = useState([]);
   const [modeForShippingTerms, setModeForShippingTerms] = useState('add');
 
+  const [mainClasses, setClasses] = useState('');
+
+  const [statues, setStatuses] = useState('');
+
+  const [subClasses, setSubClasses] = useState('');
+
   useEffect(() => {
     setcomingFor(props.history.location.state.comingFor);
+    setClasses(props.history.location.state.mainClasses);
+    setStatuses(props.history.location.state.statues);
+    setSubClasses(props.history.location.state.subClasses);
+
     const selectedRec = props.history.location.state.selectedItem;
     if (selectedRec) {
       Object.entries(selectedRec).map(([key, val]) => {
@@ -166,7 +187,9 @@ function AddEditVendor(props) {
         contactPersonEmail,
         paymentTerms,
         rating,
-        status
+        status,
+        cls,
+        subClass
       };
       axios
         .post(addVendorUrl, params)
@@ -234,7 +257,9 @@ function AddEditVendor(props) {
         contactPersonEmail,
         paymentTerms,
         rating,
-        status
+        status,
+        cls,
+        subClass
       };
       axios
         .put(updateVendorUrl, params)
@@ -533,6 +558,58 @@ function AddEditVendor(props) {
 
       <div className="row">
         <div className="col-md-6" style={styles.inputContainer}>
+          <InputLabel id="buHead-label">Class</InputLabel>
+          <Select
+            fullWidth
+            id="cls"
+            name="cls"
+            value={cls}
+            onChange={onChangeValue}
+            label="Class"
+            error={!cls && isFormSubmitted}
+          >
+            <MenuItem value="">
+              <em>None</em>
+            </MenuItem>
+            {mainClasses &&
+              mainClasses.map(val => {
+                return (
+                  <MenuItem key={val.key} value={val.key}>
+                    {val.value}
+                  </MenuItem>
+                );
+              })}
+          </Select>
+        </div>
+
+        <div className="col-md-6" style={styles.inputContainer}>
+          <InputLabel id="buName-label">Sub Class</InputLabel>
+          <Select
+            fullWidth
+            id="subClass"
+            name="subClass"
+            value={subClass}
+            onChange={onChangeValue}
+            label="Sub Class"
+          >
+            <MenuItem value="">
+              <em>None</em>
+            </MenuItem>
+            {subClasses &&
+              subClasses.map(val => {
+                if (val.parent === cls)
+                  return (
+                    <MenuItem key={val.key} value={val.key}>
+                      {val.value}
+                    </MenuItem>
+                  );
+              })}
+          </Select>
+        </div>
+      </div>
+
+      <div className="row">
+        <div className="col-md-6" style={styles.inputContainer}>
           <TextField
             fullWidth
             id="paymentTerms"
@@ -560,16 +637,27 @@ function AddEditVendor(props) {
 
       <div className="row">
         <div className="col-md-6" style={styles.inputContainer}>
-          <TextField
+          <InputLabel id="buName-label">Status</InputLabel>
+          <Select
             fullWidth
             id="status"
             name="status"
-            label="Status"
-            type="text"
-            variant="outlined"
             value={status}
             onChange={onChangeValue}
-          />
+            label="Status"
+          >
+            <MenuItem value="">
+              <em>None</em>
+            </MenuItem>
+            {statues &&
+              statues.map(val => {
+                return (
+                  <MenuItem key={val.key} value={val.key}>
+                    {val.value}
+                  </MenuItem>
+                );
+              })}
+          </Select>
         </div>
       </div>
 
