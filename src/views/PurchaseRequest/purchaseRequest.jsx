@@ -20,7 +20,7 @@ const tableHeading = [
 ];
 const tableDataKeys = [
     'name',
-    ['vendorId', 'name'],
+    ['vendorId', 'englishName'],
     'date',
     'status'
 ];

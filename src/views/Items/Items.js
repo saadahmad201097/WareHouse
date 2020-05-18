@@ -23,13 +23,13 @@ const tableHeading = [
 const tableDataKeys = [
   'name',
   'subClass',
-  ['vendorId', 'name'],
+  ['vendorId', 'englishName'],
   'purchasePrice',
   'minimumLevel',
   'maximumLevel'
 ];
 
-const actions = {edit: true, delete: true};
+const actions = { edit: true, delete: true };
 
 export default function Items(props) {
   const [itemsArray, setItem] = useState('');
@@ -38,12 +38,23 @@ export default function Items(props) {
   const [deleteItem, setdeleteItem] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
 
+  const [classes, setClasses] = useState('');
+  const [subClasses, setSubClasses] = useState('');
+  const [grandSubClasses, setGrandSubClasses] = useState('');
+
   async function getItems() {
-    axios.get(getItemsUrl).then(res => {
+    axios
+      .get(getItemsUrl)
+      .then(res => {
         if (res.data.success) {
+          console.log(res.data.data);
           setItem(res.data.data.items);
           setVendors(res.data.data.vendors);
           setUnits(res.data.data.functionalUnit);
+
+          setClasses(res.data.data.classes);
+          setSubClasses(res.data.data.subClasses);
+          setGrandSubClasses(res.data.data.grandSubClasses);
         }
         // else if (!res.data.success) {
         //   this.setState({ tr: true });
@@ -62,7 +73,14 @@ export default function Items(props) {
     let path = `items/next/add`;
     props.history.push({
       pathname: path,
-      state: { comingFor: 'AddItems', vendors, units }
+      state: {
+        comingFor: 'AddItems',
+        vendors,
+        units,
+        classes,
+        subClasses,
+        grandSubClasses
+      }
     });
   };
 
@@ -70,7 +88,15 @@ export default function Items(props) {
     let path = `items/next/edit`;
     props.history.push({
       pathname: path,
-      state: { comingFor: 'EditItems', selectedItem: item, vendors, units }
+      state: {
+        comingFor: 'EditItems',
+        selectedItem: item,
+        vendors,
+        units,
+        classes,
+        subClasses,
+        grandSubClasses
+      }
     });
   }
 
@@ -84,7 +110,9 @@ export default function Items(props) {
       _id: deleteItem
     };
 
-    axios.delete(deleteItemUrl + '/' + params._id).then(res => {
+    axios
+      .delete(deleteItemUrl + '/' + params._id)
+      .then(res => {
         if (res.data.success) {
           setdeleteItem('');
           setModalVisible(false);
@@ -101,7 +129,6 @@ export default function Items(props) {
         setdeleteItem('');
       });
   }
-
 
   return (
     <div>
@@ -147,7 +174,6 @@ export default function Items(props) {
             handleDelete={handleDelete}
           />
 
-      
           <Modal
             open={modalVisible}
             style={{

@@ -288,9 +288,7 @@ export default function ShippingTerm(props) {
         </div>
       )}
 
-      {/* <div style={{ flex: 1, backgroundColor: 'red' }}></div>
-
-      <div style={{ flex: 1, backgroundColor: 'blue' }}></div> */}
+    
     </div>
   );
 }

@@ -9,6 +9,8 @@ export const getItemsUrl = `${baseUrl}/item/getitems`;
 export const addItemUrl = `${baseUrl}/item/additem`;
 export const updateItemUrl = `${baseUrl}/item/updateitem`;
 export const deleteItemUrl = `${baseUrl}/item/deleteitem`;
+export const getSearchedItemUrl = `${baseUrl}/item/getsearcheditems`;
+
 
 // bu inventory endpoints
 export const getBuInventoryUrl = `${baseUrl}/buinventory/getbuinventory`;
