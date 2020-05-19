@@ -21,12 +21,20 @@ import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import {
   addPurchaseRequestUrl,
   updatePurchaseRequestUrl,
-  getSearchedItemUrl
+  getSearchedItemUrl,
+  addPurchasingRequestItemUrl,
+  getPurchasingRequestItemUrl,
+  updatePurchasingRequestItemUrl
 } from '../../public/endpoins';
 
 import Paper from '@material-ui/core/Paper';
 
 import cookie from 'react-cookies';
+
+import Chip from '@material-ui/core/Chip';
+
+import Dialog from '@material-ui/core/Dialog';
+import { tr } from 'date-fns/locale';
 
 const styles = {
   inputContainer: {
@@ -94,17 +102,9 @@ function AddEditPurchaseRequest(props) {
 
   function validateForm() {
     return (
-      requestNo.length > 0 &&
-      generatedBy.length > 0 &&
-      date.length > 0 &&
-      vendorId.length > 0 &&
-      status.length > 0 &&
-      itemCode.length > 0 &&
-      name.length > 0 &&
-      description.length > 0 &&
-      currentQty > 0 &&
-      reqQty > 0 &&
-      comments.length > 0
+      // generatedBy.length > 0 &&
+      vendorId.length > 0 && status.length > 0
+      // && selectedItemsArray.length > 0
     );
   }
 
@@ -121,6 +121,33 @@ function AddEditPurchaseRequest(props) {
 
   const [itemFoundSuccessfull, setItemFoundSuccessfully] = useState(false);
   const [itemFound, setItem] = useState('');
+
+  const [selectedItemsArray, setSelectedItemsArray] = useState([]);
+
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const [selectedItem, setSelectedItem] = useState('');
+
+  const [purchaseRequestItems, setPurchaseRequestItems] = useState('');
+
+  const [selectItemToEditId, setSelectItemToEditId] = useState('');
+
+  function getPurchasingRequestItems(_id) {
+    console.log('called');
+    axios
+      .get(getPurchasingRequestItemUrl + '/' + _id)
+      .then(res => {
+        if (res.data.success) {
+          setPurchaseRequestItems(res.data.data);
+        } else if (!res.data.success) {
+        }
+      })
+      .catch(e => {
+        console.log('error after adding purchase request', e);
+        setOpenNotification(true);
+        setErrorMsg('Error while adding the purchase request');
+      });
+  }
 
   useEffect(() => {
     setCurrentUser(cookie.load('current_user'));
@@ -153,6 +180,10 @@ function AddEditPurchaseRequest(props) {
     if (props.history.location.state.items) {
       dispatch({ field: 'items', value: props.history.location.state.items });
     }
+
+    if (props.history.location.state.comingFor === 'edit') {
+      getPurchasingRequestItems(selectedRec._id);
+    }
   }, []);
 
   const handleCancel = () => {
@@ -163,17 +194,18 @@ function AddEditPurchaseRequest(props) {
     setIsFormSubmitted(true);
     if (validateForm()) {
       const params = {
+        _id,
         requestNo,
-        generatedBy,
-        date,
+        generatedBy: currentUser.name,
+        date: new Date(),
         vendorId,
-        status,
-        itemCode,
-        name,
-        description,
-        currentQty,
-        reqQty,
-        comments
+        status
+        // itemCode,
+        // name,
+        // description,
+        // currentQty,
+        // reqQty,
+        // comments
       };
       axios
         .post(addPurchaseRequestUrl, params)
@@ -199,15 +231,15 @@ function AddEditPurchaseRequest(props) {
         _id,
         requestNo,
         generatedBy,
-        date,
+        date: new Date(),
         vendorId,
-        status,
-        itemCode,
-        name,
-        description,
-        currentQty,
-        reqQty,
-        comments
+        status
+        // itemCode,
+        // name,
+        // description,
+        // currentQty,
+        // reqQty,
+        // comments
       };
       axios
         .put(updatePurchaseRequestUrl, params)
@@ -235,7 +267,7 @@ function AddEditPurchaseRequest(props) {
 
   const handleSearch = e => {
     setSearchQuery(e.target.value);
-    if (e.target.value.length > 3) {
+    if (e.target.value.length >= 3) {
       axios
         .get(getSearchedItemUrl + '/' + e.target.value)
         .then(res => {
@@ -249,6 +281,158 @@ function AddEditPurchaseRequest(props) {
               setItem('');
             }
           } else if (!res.data.success) {
+          }
+        })
+        .catch(e => {
+          console.log('error after adding purchase request', e);
+          setOpenNotification(true);
+          setErrorMsg('Error while adding the purchase request');
+        });
+    }
+  };
+
+  function handleAddItem(i) {
+    let found = false;
+    for (let i = 0; i < selectedItemsArray.length; i++) {
+      if (selectedItemsArray[i].itemCode === i.itemCode) {
+        found = true;
+        console.log('found');
+      }
+    }
+
+    if (!found) {
+      setDialogOpen(true);
+      setSelectedItem(i);
+
+      dispatch({ field: 'itemCode', value: i.itemCode });
+      dispatch({ field: 'name', value: i.name });
+
+      const obj = {
+        itemCode: i.itemCode
+      };
+
+      setSelectedItemsArray(pervState => [...pervState, obj]);
+      setSearchQuery('');
+    }
+  }
+
+  function validateItemsForm() {
+    return (
+      itemCode.length > 0 &&
+      description.length > 0 &&
+      name.length > 0 &&
+      reqQty.length > 0 &&
+      currentQty.length > 0 &&
+      comments.length > 0
+    );
+  }
+
+  function hideDialog() {
+    setDialogOpen(false);
+    setSelectedItem('');
+    setSelectItemToEditId('');
+  }
+
+  const addSelectedItem = () => {
+    if (validateItemsForm()) {
+      let params;
+      if (_id) {
+        params = {
+          purchaseRequestId: _id,
+          itemCode,
+          name,
+          description,
+          currentQty,
+          reqQty,
+          comments
+        };
+      } else {
+        params = {
+          itemCode,
+          name,
+          description,
+          currentQty,
+          reqQty,
+          comments
+        };
+      }
+
+      for (let i = 0; i < purchaseRequestItems.length; i++) {
+        if (purchaseRequestItems[i].itemCode === params.itemCode) {
+          alert('item already added');
+          setDialogOpen(false);
+          setSelectedItem('');
+          return;
+        }
+      }
+
+      axios
+        .post(addPurchasingRequestItemUrl, params)
+        .then(res => {
+          if (res.data.success) {
+            // props.history.goBack();
+            // console.log(res.data.data.purchaseRequestItem);
+            window.location.reload(false);
+
+            dispatch({
+              field: '_id',
+              value: res.data.data.purchaseRequestItem.purchaseRequestId
+            });
+
+            setDialogOpen(false);
+            setSelectedItem('');
+          } else if (!res.data.success) {
+            setOpenNotification(true);
+          }
+        })
+        .catch(e => {
+          console.log('error after adding purchase request', e);
+          setOpenNotification(true);
+          setErrorMsg('Error while adding the purchase request');
+        });
+    }
+  };
+
+  function selectedItemToEdit(i) {
+    setSelectItemToEditId(i._id);
+    dispatch({ field: 'description', value: i.description });
+    dispatch({ field: 'currentQty', value: i.currentQty });
+    dispatch({ field: 'comments', value: i.comments });
+    dispatch({ field: 'reqQty', value: i.reqQty });
+    dispatch({ field: 'name', value: i.name });
+    dispatch({ field: 'itemCode', value: i.itemCode });
+    setDialogOpen(true);
+  }
+
+  const editSelectedItem = () => {
+    if (validateItemsForm()) {
+      let params = {
+        _id: selectItemToEditId,
+        purchaseRequestId: _id,
+        itemCode,
+        name,
+        description,
+        currentQty,
+        reqQty,
+        comments
+      };
+
+      axios
+        .put(updatePurchasingRequestItemUrl, params)
+        .then(res => {
+          if (res.data.success) {
+            dispatch({ field: 'description', value: '' });
+            dispatch({ field: 'currentQty', value: '' });
+            dispatch({ field: 'comments', value: '' });
+            dispatch({ field: 'reqQty', value: '' });
+            dispatch({ field: 'name', value: '' });
+            dispatch({ field: 'itemCode', value: '' });
+            setDialogOpen(false);
+            setSelectedItem('');
+            setSelectItemToEditId('');
+            window.location.reload(false);
+          } else if (!res.data.success) {
+            setOpenNotification(true);
           }
         })
         .catch(e => {
@@ -375,189 +559,67 @@ function AddEditPurchaseRequest(props) {
       </div>
 
       {searchQuery ? (
-        <Paper
-          style={{ width: ' 100%',  marginTop: 20 }}
-          elevation={3}
-        >
-          {itemFoundSuccessfull ? (
-            itemFound && (
-              <Table size="small">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Name</TableCell>
-                    <TableCell>Item Code</TableCell>
-                    <TableCell>Puschase Price</TableCell>
-                    <TableCell  align="center">Description</TableCell>
-                  </TableRow>
-                </TableHead>
+        // <Paper style={{ width: ' 100%', marginTop: 20,  }} elevation={3}>
+        <div style={{ zIndex: 3 }}>
+          <Paper>
+            {itemFoundSuccessfull ? (
+              itemFound && (
+                <Table size="small">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Name</TableCell>
+                      <TableCell>Item Code</TableCell>
+                      <TableCell>Puschase Price</TableCell>
+                      <TableCell align="center">Description</TableCell>
+                    </TableRow>
+                  </TableHead>
 
-                <TableBody>
-                  {itemFound.map(item => {
-                    return (
-                      <TableRow  style={{cursor:"pointer"}}>
-                        <TableCell>{item.name}</TableCell>
-                        <TableCell>{item.itemCode}</TableCell>
-                        <TableCell>{item.purchasePrice}</TableCell>
-                        <TableCell>{item.description}</TableCell>
-                      </TableRow>
-                    );
-                  })}
-                </TableBody>
-              </Table>
-            )
-          ) : (
-            <h4 style={{ textAlign: 'center' }}>Item Not Found</h4>
-          )}
-        </Paper>
+                  <TableBody>
+                    {itemFound.map((i, index) => {
+                      return (
+                        <TableRow
+                          onClick={() => handleAddItem(i)}
+                          style={{ cursor: 'pointer' }}
+                        >
+                          <TableCell>{i.name}</TableCell>
+                          <TableCell>{i.itemCode}</TableCell>
+                          <TableCell>{i.purchasePrice}</TableCell>
+                          <TableCell>{i.description}</TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+              )
+            ) : (
+              <h4
+                style={{ textAlign: 'center' }}
+                onClick={() => console.log('ddf')}
+              >
+                Item Not Found
+              </h4>
+            )}
+          </Paper>
+        </div>
       ) : (
         undefined
       )}
 
-      <div className="row">
-        <h4 className="mt25 ml20">Items</h4>
-        <div className="col-md-12">
-          <Table className={classes.table}>
-            <TableHead className="TableHeader">
-              <TableRow className={classes.tableHeadRow}>
-                <TableCell
-                  className={classes.tableCell + ' ' + classes.tableHeadCell}
-                >
-                  Item Code
-                </TableCell>
-                <TableCell
-                  className={classes.tableCell + ' ' + classes.tableHeadCell}
-                >
-                  Name
-                </TableCell>
-                <TableCell
-                  className={classes.tableCell + ' ' + classes.tableHeadCell}
-                >
-                  Sub Class
-                </TableCell>
-                <TableCell
-                  className={classes.tableCell + ' ' + classes.tableHeadCell}
-                >
-                  Minimum Level
-                </TableCell>
-                <TableCell
-                  className={classes.tableCell + ' ' + classes.tableHeadCell}
-                >
-                  Maximun Level
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {items &&
-                items.map((prop, index) => {
-                  return (
-                    <TableRow
-                      key={index}
-                      onClick={() => {
-                        dispatch({ field: 'selectedRow', value: index });
-                      }}
-                      className={`${classes.tableBodyRow} ${classes.pointer} ${
-                        index === selectedRow ? 'selected' : ''
-                      }`}
-                    >
-                      <TableCell className={classes.tableCell}>
-                        {prop.itemCode} selected: {selectedRow}
-                      </TableCell>
-                      <TableCell className={classes.tableCell}>
-                        {prop.name}
-                      </TableCell>
-                      <TableCell className={classes.tableCell}>
-                        {prop.subClass}
-                      </TableCell>
-                      <TableCell className={classes.tableCell}>
-                        {prop.minimumLevel}
-                      </TableCell>
-                      <TableCell className={classes.tableCell}>
-                        {prop.maximumLevel}
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-            </TableBody>
-          </Table>
-        </div>
-      </div>
-
-      <div className="row">
-        <div className="col-md-6" style={styles.inputContainer}>
-          <TextField
-            fullWidth
-            name="itemCode"
-            label="Item Code"
-            type="text"
-            variant="outlined"
-            value={itemCode}
-            onChange={onChangeValue}
-          />
-        </div>
-        <div className="col-md-6" style={styles.inputContainer}>
-          <TextField
-            fullWidth
-            name="name"
-            label="Name"
-            type="text"
-            variant="outlined"
-            value={name}
-            onChange={onChangeValue}
-          />
-        </div>
-      </div>
-
-      <div className="row">
-        <div className="col-md-4" style={styles.inputContainer}>
-          <TextField
-            fullWidth
-            name="description"
-            label="Description"
-            type="text"
-            variant="outlined"
-            value={description}
-            onChange={onChangeValue}
-          />
-        </div>
-        <div className="col-md-4" style={styles.inputContainer}>
-          <TextField
-            fullWidth
-            id="currentQty"
-            name="currentQty"
-            label="Current Qty"
-            type="number"
-            variant="outlined"
-            value={currentQty}
-            InputProps={{ inputProps: { min: 0 } }}
-            onChange={onChangeValue}
-          />
-        </div>
-        <div className="col-md-4" style={styles.inputContainer}>
-          <TextField
-            fullWidth
-            name="reqQty"
-            label="Req Qty"
-            type="number"
-            variant="outlined"
-            value={reqQty}
-            InputProps={{ inputProps: { min: 0 } }}
-            onChange={onChangeValue}
-          />
-        </div>
-      </div>
-
-      <div className="row">
-        <div className="col-md-12" style={styles.inputContainer}>
-          <TextField
-            fullWidth
-            name="comments"
-            label="Notes/Comments"
-            type="text"
-            variant="outlined"
-            value={comments}
-            onChange={onChangeValue}
-          />
-        </div>
+      <div style={{ marginTop: 10 }}>
+        {comingFor === 'edit' && purchaseRequestItems.length > 0
+          ? purchaseRequestItems.map(i => {
+              return (
+                <Chip
+                  style={{ marginLeft: 15 }}
+                  size="large"
+                  label={i.name}
+                  clickable
+                  color="primary"
+                  onClick={() => selectedItemToEdit(i)}
+                />
+              );
+            })
+          : undefined}
       </div>
 
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -601,6 +663,136 @@ function AddEditPurchaseRequest(props) {
       </div>
 
       <Notification msg={errorMsg} open={openNotification} />
+
+      <Dialog
+        aria-labelledby="form-dialog-title"
+        open={dialogOpen}
+        maxWidth={'md'}
+        fullWidth={true}
+      >
+        <div className="container">
+          <div className="row">
+            <div className="col-md-6" style={styles.inputContainer}>
+              <TextField
+                fullWidth
+                name="itemCode"
+                label="Item Code"
+                disabled={true}
+                type="text"
+                variant="outlined"
+                value={itemCode}
+                onChange={onChangeValue}
+              />
+            </div>
+            <div className="col-md-6" style={styles.inputContainer}>
+              <TextField
+                fullWidth
+                name="name"
+                label="Name"
+                disabled={true}
+                type="text"
+                variant="outlined"
+                value={name}
+                onChange={onChangeValue}
+              />
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col-md-6" style={styles.inputContainer}>
+              <TextField
+                fullWidth
+                name="description"
+                label="Description"
+                type="text"
+                variant="outlined"
+                value={description}
+                onChange={onChangeValue}
+              />
+            </div>
+            <div className="col-md-6" style={styles.inputContainer}>
+              <TextField
+                fullWidth
+                id="currentQty"
+                name="currentQty"
+                label="Current Qty"
+                type="number"
+                variant="outlined"
+                value={currentQty}
+                InputProps={{ inputProps: { min: 0 } }}
+                onChange={onChangeValue}
+              />
+            </div>
+          </div>
+
+          <div className="row" style={{ paddingBottom: 20 }}>
+            <div className="col-md-6" style={styles.inputContainer}>
+              <TextField
+                fullWidth
+                name="comments"
+                label="Notes/Comments"
+                type="text"
+                variant="outlined"
+                value={comments}
+                onChange={onChangeValue}
+              />
+            </div>
+
+            <div className="col-md-6" style={styles.inputContainer}>
+              <TextField
+                fullWidth
+                name="reqQty"
+                label="Req Qty"
+                type="number"
+                variant="outlined"
+                value={reqQty}
+                InputProps={{ inputProps: { min: 0 } }}
+                onChange={onChangeValue}
+              />
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <div style={styles.inputContainer}>
+              <Button onClick={() => hideDialog()} variant="contained">
+                Cancel
+              </Button>
+            </div>
+
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                marginTop: '2%',
+                marginBottom: '2%'
+              }}
+            >
+              {comingFor === 'add' || selectItemToEditId === '' ? (
+                <Button
+                  style={{ paddingLeft: 30, paddingRight: 30 }}
+                  disabled={!validateItemsForm()}
+                  onClick={addSelectedItem}
+                  variant="contained"
+                  color="primary"
+                >
+                  Add Item
+                </Button>
+              ) : (
+                <Button
+                  style={{ paddingLeft: 30, paddingRight: 30 }}
+                  disabled={!validateItemsForm()}
+                  onClick={editSelectedItem}
+                  variant="contained"
+                  color="primary"
+                >
+                  {' '}
+                  Edit{' '}
+                </Button>
+              )}
+            </div>
+          </div>
+        </div>
+      </Dialog>
     </div>
   );
 }

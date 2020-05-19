@@ -40,6 +40,9 @@ import VendorRoutes from '../subRoutes/vendor';
 import WareHouseInventoryRoutes from '../subRoutes/warehouseInventory.js';
 import PurchaseRequestRoutes from '../subRoutes/purchaseRequest';
 
+import PurchaseOrdersRoutes from '../subRoutes/purchaseOrders';
+
+
 let ps;
 
 const switchRoutes = (
@@ -71,6 +74,9 @@ const switchRoutes = (
     <Route path="/admin/vendor/next" component={VendorRoutes} />
     <Route path="/admin/warehouseinventory/next" component={WareHouseInventoryRoutes} />
     <Route path="/admin/purchaserequest/next" component={PurchaseRequestRoutes} />
+
+    <Route path="/admin/purchaseorders/next" component={PurchaseOrdersRoutes} />
+
 
     {/* <Route path={'/admin/dashboard/details/login'} component={Login} /> */}
 

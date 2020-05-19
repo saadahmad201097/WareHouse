@@ -1,5 +1,5 @@
-const baseUrl= 'http://localhost:8080/api';
-export const socketUrl= 'ws://localhost:8080';
+const baseUrl = 'http://localhost:8080/api';
+export const socketUrl = 'ws://localhost:8080';
 
 // auth endpoints
 export const loginUrl = `${baseUrl}/auth/login`;
@@ -10,7 +10,6 @@ export const addItemUrl = `${baseUrl}/item/additem`;
 export const updateItemUrl = `${baseUrl}/item/updateitem`;
 export const deleteItemUrl = `${baseUrl}/item/deleteitem`;
 export const getSearchedItemUrl = `${baseUrl}/item/getsearcheditems`;
-
 
 // bu inventory endpoints
 export const getBuInventoryUrl = `${baseUrl}/buinventory/getbuinventory`;
@@ -58,24 +57,37 @@ export const deleteBuStockInLogUrl = `${baseUrl}/bustockinlog/deletebustockinlog
 
 // bu stock out log
 export const getBuStockOutLogUrl = `${baseUrl}/bustockoutlog/getbustockoutlog`;
-export const addBuStockOutLogUrl= `${baseUrl}/bustockoutlog/addbustockoutlog`;
-export const updateBuStockOutLogUrl= `${baseUrl}/bustockoutlog/updatebustockoutlog`;
-export const deleteBuStockOutLogUrl= `${baseUrl}/bustockoutlog/deletebustockoutlog`;
+export const addBuStockOutLogUrl = `${baseUrl}/bustockoutlog/addbustockoutlog`;
+export const updateBuStockOutLogUrl = `${baseUrl}/bustockoutlog/updatebustockoutlog`;
+export const deleteBuStockOutLogUrl = `${baseUrl}/bustockoutlog/deletebustockoutlog`;
 
 // vendor
 export const getVendorUrl = `${baseUrl}/vendor/getvendors`;
-export const addVendorUrl= `${baseUrl}/vendor/addvendor`;
-export const updateVendorUrl= `${baseUrl}/vendor/updatevendor`;
-export const deleteVendorUrl= `${baseUrl}/vendor/deletevendor`;
+export const addVendorUrl = `${baseUrl}/vendor/addvendor`;
+export const updateVendorUrl = `${baseUrl}/vendor/updatevendor`;
+export const deleteVendorUrl = `${baseUrl}/vendor/deletevendor`;
 
 // purchase request
 export const getPurchaseRequestUrl = `${baseUrl}/purchaserequest/getpurchaserequests`;
-export const addPurchaseRequestUrl= `${baseUrl}/purchaserequest/addpurchaserequest`;
-export const updatePurchaseRequestUrl= `${baseUrl}/purchaserequest/updatepurchaserequest`;
-export const deletePurchaseRequestUrl= `${baseUrl}/purchaserequest/deletepurchaserequest`;
+export const addPurchaseRequestUrl = `${baseUrl}/purchaserequest/addpurchaserequest`;
+export const updatePurchaseRequestUrl = `${baseUrl}/purchaserequest/updatepurchaserequest`;
+export const deletePurchaseRequestUrl = `${baseUrl}/purchaserequest/deletepurchaserequest`;
 
 // shipping term
 export const getShippingTermUrl = `${baseUrl}/shippingterm/getshippingterms`;
-export const addShippingTermUrl= `${baseUrl}/shippingterm/addshippingterm`;
-export const updateShippingTermUrl= `${baseUrl}/shippingterm/updateShippingTerm`;
-export const deleteShippingTermUrl= `${baseUrl}/shippingterm/deleteShippingTerm`;
+export const addShippingTermUrl = `${baseUrl}/shippingterm/addshippingterm`;
+export const updateShippingTermUrl = `${baseUrl}/shippingterm/updateShippingTerm`;
+export const deleteShippingTermUrl = `${baseUrl}/shippingterm/deleteShippingTerm`;
+
+//purchasing Request items
+
+export const getPurchasingRequestItemUrl = `${baseUrl}/purchaserequest/getPurchaseRequestItems`;
+export const addPurchasingRequestItemUrl = `${baseUrl}/purchaserequest/addpurchaserequestitem`;
+export const updatePurchasingRequestItemUrl = `${baseUrl}/purchaserequest/updatepurchaserequestitem`;
+// export const deletePurchasingRequestItemUrl= `${baseUrl}/shippingterm/deleteShippingTerm`;
+
+// purchase orders
+export const getPurchaseOrderUrl = `${baseUrl}/purchaseorder/getpurchaseorders`;
+export const addPurchaseOrderUrl = `${baseUrl}/purchaseorder/addpurchaseorder`;
+export const deletePurchaseOrderUrl = `${baseUrl}/purchaseorder/deletepurchaseorder`;
+export const updatePurchaseOrderUrl = `${baseUrl}/purchaseorder/updatepurchaseorder`;

@@ -17,106 +17,106 @@
 */
 // @material-ui/icons
 import React from 'react';
-import Dashboard from "@material-ui/icons/Dashboard";
-import Person from "@material-ui/icons/Person";
-import LibraryBooks from "@material-ui/icons/LibraryBooks";
-import BubbleChart from "@material-ui/icons/BubbleChart";
-import LocationOn from "@material-ui/icons/LocationOn";
-import Notifications from "@material-ui/icons/Notifications";
-import Unarchive from "@material-ui/icons/Unarchive";
-import Language from "@material-ui/icons/Language";
+import Dashboard from '@material-ui/icons/Dashboard';
+import Person from '@material-ui/icons/Person';
+import LibraryBooks from '@material-ui/icons/LibraryBooks';
+import BubbleChart from '@material-ui/icons/BubbleChart';
+import LocationOn from '@material-ui/icons/LocationOn';
+import Notifications from '@material-ui/icons/Notifications';
+import Unarchive from '@material-ui/icons/Unarchive';
+import Language from '@material-ui/icons/Language';
 // core components/views for Admin layout
-import DashboardPage from "views/Dashboard/Dashboard.js";
-import UserProfile from "views/UserProfile/UserProfile.js";
-import BusinessUnit from "views/BusinessUnit/BusinessUnit.js";
-import Typography from "views/Typography/Typography.js";
+import DashboardPage from 'views/Dashboard/Dashboard.js';
+import UserProfile from 'views/UserProfile/UserProfile.js';
+import BusinessUnit from 'views/BusinessUnit/BusinessUnit.js';
+import Typography from 'views/Typography/Typography.js';
 // eslint-disable-next-line import/extensions
-import Items from "views/Items/Items.js";
-import BuInventory from "views/BuInventory/buInventory";
-import BuRepRequest from "views/BuRepRequest/buRepRequest";
-import BuRepRequestDetails from "views/BuRepRequestDetails/buRepRequestDetails";
-import BuReturn from "views/BuReturn/buReturn";
-import BuStockInLog from "views/BuStockInLog/buStockInLog";
-import BuStockOutLog from "views/BuStockOutLog/buStockOutLog";
-import Vendor from "views/Vendor/vendor";
-import PurchaseRequest from "views/PurchaseRequest/purchaseRequest";
+import Items from 'views/Items/Items.js';
+import BuInventory from 'views/BuInventory/buInventory';
+import BuRepRequest from 'views/BuRepRequest/buRepRequest';
+import BuRepRequestDetails from 'views/BuRepRequestDetails/buRepRequestDetails';
+import BuReturn from 'views/BuReturn/buReturn';
+import BuStockInLog from 'views/BuStockInLog/buStockInLog';
+import BuStockOutLog from 'views/BuStockOutLog/buStockOutLog';
+import Vendor from 'views/Vendor/vendor';
+import PurchaseRequest from 'views/PurchaseRequest/purchaseRequest';
+
+import PurchaseOrder from 'views/PurchaseOrders/purchaseOrder';
+
 // core components/views for RTL layout
-import RTLPage from "views/RTLPage/RTLPage.js";
+import RTLPage from 'views/RTLPage/RTLPage.js';
 
 // const items = () => { return (< i class="zmdi zmdi-collection-item" ></i >) }
 
-import FunctionalUnit from "views/FunctionalUnit/functionalUnit.jsx";
+import FunctionalUnit from 'views/FunctionalUnit/functionalUnit.jsx';
 
-import WareHouseInventory from "views/WareHouseInventory/wareHouseInventory.jsx";
-
-
+import WareHouseInventory from 'views/WareHouseInventory/wareHouseInventory.jsx';
 
 const dashboardRoutes = [
   {
-    path: "/dashboard",
-    name: "Dashboard",
-    rtlName: "لوحة القيادة",
+    path: '/dashboard',
+    name: 'Dashboard',
+    rtlName: 'لوحة القيادة',
     icon: Dashboard,
     component: DashboardPage,
-    layout: "/admin"
+    layout: '/admin'
   },
   {
-    path: "/items",
-    name: "Items",
-    rtlName: "الرموز",
+    path: '/items',
+    name: 'Items',
+    rtlName: 'الرموز',
     icon: BubbleChart,
     component: Items,
-    layout: "/admin"
+    layout: '/admin'
   },
   {
-    path: "/buInventory",
-    name: "Business Unit Inventory",
-    rtlName: "الرموز",
+    path: '/buInventory',
+    name: 'Business Unit Inventory',
+    rtlName: 'الرموز',
     icon: BubbleChart,
     component: BuInventory,
-    layout: "/admin"
+    layout: '/admin'
   },
   {
-    path: "/buRepRequest",
-    name: "Business Unit Rep Request",
-    rtlName: "الرمز",
+    path: '/buRepRequest',
+    name: 'Business Unit Rep Request',
+    rtlName: 'الرمز',
     icon: BubbleChart,
     component: BuRepRequest,
-    layout: "/admin"
+    layout: '/admin'
   },
   {
-    path: "/buRepRequestDetails",
-    name: "Business Unit Rep Request Details",
-    rtlName: "الرمو",
+    path: '/buRepRequestDetails',
+    name: 'Business Unit Rep Request Details',
+    rtlName: 'الرمو',
     icon: BubbleChart,
     component: BuRepRequestDetails,
-    layout: "/admin"
+    layout: '/admin'
   },
   {
-    path: "/buReturn",
-    name: "Business Return",
-    rtlName: "الموز",
+    path: '/buReturn',
+    name: 'Business Return',
+    rtlName: 'الموز',
     icon: BubbleChart,
     component: BuReturn,
-    layout: "/admin"
+    layout: '/admin'
   },
   {
-    path: "/buStockInLog",
-    name: "Business Unit Stock In Log",
-    rtlName: "الموز",
+    path: '/buStockInLog',
+    name: 'Business Unit Stock In Log',
+    rtlName: 'الموز',
     icon: BubbleChart,
     component: BuStockInLog,
-    layout: "/admin"
+    layout: '/admin'
   },
   {
-    path: "/buStockOutLog",
-    name: "Business Unit Stock Out Log",
-    rtlName: "الموز",
+    path: '/buStockOutLog',
+    name: 'Business Unit Stock Out Log',
+    rtlName: 'الموز',
     icon: BubbleChart,
     component: BuStockOutLog,
-    layout: "/admin"
+    layout: '/admin'
   },
-
 
   // {
   //   path: "/table",
@@ -128,49 +128,56 @@ const dashboardRoutes = [
   // },
 
   {
-    path: "/businessunit",
-    name: "Business Unit",
-    rtlName: "قائمة الجدول",
-    icon: "content_paste",
+    path: '/businessunit',
+    name: 'Business Unit',
+    rtlName: 'قائمة الجدول',
+    icon: 'content_paste',
     component: BusinessUnit,
-    layout: "/admin"
+    layout: '/admin'
   },
 
-
   {
-    path: "/functionalunit",
-    name: "Functional Unit",
-    rtlName: "قائمة الجدول",
-    icon: "content_paste",
+    path: '/functionalunit',
+    name: 'Functional Unit',
+    rtlName: 'قائمة الجدول',
+    icon: 'content_paste',
     component: FunctionalUnit,
-    layout: "/admin"
+    layout: '/admin'
   },
 
   {
-    path: "/warehouseinventory",
-    name: "WareHouse Inventory",
-    rtlName: "قائمة الجدول",
-    icon: "content_paste",
+    path: '/warehouseinventory',
+    name: 'WareHouse Inventory',
+    rtlName: 'قائمة الجدول',
+    icon: 'content_paste',
     component: WareHouseInventory,
-    layout: "/admin"
+    layout: '/admin'
   },
   {
-    path: "/vendor",
-    name: "Vendor",
-    rtlName: "قائمة الجدول",
-    icon: "content_paste",
+    path: '/vendor',
+    name: 'Vendor',
+    rtlName: 'قائمة الجدول',
+    icon: 'content_paste',
     component: Vendor,
-    layout: "/admin"
+    layout: '/admin'
   },
   {
-    path: "/purchaserequest",
-    name: "Purchase Request",
-    rtlName: "قائمة الجدول",
-    icon: "content_paste",
+    path: '/purchaserequest',
+    name: 'Purchase Request',
+    rtlName: 'قائمة الجدول',
+    icon: 'content_paste',
     component: PurchaseRequest,
-    layout: "/admin"
-  }
+    layout: '/admin'
+  },
 
+  {
+    path: '/purchaseorder',
+    name: 'Purchase Orders',
+    rtlName: 'قائمة الجدول',
+    icon: 'content_paste',
+    component: PurchaseOrder,
+    layout: '/admin'
+  }
 ];
 
 export default dashboardRoutes;

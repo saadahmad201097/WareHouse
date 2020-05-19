@@ -20,12 +20,7 @@ import { dateOptions } from '../../variables/public';
 const useStyles = makeStyles(styles);
 
 export default function CustomTable(props) {
-  const {
-    tableHeading,
-    tableData,
-    tableDataKeys,
-    tableHeaderColor
-  } = props;
+  const { tableHeading, tableData, tableDataKeys, tableHeaderColor } = props;
 
   const classes = useStyles();
   const [page, setPage] = React.useState(0);
@@ -35,20 +30,24 @@ export default function CustomTable(props) {
     setPage(newPage);
   };
 
-  const replaceSlugToTitle = (val) =>{
-    if(val === 'in_active'){
+  const replaceSlugToTitle = val => {
+    if (val === 'in_active') {
       return 'In Active';
-    }
-    else if(val === 'active'){
+    } else if (val === 'active') {
       return 'Active';
     }
 
     return val;
-  }
+  };
 
   const handleChangeRowsPerPage = event => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
+  };
+
+  const formatDate = date => {
+    const d = new Date(date);
+    return d.getDate() + '/' + (d.getMonth() + 1) + '/' + d.getFullYear() +" " + d.toLocaleTimeString();
   };
 
   return (
@@ -71,50 +70,81 @@ export default function CustomTable(props) {
           </TableHead>
         ) : null}
         <TableBody>
-          {tableData && tableData
-            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            .map((prop, index) => {
-              return (
-                <TableRow key={index} className={classes.tableBodyRow}>
-                  {tableDataKeys
-                    ? tableDataKeys.map((val, key) => {
-                        return (
-                          <TableCell className={classes.tableCell} key={key}>
-                            { Array.isArray(val) ? ( prop[val[0]] ? prop[val[0]][val[1]] : null): ( val.toLowerCase() === 'timestamp' ? new Intl.DateTimeFormat('en-US', dateOptions).format(Date.parse(prop[val])) : `${replaceSlugToTitle(prop[val])}` )}
-                          </TableCell>
-                        );
-                      })
-                    : null}
-                  <TableCell
-                    style={{
-                      cursor: 'pointer'
-                    }}
-                    className={classes.tableCell}
-                    colSpan="2"
-                  >
-                    {props.action ? (
-                      <>
-                        <RcIf if={props.action.edit}> 
-                          <span onClick={() => props.handleEdit(prop)}>
-                            <i className="zmdi zmdi-edit zmdi-hc-2x" />
-                          </span>
-                        </RcIf>
-                        <RcIf if={props.action.delete}> 
-                          <span onClick={() => props.handleDelete(prop._id)}>
-                            <i className=" ml-10 zmdi zmdi-delete zmdi-hc-2x" />
-                          </span>
-                        </RcIf>
-                        <RcIf if={props.action.active && prop.status === 'in_active'}> 
-                          <span onClick={() => props.handleStatus(prop._id)} title="Active">
-                            <i className=" ml-10 zmdi zmdi-check zmdi-hc-2x" />
-                          </span>
-                        </RcIf>
-                      </>
-                    ) : null}
-                  </TableCell>
-                </TableRow>
-              );
-            })}
+          {tableData &&
+            tableData
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((prop, index) => {
+                return (
+                  <TableRow key={index} className={classes.tableBodyRow}>
+                    {tableDataKeys
+                      ? tableDataKeys.map((val, key) => {
+                          if (val === 'date') {
+                            return (
+                              <TableCell
+                                className={classes.tableCell}
+                                key={key}
+                              >
+                                {formatDate(prop[val])}
+                              </TableCell>
+                            );
+                          } else {
+                            return (
+                              <TableCell
+                                className={classes.tableCell}
+                                key={key}
+                              >
+                                {Array.isArray(val)
+                                  ? prop[val[0]]
+                                    ? prop[val[0]][val[1]]
+                                    : null
+                                  : val.toLowerCase() === 'timestamp'
+                                  ? new Intl.DateTimeFormat(
+                                      'en-US',
+                                      dateOptions
+                                    ).format(Date.parse(prop[val]))
+                                  : `${replaceSlugToTitle(prop[val])}`}
+                              </TableCell>
+                            );
+                          }
+                        })
+                      : null}
+                    <TableCell
+                      style={{
+                        cursor: 'pointer'
+                      }}
+                      className={classes.tableCell}
+                      colSpan="2"
+                    >
+                      {props.action ? (
+                        <>
+                          <RcIf if={props.action.edit}>
+                            <span onClick={() => props.handleEdit(prop)}>
+                              <i className="zmdi zmdi-edit zmdi-hc-2x" />
+                            </span>
+                          </RcIf>
+                          <RcIf if={props.action.delete}>
+                            <span onClick={() => props.handleDelete(prop._id)}>
+                              <i className=" ml-10 zmdi zmdi-delete zmdi-hc-2x" />
+                            </span>
+                          </RcIf>
+                          <RcIf
+                            if={
+                              props.action.active && prop.status === 'in_active'
+                            }
+                          >
+                            <span
+                              onClick={() => props.handleStatus(prop._id)}
+                              title="Active"
+                            >
+                              <i className=" ml-10 zmdi zmdi-check zmdi-hc-2x" />
+                            </span>
+                          </RcIf>
+                        </>
+                      ) : null}
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
         </TableBody>
       </Table>
       <TablePagination
