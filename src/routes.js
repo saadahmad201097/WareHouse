@@ -43,6 +43,11 @@ import PurchaseRequest from 'views/PurchaseRequest/purchaseRequest';
 
 import PurchaseOrder from 'views/PurchaseOrders/purchaseOrder';
 
+import ReceiveItems from 'views/ReceiveItems/receiveItems';
+
+import MaterialReceiving from 'views/MaterialReceiving/materialreceiving';
+
+
 // core components/views for RTL layout
 import RTLPage from 'views/RTLPage/RTLPage.js';
 
@@ -176,6 +181,24 @@ const dashboardRoutes = [
     rtlName: 'قائمة الجدول',
     icon: 'content_paste',
     component: PurchaseOrder,
+    layout: '/admin'
+  },
+
+  {
+    path: '/receiveitems',
+    name: 'Receive Items',
+    rtlName: 'قائمة الجدول',
+    icon: 'content_paste',
+    component: ReceiveItems,
+    layout: '/admin'
+  },
+
+  {
+    path: '/materialreceiving',
+    name: 'Material Receiving',
+    rtlName: 'قائمة الجدول',
+    icon: 'content_paste',
+    component: MaterialReceiving,
     layout: '/admin'
   }
 ];

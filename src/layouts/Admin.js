@@ -42,6 +42,9 @@ import PurchaseRequestRoutes from '../subRoutes/purchaseRequest';
 
 import PurchaseOrdersRoutes from '../subRoutes/purchaseOrders';
 
+import ReceiveItemsRoutes from '../subRoutes/receiveItems';
+import MaterialReceivingRoutes from '../subRoutes/materialReceiving';
+
 
 let ps;
 
@@ -66,16 +69,27 @@ const switchRoutes = (
     <Route path="/admin/businessunit/next" component={BusinessUnitRoutes} />
     <Route path="/admin/buinventory/next" component={BuInventoryRoutes} />
     <Route path="/admin/bureprequest/next" component={BuRepRequestRoutes} />
-    <Route path="/admin/bureprequestdetails/next" component={BuRepRequestDetailsRoutes} />
+    <Route
+      path="/admin/bureprequestdetails/next"
+      component={BuRepRequestDetailsRoutes}
+    />
     <Route path="/admin/bureturn/next" component={BuReturnRoutes} />
     <Route path="/admin/bustockinlog/next" component={BuStockInLogRoutes} />
     <Route path="/admin/bustockoutlog/next" component={BuStockOutLogRoutes} />
     <Route path="/admin/functionalunit/next" component={FunctionalUnitRoutes} />
     <Route path="/admin/vendor/next" component={VendorRoutes} />
-    <Route path="/admin/warehouseinventory/next" component={WareHouseInventoryRoutes} />
-    <Route path="/admin/purchaserequest/next" component={PurchaseRequestRoutes} />
+    <Route
+      path="/admin/warehouseinventory/next"
+      component={WareHouseInventoryRoutes}
+    />
+    <Route
+      path="/admin/purchaserequest/next"
+      component={PurchaseRequestRoutes}
+    />
 
     <Route path="/admin/purchaseorders/next" component={PurchaseOrdersRoutes} />
+    <Route path="/admin/receiveitems/next" component={ReceiveItemsRoutes} />
+    <Route path="/admin/materialreceiving/next" component={MaterialReceivingRoutes} />
 
 
     {/* <Route path={'/admin/dashboard/details/login'} component={Login} /> */}

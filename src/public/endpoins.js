@@ -91,3 +91,17 @@ export const getPurchaseOrderUrl = `${baseUrl}/purchaseorder/getpurchaseorders`;
 export const addPurchaseOrderUrl = `${baseUrl}/purchaseorder/addpurchaseorder`;
 export const deletePurchaseOrderUrl = `${baseUrl}/purchaseorder/deletepurchaseorder`;
 export const updatePurchaseOrderUrl = `${baseUrl}/purchaseorder/updatepurchaseorder`;
+
+
+// receive items
+export const getReceiveItemsUrl = `${baseUrl}/receiveitem/getreceiveitems`;
+export const addReceiveItemsUrl = `${baseUrl}/receiveitem/addreceiveitem`;
+export const deleteReceiveItemsUrl = `${baseUrl}/receiveitem/deletereceiveitem`;
+export const updateReceiveItemsUrl = `${baseUrl}/receiveitem/updatereceiveitem`;
+
+
+// receive items
+export const getMaterialReceivingUrl = `${baseUrl}/materialreceiving/getmaterialreceivings`;
+export const addMaterialReceivingUrl = `${baseUrl}/materialreceiving/addmaterialreceiving`;
+export const deleteMaterialReceivingUrl = `${baseUrl}/materialreceiving/deletematerialreceiving`;
+export const updateMaterialReceivingUrl = `${baseUrl}/materialreceiving/updatematerialreceiving`;

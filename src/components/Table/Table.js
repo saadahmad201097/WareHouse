@@ -47,7 +47,21 @@ export default function CustomTable(props) {
 
   const formatDate = date => {
     const d = new Date(date);
-    return d.getDate() + '/' + (d.getMonth() + 1) + '/' + d.getFullYear() +" " + d.toLocaleTimeString();
+    return (
+      d.getDate() +
+      '/' +
+      (d.getMonth() + 1) +
+      '/' +
+      d.getFullYear() +
+      ' ' +
+      d.toLocaleTimeString()
+    );
+  };
+
+  const handleClick = (prop, val) => {
+    if (props.handleModelMaterialReceiving) {
+      props.handleModelMaterialReceiving(prop, val);
+    }
   };
 
   return (
@@ -92,6 +106,12 @@ export default function CustomTable(props) {
                               <TableCell
                                 className={classes.tableCell}
                                 key={key}
+                                onClick={() => handleClick(prop, val)}
+                                style={{
+                                  cursor: props.handleModelMaterialReceiving
+                                    ? 'pointer'
+                                    : ''
+                                }}
                               >
                                 {Array.isArray(val)
                                   ? prop[val[0]]
