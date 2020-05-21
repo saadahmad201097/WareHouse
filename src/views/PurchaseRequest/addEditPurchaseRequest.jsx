@@ -133,7 +133,6 @@ function AddEditPurchaseRequest(props) {
   const [selectItemToEditId, setSelectItemToEditId] = useState('');
 
   function getPurchasingRequestItems(_id) {
-    console.log('called');
     axios
       .get(getPurchasingRequestItemUrl + '/' + _id)
       .then(res => {
@@ -234,12 +233,6 @@ function AddEditPurchaseRequest(props) {
         date: new Date(),
         vendorId,
         status
-        // itemCode,
-        // name,
-        // description,
-        // currentQty,
-        // reqQty,
-        // comments
       };
       axios
         .put(updatePurchaseRequestUrl, params)
@@ -370,14 +363,17 @@ function AddEditPurchaseRequest(props) {
         .post(addPurchasingRequestItemUrl, params)
         .then(res => {
           if (res.data.success) {
-            // props.history.goBack();
             // console.log(res.data.data.purchaseRequestItem);
-            window.location.reload(false);
+            //   window.location.reload(false);
 
             dispatch({
               field: '_id',
               value: res.data.data.purchaseRequestItem.purchaseRequestId
             });
+
+            getPurchasingRequestItems(
+              res.data.data.purchaseRequestItem.purchaseRequestId
+            );
 
             setDialogOpen(false);
             setSelectedItem('');
@@ -430,7 +426,8 @@ function AddEditPurchaseRequest(props) {
             setDialogOpen(false);
             setSelectedItem('');
             setSelectItemToEditId('');
-            window.location.reload(false);
+            // window.location.reload(false);
+            getPurchasingRequestItems(_id);
           } else if (!res.data.success) {
             setOpenNotification(true);
           }
@@ -578,6 +575,7 @@ function AddEditPurchaseRequest(props) {
                     {itemFound.map((i, index) => {
                       return (
                         <TableRow
+                          key={i.itemCode}
                           onClick={() => handleAddItem(i)}
                           style={{ cursor: 'pointer' }}
                         >
@@ -606,12 +604,13 @@ function AddEditPurchaseRequest(props) {
       )}
 
       <div style={{ marginTop: 10 }}>
-        {comingFor === 'edit' && purchaseRequestItems.length > 0
+        {purchaseRequestItems.length > 0
           ? purchaseRequestItems.map(i => {
               return (
                 <Chip
+                  key={i.name}
                   style={{ marginLeft: 15 }}
-                  size="large"
+                  size={'large'}
                   label={i.name}
                   clickable
                   color="primary"
@@ -767,7 +766,7 @@ function AddEditPurchaseRequest(props) {
                 marginBottom: '2%'
               }}
             >
-              {comingFor === 'add' || selectItemToEditId === '' ? (
+              {selectItemToEditId === '' ? (
                 <Button
                   style={{ paddingLeft: 30, paddingRight: 30 }}
                   disabled={!validateItemsForm()}
