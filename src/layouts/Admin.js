@@ -8,22 +8,12 @@ import { makeStyles } from '@material-ui/core/styles';
 // core components
 import Navbar from 'components/Navbars/Navbar.js';
 import Footer from 'components/Footer/Footer.js';
-import Sidebar from '../components/Sidebar/Sidebar.js';
-import FixedPlugin from 'components/FixedPlugin/FixedPlugin.js';
-
 import routes from 'routes.js';
-
 import styles from 'assets/jss/material-dashboard-react/layouts/adminStyle.js';
-
-import bgImage from 'assets/img/sidebar-2.jpg';
-
 import logo from 'assets/companyLogo/reactlogo.png';
-
+import Sidebar from '../components/Sidebar/Sidebar.js';
 import { warehouseName, backgroundColorForActiveSideNavTab } from '../config';
-
 import New from '../New.js';
-import Login from '../layouts/Login';
-
 import NotFound from '../components/NotFound/NotFound.js';
 
 import DashboardRoutes from '../subRoutes/dashboard.js';
@@ -70,7 +60,7 @@ const switchRoutes = (
       }
       return null;
     })}
-
+      
     <Route path="/admin/dashboard/next" component={DashboardRoutes} />
     <Route path="/admin/items/next" component={ItemsRoutes} />
     <Route path="/admin/businessunit/next" component={BusinessUnitRoutes} />
@@ -97,18 +87,9 @@ const switchRoutes = (
     <Route path="/admin/purchaseorders/next" component={PurchaseOrdersRoutes} />
     <Route path="/admin/receiveitems/next" component={ReceiveItemsRoutes} />
     <Route path="/admin/materialreceiving/next" component={MaterialReceivingRoutes} />
-
-
     <Route path="/admin/stafftypes/next" component={StaffTypesRoutes} />
     <Route path="/admin/staff/next" component={StaffRoutes} />
-
     <Route path="/admin/sysadmin/next" component={SystemAdminRoutes} />
-
-
-
-
-    {/* <Route path={'/admin/dashboard/details/login'} component={Login} /> */}
-
     <Redirect from="/admin" to="/admin/dashboard" />
   </Switch>
 );

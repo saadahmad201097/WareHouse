@@ -1,3 +1,4 @@
+/* eslint-disable import/no-mutable-exports */
 /*!
 
 =========================================================
@@ -18,18 +19,11 @@
 // @material-ui/icons
 import React from 'react';
 import Dashboard from '@material-ui/icons/Dashboard';
-import Person from '@material-ui/icons/Person';
-import LibraryBooks from '@material-ui/icons/LibraryBooks';
 import BubbleChart from '@material-ui/icons/BubbleChart';
-import LocationOn from '@material-ui/icons/LocationOn';
-import Notifications from '@material-ui/icons/Notifications';
-import Unarchive from '@material-ui/icons/Unarchive';
 import Language from '@material-ui/icons/Language';
 // core components/views for Admin layout
 import DashboardPage from 'views/Dashboard/Dashboard.js';
-import UserProfile from 'views/UserProfile/UserProfile.js';
 import BusinessUnit from 'views/BusinessUnit/BusinessUnit.js';
-import Typography from 'views/Typography/Typography.js';
 // eslint-disable-next-line import/extensions
 import Items from 'views/Items/Items.js';
 import BuInventory from 'views/BuInventory/buInventory';
@@ -46,7 +40,7 @@ import PurchaseOrder from 'views/PurchaseOrders/purchaseOrder';
 import ReceiveItems from 'views/ReceiveItems/receiveItems';
 
 import MaterialReceiving from 'views/MaterialReceiving/materialreceiving';
-
+import cookie from 'react-cookies';
 // core components/views for RTL layout
 import RTLPage from 'views/RTLPage/RTLPage.js';
 
@@ -60,7 +54,7 @@ import StaffTypes from 'views/UserManagement/staffType/staffTypes';
 import Staff from 'views/UserManagement/staff/staff';
 import SystemAdmin from 'views/UserManagement/systemAdmin/systemAdmin';
 
-const dashboardRoutes = [
+let dashboardRoutes = [
   {
     path: '/dashboard',
     name: 'Dashboard',
@@ -69,34 +63,6 @@ const dashboardRoutes = [
     component: DashboardPage,
     layout: '/admin'
   },
-
-  {
-    path: '/sysadmin',
-    name: 'System Admin',
-    // rtlName: 'لوحة القيادة',
-    icon: Dashboard,
-    component: SystemAdmin,
-    layout: '/admin'
-  },
-
-  {
-    path: '/typestaff',
-    name: 'Staff Type',
-    // rtlName: 'لوحة القيادة',
-    icon: Dashboard,
-    component: StaffTypes,
-    layout: '/admin'
-  },
-
-  {
-    path: '/staff',
-    name: 'Staff',
-    // rtlName: 'لوحة القيادة',
-    icon: Dashboard,
-    component: Staff,
-    layout: '/admin'
-  },
-
   {
     path: '/items',
     name: 'Items',
@@ -233,5 +199,37 @@ const dashboardRoutes = [
     layout: '/admin'
   }
 ];
+
+const currentUser = cookie.load('current_user') || '';debugger
+if(currentUser && currentUser.staffTypeId && currentUser.staffTypeId.type === 'admin'){
+  const adminRoutes = [
+    {
+      path: '/sysadmin',
+      name: 'System Admin',
+      // rtlName: 'لوحة القيادة',
+      icon: Dashboard,
+      component: SystemAdmin,
+      layout: '/admin'
+    },
+    {
+      path: '/typestaff',
+      name: 'Staff Type',
+      // rtlName: 'لوحة القيادة',
+      icon: Dashboard,
+      component: StaffTypes,
+      layout: '/admin'
+    },
+  
+    {
+      path: '/staff',
+      name: 'Staff',
+      // rtlName: 'لوحة القيادة',
+      icon: Dashboard,
+      component: Staff,
+      layout: '/admin'
+    }
+  ];
+  dashboardRoutes = [...dashboardRoutes.slice(0, 1), ...adminRoutes, ...dashboardRoutes.slice(1)]
+}
 
 export default dashboardRoutes;

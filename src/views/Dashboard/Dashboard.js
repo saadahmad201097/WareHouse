@@ -31,8 +31,6 @@ import CardFooter from 'components/Card/CardFooter.js';
 
 import { bugs, website, server } from 'variables/general.js';
 
-import { Link } from 'react-router-dom';
-
 import {
   dailySalesChart,
   emailsSubscriptionChart,

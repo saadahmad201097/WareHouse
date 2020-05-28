@@ -89,7 +89,7 @@ class Login extends React.Component {
         this.setState({ tr: false, msg: '' });
       }, 2000);
     }
-    if (this.state.verifiedUser) {
+    if(this.state.verifiedUser){
       return <Redirect to="/admin/dashboard" />;
     }
 
