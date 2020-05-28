@@ -87,7 +87,7 @@ const switchRoutes = (
     <Route path="/admin/purchaseorders/next" component={PurchaseOrdersRoutes} />
     <Route path="/admin/receiveitems/next" component={ReceiveItemsRoutes} />
     <Route path="/admin/materialreceiving/next" component={MaterialReceivingRoutes} />
-    <Route path="/admin/stafftypes/next" component={StaffTypesRoutes} />
+    <Route path="/admin/stafftype/next" component={StaffTypesRoutes} />
     <Route path="/admin/staff/next" component={StaffRoutes} />
     <Route path="/admin/systemadmin/next" component={SystemAdminRoutes} />
     <Redirect from="/admin" to="/admin/dashboard" />
