@@ -47,7 +47,6 @@ import ReceiveItems from 'views/ReceiveItems/receiveItems';
 
 import MaterialReceiving from 'views/MaterialReceiving/materialreceiving';
 
-
 // core components/views for RTL layout
 import RTLPage from 'views/RTLPage/RTLPage.js';
 
@@ -56,6 +55,10 @@ import RTLPage from 'views/RTLPage/RTLPage.js';
 import FunctionalUnit from 'views/FunctionalUnit/functionalUnit.jsx';
 
 import WareHouseInventory from 'views/WareHouseInventory/wareHouseInventory.jsx';
+
+import StaffTypes from 'views/UserManagement/staffType/staffTypes';
+import Staff from 'views/UserManagement/staff/staff';
+import SystemAdmin from 'views/UserManagement/systemAdmin/systemAdmin';
 
 const dashboardRoutes = [
   {
@@ -66,6 +69,34 @@ const dashboardRoutes = [
     component: DashboardPage,
     layout: '/admin'
   },
+
+  {
+    path: '/sysadmin',
+    name: 'System Admin',
+    // rtlName: 'لوحة القيادة',
+    icon: Dashboard,
+    component: SystemAdmin,
+    layout: '/admin'
+  },
+
+  {
+    path: '/typestaff',
+    name: 'Staff Type',
+    // rtlName: 'لوحة القيادة',
+    icon: Dashboard,
+    component: StaffTypes,
+    layout: '/admin'
+  },
+
+  {
+    path: '/staff',
+    name: 'Staff',
+    // rtlName: 'لوحة القيادة',
+    icon: Dashboard,
+    component: Staff,
+    layout: '/admin'
+  },
+
   {
     path: '/items',
     name: 'Items',

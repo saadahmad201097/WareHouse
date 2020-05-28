@@ -45,6 +45,13 @@ import PurchaseOrdersRoutes from '../subRoutes/purchaseOrders';
 import ReceiveItemsRoutes from '../subRoutes/receiveItems';
 import MaterialReceivingRoutes from '../subRoutes/materialReceiving';
 
+import StaffTypesRoutes from '../subRoutes/staffTypes';
+import StaffRoutes from '../subRoutes/staff';
+import SystemAdminRoutes from '../subRoutes/systemAdmin';
+
+
+
+
 
 let ps;
 
@@ -90,6 +97,14 @@ const switchRoutes = (
     <Route path="/admin/purchaseorders/next" component={PurchaseOrdersRoutes} />
     <Route path="/admin/receiveitems/next" component={ReceiveItemsRoutes} />
     <Route path="/admin/materialreceiving/next" component={MaterialReceivingRoutes} />
+
+
+    <Route path="/admin/stafftypes/next" component={StaffTypesRoutes} />
+    <Route path="/admin/staff/next" component={StaffRoutes} />
+
+    <Route path="/admin/sysadmin/next" component={SystemAdminRoutes} />
+
+
 
 
     {/* <Route path={'/admin/dashboard/details/login'} component={Login} /> */}

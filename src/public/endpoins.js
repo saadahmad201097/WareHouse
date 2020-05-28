@@ -92,16 +92,32 @@ export const addPurchaseOrderUrl = `${baseUrl}/purchaseorder/addpurchaseorder`;
 export const deletePurchaseOrderUrl = `${baseUrl}/purchaseorder/deletepurchaseorder`;
 export const updatePurchaseOrderUrl = `${baseUrl}/purchaseorder/updatepurchaseorder`;
 
-
 // receive items
 export const getReceiveItemsUrl = `${baseUrl}/receiveitem/getreceiveitems`;
 export const addReceiveItemsUrl = `${baseUrl}/receiveitem/addreceiveitem`;
 export const deleteReceiveItemsUrl = `${baseUrl}/receiveitem/deletereceiveitem`;
 export const updateReceiveItemsUrl = `${baseUrl}/receiveitem/updatereceiveitem`;
 
-
 // receive items
 export const getMaterialReceivingUrl = `${baseUrl}/materialreceiving/getmaterialreceivings`;
 export const addMaterialReceivingUrl = `${baseUrl}/materialreceiving/addmaterialreceiving`;
 export const deleteMaterialReceivingUrl = `${baseUrl}/materialreceiving/deletematerialreceiving`;
 export const updateMaterialReceivingUrl = `${baseUrl}/materialreceiving/updatematerialreceiving`;
+
+// staff Types
+export const getStaffTypeUrl = `${baseUrl}/stafftype/getstafftype`;
+export const addStaffTypeUrl = `${baseUrl}/stafftype/addstafftype`;
+export const deleteStaffTypeUrl = `${baseUrl}/stafftype/deletestafftype`;
+export const updateStaffTypeUrl = `${baseUrl}/stafftype/updatestafftype`;
+
+// staffs
+export const getStaffUrl = `${baseUrl}/staff/getstaff`;
+export const addStaffUrl = `${baseUrl}/staff/addstaff`;
+export const deleteStaffUrl = `${baseUrl}/staff/deletestaff`;
+export const updateStaffTUrl = `${baseUrl}/staff/updatestaff`;
+
+// system admin
+export const getSystemAdminUrl = `${baseUrl}/systemadmin/getsystemadmin`;
+export const addSystemAdminUrl = `${baseUrl}/systemadmin/addsystemadmin`;
+export const deleteSystemAdminUrl = `${baseUrl}/systemadmin/deletesystemadmin`;
+export const updateSystemAdminUrl = `${baseUrl}/systemadmin/updatesystemadmin`;
