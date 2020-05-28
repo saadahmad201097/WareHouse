@@ -4,8 +4,8 @@ import { Route, Switch } from 'react-router-dom';
 import NotFound from '../components/NotFound/NotFound';
 import AddEditStaffTypes from '../views/UserManagement/staffType/addEditStaffTypes';
 
-class ReceiveItemsRoutes extends React.PureComponent {
-  render() {
+class StaffTypesRoutes extends React.PureComponent {
+  render(){
     return (
       <Switch>
         <Route
@@ -22,4 +22,4 @@ class ReceiveItemsRoutes extends React.PureComponent {
   }
 }
 
-export default ReceiveItemsRoutes;
+export default StaffTypesRoutes;

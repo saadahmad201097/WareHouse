@@ -55,7 +55,7 @@ export default function SystemAdmin(props) {
   }, []);
 
   const addNewItem = () => {
-    let path = `sysadmin/next/add`;
+    let path = `systemadmin/next/add`;
     props.history.push({
       pathname: path,
       state: { comingFor: 'add', systemAdmin }
@@ -63,7 +63,7 @@ export default function SystemAdmin(props) {
   };
 
   function handleEdit(rec) {
-    let path = `sysadmin/next/edit`;
+    let path = `systemadmin/next/edit`;
     props.history.push({
       pathname: path,
       state: { comingFor: 'edit', selectedItem: rec, systemAdmin }

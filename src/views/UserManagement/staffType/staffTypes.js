@@ -68,7 +68,7 @@ export default function StaffTypes(props) {
   }, []);
 
   const addNewItem = () => {
-    let path = `typestaff/next/add`;
+    let path = `stafftype/next/add`;
     props.history.push({
       pathname: path,
       state: { comingFor: 'add' , systemAdminArray}
@@ -76,7 +76,7 @@ export default function StaffTypes(props) {
   };
 
   function handleEdit(rec) {
-    let path = `typestaff/next/edit`;
+    let path = `stafftype/next/edit`;
     props.history.push({
       pathname: path,
       state: { comingFor: 'edit', selectedItem: rec, systemAdminArray }

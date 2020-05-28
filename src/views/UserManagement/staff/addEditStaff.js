@@ -119,19 +119,17 @@ function AddEditStaff(props) {
 
   function validateForm() {
     return (
-      firstName.length > 0 &&
-      lastName.length > 0 &&
-      staffTypeId.length > 0 &&
+      (firstName && firstName.length > 0) &&
+      (lastName && lastName.length > 0) &&
+      (staffTypeId && staffTypeId.length > 0) &&
       timeStamp !== '' &&
-      designation.length > 0 &&
-      email.length > 0 &&
-      contactNumber.length > 0 &&
-      identificationNumber.length > 0 &&
-      gender.length > 0 &&
+      (designation && designation.length > 0) &&
+      (email && email.length > 0) &&
+      (contactNumber && contactNumber.length > 0) &&
+      (identificationNumber && identificationNumber.length > 0) &&
+      (gender && gender.length > 0) &&
       dob !== '' &&
-      address.length > 0 &&
-      createdBySystemAdminStaffId.length > 0 &&
-      status.length > 0
+      (status && status.length > 0)
     );
   }
 

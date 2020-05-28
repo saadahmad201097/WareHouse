@@ -1,4 +1,3 @@
-/* eslint-disable import/no-mutable-exports */
 /*!
 
 =========================================================
@@ -40,7 +39,7 @@ import PurchaseOrder from 'views/PurchaseOrders/purchaseOrder';
 import ReceiveItems from 'views/ReceiveItems/receiveItems';
 
 import MaterialReceiving from 'views/MaterialReceiving/materialreceiving';
-import cookie from 'react-cookies';
+
 // core components/views for RTL layout
 import RTLPage from 'views/RTLPage/RTLPage.js';
 
@@ -54,7 +53,7 @@ import StaffTypes from 'views/UserManagement/staffType/staffTypes';
 import Staff from 'views/UserManagement/staff/staff';
 import SystemAdmin from 'views/UserManagement/systemAdmin/systemAdmin';
 
-let dashboardRoutes = [
+const dashboardRoutes = [
   {
     path: '/dashboard',
     name: 'Dashboard',
@@ -63,6 +62,34 @@ let dashboardRoutes = [
     component: DashboardPage,
     layout: '/admin'
   },
+
+  {
+    path: '/systemadmin',
+    name: 'System Admin',
+    // rtlName: 'لوحة القيادة',
+    icon: Dashboard,
+    component: SystemAdmin,
+    layout: '/admin'
+  },
+
+  {
+    path: '/stafftype',
+    name: 'Staff Type',
+    // rtlName: 'لوحة القيادة',
+    icon: Dashboard,
+    component: StaffTypes,
+    layout: '/admin'
+  },
+
+  {
+    path: '/staff',
+    name: 'Staff',
+    // rtlName: 'لوحة القيادة',
+    icon: Dashboard,
+    component: Staff,
+    layout: '/admin'
+  },
+
   {
     path: '/items',
     name: 'Items',
@@ -199,37 +226,5 @@ let dashboardRoutes = [
     layout: '/admin'
   }
 ];
-
-const currentUser = cookie.load('current_user') || '';debugger
-if(currentUser && currentUser.staffTypeId && currentUser.staffTypeId.type === 'admin'){
-  const adminRoutes = [
-    {
-      path: '/sysadmin',
-      name: 'System Admin',
-      // rtlName: 'لوحة القيادة',
-      icon: Dashboard,
-      component: SystemAdmin,
-      layout: '/admin'
-    },
-    {
-      path: '/typestaff',
-      name: 'Staff Type',
-      // rtlName: 'لوحة القيادة',
-      icon: Dashboard,
-      component: StaffTypes,
-      layout: '/admin'
-    },
-  
-    {
-      path: '/staff',
-      name: 'Staff',
-      // rtlName: 'لوحة القيادة',
-      icon: Dashboard,
-      component: Staff,
-      layout: '/admin'
-    }
-  ];
-  dashboardRoutes = [...dashboardRoutes.slice(0, 1), ...adminRoutes, ...dashboardRoutes.slice(1)]
-}
 
 export default dashboardRoutes;

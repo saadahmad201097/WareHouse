@@ -18,13 +18,8 @@ import {
   TimePicker,
   DatePicker
 } from '@material-ui/pickers';
-import {
-  addStaffTypeUrl,
-  updateStaffTypeUrl,
-  getSystemAdminUrl
-} from '../../../public/endpoins';
-
 import cookie from 'react-cookies';
+import { addStaffTypeUrl, updateStaffTypeUrl } from '../../../public/endpoins';
 
 const styles = {
   inputContainer: {

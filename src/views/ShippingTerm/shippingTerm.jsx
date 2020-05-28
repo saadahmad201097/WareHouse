@@ -87,7 +87,6 @@ export default function ShippingTerm(props) {
   };
 
   function onChangeValue(e, index) {
-    // debugger;
 
     let x = '';
     let temp = [];
@@ -118,7 +117,6 @@ export default function ShippingTerm(props) {
         .delete(deleteShippingTermUrl + '/' + id)
         .then(res => {
           if (res.data.success) {
-            // debugger;
             let temp = shippingTerms.filter(item => {
               return item._id !== id;
             });

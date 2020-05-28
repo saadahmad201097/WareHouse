@@ -195,7 +195,6 @@ function AddEditVendor(props) {
         .post(addVendorUrl, params)
         .then(res => {
           if (res.data.success) {
-            // debugger;
             console.log('response is', res.data.data._id);
             if (shippingTermsData.length > 0) {
               addShippingTerms(res.data.data._id);
@@ -326,7 +325,6 @@ function AddEditVendor(props) {
   const addPaymetTerm = () => {};
 
   const hideShippingModel = (data = shippingTermsData) => {
-    // debugger;
     console.log(data);
     setShippingTermsData(data);
     setOpenShippingTermModal(false);
