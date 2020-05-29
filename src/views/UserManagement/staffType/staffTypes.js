@@ -11,7 +11,7 @@ import { getStaffTypeUrl, deleteStaffTypeUrl } from '../../../public/endpoins';
 import Loader from 'react-loader-spinner';
 
 const tableHeading = [
-  'Type',
+  'Staff Type',
   'Description',
   'Access Level',
   'Status',
@@ -68,7 +68,7 @@ export default function StaffTypes(props) {
   }, []);
 
   const addNewItem = () => {
-    let path = `stafftype/next/add`;
+    let path = `typestaff/next/add`;
     props.history.push({
       pathname: path,
       state: { comingFor: 'add' , systemAdminArray}
@@ -76,7 +76,7 @@ export default function StaffTypes(props) {
   };
 
   function handleEdit(rec) {
-    let path = `stafftype/next/edit`;
+    let path = `typestaff/next/edit`;
     props.history.push({
       pathname: path,
       state: { comingFor: 'edit', selectedItem: rec, systemAdminArray }

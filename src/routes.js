@@ -73,7 +73,7 @@ const dashboardRoutes = [
   },
 
   {
-    path: '/stafftype',
+    path: '/typestaff',
     name: 'Staff Type',
     // rtlName: 'لوحة القيادة',
     icon: Dashboard,

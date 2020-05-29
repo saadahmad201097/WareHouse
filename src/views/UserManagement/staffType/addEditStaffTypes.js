@@ -261,7 +261,7 @@ function AddEditStaffTypes(props) {
       </div>
 
       <div className="row" style={styles.inputContainer}>
-        <div className="col-md-6" style={styles.inputContainer}>
+        <div className="col-md-12" style={styles.inputContainer}>
           <TextField
             fullWidth
             name="description"
@@ -273,7 +273,7 @@ function AddEditStaffTypes(props) {
           />
         </div>
 
-        <div className="col-md-6" style={styles.inputContainer}>
+        {/* <div className="col-md-6" style={styles.inputContainer}>
           <InputLabel id="status-label">Created By</InputLabel>
           <Select
             fullWidth
@@ -296,7 +296,7 @@ function AddEditStaffTypes(props) {
                 );
               })}
           </Select>
-        </div>
+        </div> */}
       </div>
 
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>

@@ -36,6 +36,17 @@ const styles = {
 };
 const useStyles = makeStyles(tableStyles);
 
+const statues = [
+  {
+    key: 'active',
+    value: 'Active'
+  },
+  {
+    key: 'in_active',
+    value: 'In Active'
+  }
+];
+
 function AddEditStaff(props) {
   const classes = useStyles();
   const initialState = {
@@ -121,13 +132,14 @@ function AddEditStaff(props) {
 
   function validateForm() {
     return (
-      (firstName && firstName.length > 0) &&
+      firstName &&
+      firstName.length > 0 &&
       (lastName && lastName.length > 0) &&
       (staffTypeId && staffTypeId.length > 0) &&
       timeStamp !== '' &&
       (designation && designation.length > 0) &&
       (email && email.length > 0) &&
-      (password && password.length > 0) &&
+      (password && password.length >= 6) &&
       (contactNumber && contactNumber.length > 0) &&
       (identificationNumber && identificationNumber.length > 0) &&
       (gender && gender.length > 0) &&
@@ -337,7 +349,7 @@ function AddEditStaff(props) {
         </div>
 
         <div className="col-md-4" style={styles.inputContainer}>
-          <TextField
+          {/* <TextField
             fullWidth
             name="status"
             label="Status"
@@ -345,7 +357,29 @@ function AddEditStaff(props) {
             variant="outlined"
             value={status}
             onChange={onChangeValue}
-          />
+          /> */}
+
+          <InputLabel id="status-label">Status</InputLabel>
+          <Select
+            fullWidth
+            id="status"
+            name="status"
+            value={status}
+            onChange={onChangeValue}
+            label="Status"
+          >
+            <MenuItem value="">
+              <em>None</em>
+            </MenuItem>
+            {statues &&
+              statues.map(val => {
+                return (
+                  <MenuItem key={val.key} value={val.key}>
+                    {val.value}
+                  </MenuItem>
+                );
+              })}
+          </Select>
         </div>
       </div>
 
