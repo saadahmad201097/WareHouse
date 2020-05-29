@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable react/jsx-wrap-multilines */
 /* eslint-disable array-callback-return */
 /* eslint-disable react/jsx-indent */
@@ -103,7 +104,7 @@ function AddEditPurchaseRequest(props) {
   function validateForm() {
     return (
       // generatedBy.length > 0 &&
-      vendorId.length > 0 && status.length > 0
+      status && status.length > 0
       // && selectedItemsArray.length > 0
     );
   }
@@ -197,7 +198,7 @@ function AddEditPurchaseRequest(props) {
         requestNo,
         generatedBy: currentUser.name,
         date: new Date(),
-        vendorId,
+        // vendorId,
         status
         // itemCode,
         // name,
@@ -231,7 +232,7 @@ function AddEditPurchaseRequest(props) {
         requestNo,
         generatedBy,
         date: new Date(),
-        vendorId,
+        // vendorId,
         status
       };
       axios
@@ -273,7 +274,6 @@ function AddEditPurchaseRequest(props) {
               setItemFoundSuccessfully(false);
               setItem('');
             }
-          } else if (!res.data.success) {
           }
         })
         .catch(e => {
@@ -299,6 +299,7 @@ function AddEditPurchaseRequest(props) {
 
       dispatch({ field: 'itemCode', value: i.itemCode });
       dispatch({ field: 'name', value: i.name });
+      dispatch({ field: 'vendorId', value: i.vendorId });
 
       const obj = {
         itemCode: i.itemCode
@@ -334,6 +335,7 @@ function AddEditPurchaseRequest(props) {
           purchaseRequestId: _id,
           itemCode,
           name,
+          vendorId,
           description,
           currentQty,
           reqQty,
@@ -343,6 +345,7 @@ function AddEditPurchaseRequest(props) {
         params = {
           itemCode,
           name,
+          vendorId,
           description,
           currentQty,
           reqQty,
@@ -397,15 +400,17 @@ function AddEditPurchaseRequest(props) {
     dispatch({ field: 'reqQty', value: i.reqQty });
     dispatch({ field: 'name', value: i.name });
     dispatch({ field: 'itemCode', value: i.itemCode });
+    dispatch({ field: 'vendorId', value: i.vendorId });
     setDialogOpen(true);
   }
 
   const editSelectedItem = () => {
     if (validateItemsForm()) {
-      let params = {
+      const params = {
         _id: selectItemToEditId,
         purchaseRequestId: _id,
         itemCode,
+        vendorId,
         name,
         description,
         currentQty,
@@ -481,7 +486,7 @@ function AddEditPurchaseRequest(props) {
       </div>
 
       <div className="row">
-        <div className="col-md-4" style={styles.inputContainer}>
+        <div className="col-md-6" style={styles.inputContainer}>
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <DateTimePicker
               inputVariant="outlined"
@@ -493,7 +498,7 @@ function AddEditPurchaseRequest(props) {
             />
           </MuiPickersUtilsProvider>
         </div>
-        <div className="col-md-4" style={styles.inputContainer}>
+        {/* <div className="col-md-4" style={styles.inputContainer}>
           <InputLabel id="vendorId-label">Vendor</InputLabel>
           <Select
             fullWidth
@@ -515,8 +520,8 @@ function AddEditPurchaseRequest(props) {
                 );
               })}
           </Select>
-        </div>
-        <div className="col-md-4" style={styles.inputContainer}>
+        </div> */}
+        <div className="col-md-6" style={styles.inputContainer}>
           <InputLabel id="status-label">Status</InputLabel>
           <Select
             fullWidth
@@ -610,7 +615,7 @@ function AddEditPurchaseRequest(props) {
                 <Chip
                   key={i.name}
                   style={{ marginLeft: 15 }}
-                  size={'large'}
+                  size='large'
                   label={i.name}
                   clickable
                   color="primary"
@@ -666,7 +671,7 @@ function AddEditPurchaseRequest(props) {
       <Dialog
         aria-labelledby="form-dialog-title"
         open={dialogOpen}
-        maxWidth={'md'}
+        maxWidth='md'
         fullWidth={true}
       >
         <div className="container">

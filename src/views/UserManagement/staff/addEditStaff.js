@@ -46,6 +46,7 @@ function AddEditStaff(props) {
     timeStamp: '',
     designation: '',
     email: '',
+    password: '',
     contactNumber: '',
     identificationNumber: '',
     gender: '',
@@ -72,6 +73,7 @@ function AddEditStaff(props) {
     timeStamp,
     designation,
     email,
+    password,
     contactNumber,
     identificationNumber,
     gender,
@@ -125,6 +127,7 @@ function AddEditStaff(props) {
       timeStamp !== '' &&
       (designation && designation.length > 0) &&
       (email && email.length > 0) &&
+      (password && password.length > 0) &&
       (contactNumber && contactNumber.length > 0) &&
       (identificationNumber && identificationNumber.length > 0) &&
       (gender && gender.length > 0) &&
@@ -147,6 +150,7 @@ function AddEditStaff(props) {
         timeStamp,
         designation,
         email,
+        password,
         contactNumber,
         identificationNumber,
         gender,
@@ -183,6 +187,7 @@ function AddEditStaff(props) {
         timeStamp,
         designation,
         email,
+        password,
         contactNumber,
         identificationNumber,
         gender,
@@ -345,6 +350,44 @@ function AddEditStaff(props) {
       </div>
 
       <div className="row" style={styles.inputContainer}>
+        <div className="col-md-4">
+          <TextField
+            fullWidth
+            name="identificationNumber"
+            label="ID Number"
+            type="number"
+            variant="outlined"
+            value={identificationNumber}
+            onChange={onChangeValue}
+          />
+        </div>
+
+        <div className="col-md-4">
+          <TextField
+            fullWidth
+            name="email"
+            label="Email"
+            type="email"
+            variant="outlined"
+            value={email}
+            onChange={onChangeValue}
+          />
+        </div>
+
+        <div className="col-md-4">
+          <TextField
+            fullWidth
+            name="password"
+            label="Password"
+            type="password"
+            variant="outlined"
+            value={password}
+            onChange={onChangeValue}
+          />
+        </div>
+      </div>
+
+      <div className="row" style={styles.inputContainer}>
         <div className="col-md-6">
           <TextField
             fullWidth
@@ -365,32 +408,6 @@ function AddEditStaff(props) {
             type="number"
             variant="outlined"
             value={contactNumber}
-            onChange={onChangeValue}
-          />
-        </div>
-      </div>
-
-      <div className="row" style={styles.inputContainer}>
-        <div className="col-md-6">
-          <TextField
-            fullWidth
-            name="identificationNumber"
-            label="ID Number"
-            type="number"
-            variant="outlined"
-            value={identificationNumber}
-            onChange={onChangeValue}
-          />
-        </div>
-
-        <div className="col-md-6">
-          <TextField
-            fullWidth
-            name="email"
-            label="Email"
-            type="email"
-            variant="outlined"
-            value={email}
             onChange={onChangeValue}
           />
         </div>

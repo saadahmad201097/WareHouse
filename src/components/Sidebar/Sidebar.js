@@ -22,7 +22,7 @@ const useStyles = makeStyles(styles);
 
 export default function Sidebar(props) {
   const classes = useStyles();
-  const restrictedPathes = ["/systemadmin", "/stafftype", "/staff"]
+  const restrictedPathes = ["/systemadmin", "/stafftype", "/staff", "/purchaserequest"]
   // verifies if routeName is the one active (in browser input)
   function activeRoute(routeName) {
     return window.location.href.indexOf(routeName) > -1 ? true : false;
