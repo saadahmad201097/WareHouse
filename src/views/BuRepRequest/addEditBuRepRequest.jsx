@@ -145,7 +145,6 @@ function AddEditBuRepRequest(props) {
                 <InputLabel id="bu_id-label">Business Unit</InputLabel>
                 <Select
                     fullWidth
-                    labelId="bu_id-label"
                     id="bu_id"
                     name="buId"
                     value={buId}

@@ -27,15 +27,7 @@ const dummyData = [
   {
     itemId: { _id: 2, name: 'Second Item' },
     qty: '20'
-  },
-//   {
-//     itemsId: { _id: 3, name: 'Third Item' },
-//     qty: '25'
-//   },
-//   {
-//     itemsId: { _id: 1, name: 'First Item' },
-//     qty: '30'
-//   }
+  }
 ];
 
 export default function WareHouseInventory(props) {

@@ -164,10 +164,10 @@ function AddBusinessUnit(props) {
 
   function validateForm() {
     return (
-      buName.length > 0 &&
-      description.length > 0 &&
-      buHead.length > 0 &&
-      status.length > 0
+      (buName && buName.length > 0) &&
+      (description && description.length > 0) &&
+      (buHead && buHead.length > 0) &&
+      (status && status.length > 0)
     );
   }
 
