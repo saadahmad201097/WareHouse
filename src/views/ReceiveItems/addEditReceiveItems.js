@@ -108,25 +108,25 @@ function ReceiveItems(props) {
 
   function validateForm() {
     return (
-      itemCode.length > 0 &&
-      itemName.length > 0 &&
-      currentQty.length > 0 &&
-      requiredQty.length > 0 &&
-      receivedQty.length > 0 &&
+      // itemCode.length > 0 &&
+      // itemName.length > 0 &&
+      // currentQty.length > 0 &&
+      // requiredQty.length > 0 &&
+      // receivedQty.length > 0 &&
       bonusQty.length > 0 &&
-      batchNumber.length > 0 &&
+      // batchNumber.length > 0 &&
       unit.length > 0 &&
       discount.length > 0 &&
-      uniyDiscount.length > 0 &&
-      discountAmount.length > 0 &&
+      // uniyDiscount.length > 0 &&
+      // discountAmount.length > 0 &&
       tax.length > 0 &&
       taxAmount.length > 0 &&
       finalUnitPrice.length > 0 &&
       subTotal.length > 0 &&
-      totalPrice.length > 0 &&
-      invoice.length > 0 &&
-      date.length > 0 &&
-      comments.length > 0
+      totalPrice.length > 0
+      // invoice.length > 0 &&
+      // date.length > 0 &&
+      // comments.length > 0
       // expiryDate.length > 0
       // discountPercentage.length > 0
     );
