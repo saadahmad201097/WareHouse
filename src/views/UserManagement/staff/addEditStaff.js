@@ -5,11 +5,6 @@ import React, { useEffect, useState, useReducer } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
 import { makeStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
@@ -18,16 +13,9 @@ import axios from 'axios';
 import Notification from 'components/Snackbar/Notification.js';
 import DateFnsUtils from '@date-io/date-fns';
 import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
-import { addStaffUrl, updateStaffTUrl } from '../../../public/endpoins';
-
-import Paper from '@material-ui/core/Paper';
-
 import cookie from 'react-cookies';
-
-import Chip from '@material-ui/core/Chip';
-
 import Dialog from '@material-ui/core/Dialog';
-import { tr } from 'date-fns/locale';
+import { addStaffUrl, updateStaffTUrl } from '../../../public/endpoins';
 
 const styles = {
   inputContainer: {
@@ -245,7 +233,7 @@ function AddEditStaff(props) {
         <div className="col-md-6" style={styles.inputContainer}>
           <TextField
             fullWidth
-            name={'firstName'}
+            name="firstName"
             label="First Name"
             type="text"
             variant="outlined"
@@ -349,16 +337,6 @@ function AddEditStaff(props) {
         </div>
 
         <div className="col-md-4" style={styles.inputContainer}>
-          {/* <TextField
-            fullWidth
-            name="status"
-            label="Status"
-            type="text"
-            variant="outlined"
-            value={status}
-            onChange={onChangeValue}
-          /> */}
-
           <InputLabel id="status-label">Status</InputLabel>
           <Select
             fullWidth
