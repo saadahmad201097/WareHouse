@@ -5,7 +5,6 @@ import React, { useEffect, useState, useReducer } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
 import { makeStyles } from '@material-ui/core/styles';
-import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import tableStyles from 'assets/jss/material-dashboard-react/components/tableStyle.js';
@@ -272,31 +271,6 @@ function AddEditStaffTypes(props) {
             onChange={onChangeValue}
           />
         </div>
-
-        {/* <div className="col-md-6" style={styles.inputContainer}>
-          <InputLabel id="status-label">Created By</InputLabel>
-          <Select
-            fullWidth
-            id="createdBySystemAdminStaffId"
-            name="createdBySystemAdminStaffId"
-            value={createdBySystemAdminStaffId}
-            onChange={onChangeValue}
-            label="Created By"
-            disabled={true}
-          >
-            <MenuItem value="">
-              <em>None</em>
-            </MenuItem>
-            {systemAdminArray &&
-              systemAdminArray.map(val => {
-                return (
-                  <MenuItem key={val._id} value={val._id}>
-                    {val.username}
-                  </MenuItem>
-                );
-              })}
-          </Select>
-        </div> */}
       </div>
 
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>

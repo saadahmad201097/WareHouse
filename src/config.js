@@ -1,4 +1,4 @@
-export const warehouseName = "XYZ";
+export const warehouseName = "Warehouse Calls";
 
 
 export const backgroundColorForSideNav = 'white';
