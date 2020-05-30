@@ -73,7 +73,7 @@ const dashboardRoutes = [
   },
 
   {
-    path: '/stafftype',
+    path: '/typestaff',
     name: 'Staff Type',
     // rtlName: 'لوحة القيادة',
     icon: Dashboard,
@@ -115,7 +115,7 @@ const dashboardRoutes = [
     layout: '/admin'
   },
   {
-    path: '/buRepRequestDetails',
+    path: '/detailsBuRepRequest',
     name: 'Business Unit Rep Request Details',
     rtlName: 'الرمو',
     icon: BubbleChart,

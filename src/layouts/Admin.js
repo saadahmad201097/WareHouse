@@ -67,7 +67,7 @@ const switchRoutes = (
     <Route path="/admin/buinventory/next" component={BuInventoryRoutes} />
     <Route path="/admin/bureprequest/next" component={BuRepRequestRoutes} />
     <Route
-      path="/admin/bureprequestdetails/next"
+      path="/admin/detailsBuRepRequest/next"
       component={BuRepRequestDetailsRoutes}
     />
     <Route path="/admin/bureturn/next" component={BuReturnRoutes} />
@@ -87,7 +87,7 @@ const switchRoutes = (
     <Route path="/admin/purchaseorders/next" component={PurchaseOrdersRoutes} />
     <Route path="/admin/receiveitems/next" component={ReceiveItemsRoutes} />
     <Route path="/admin/materialreceiving/next" component={MaterialReceivingRoutes} />
-    <Route path="/admin/stafftype/next" component={StaffTypesRoutes} />
+    <Route path="/admin/typestaff/next" component={StaffTypesRoutes} />
     <Route path="/admin/staff/next" component={StaffRoutes} />
     <Route path="/admin/systemadmin/next" component={SystemAdminRoutes} />
     <Redirect from="/admin" to="/admin/dashboard" />

@@ -112,7 +112,7 @@ export default function BuRepRequest(props) {
   }, []);
 
   const addNewItem = () => {
-    let path = `bureprequestdetails/next/add`;
+    let path = `detailsBuRepRequest/next/add`;
     props.history.push({
       pathname: path,
       state: { comingFor: 'add', items, buRepRequests }
@@ -120,7 +120,7 @@ export default function BuRepRequest(props) {
   };
 
   function handleEdit(rec) {
-    let path = `bureprequestdetails/next/edit`;
+    let path = `detailsBuRepRequest/next/edit`;
     props.history.push({
       pathname: path,
       state: { comingFor: 'edit', selectedItem: rec, items, buRepRequests }
