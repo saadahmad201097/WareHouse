@@ -11,14 +11,11 @@ import Button from '@material-ui/core/Button';
 import tableStyles from 'assets/jss/material-dashboard-react/components/tableStyle.js';
 import axios from 'axios';
 import Notification from 'components/Snackbar/Notification.js';
-
+import cookie from 'react-cookies';
 import {
   addSystemAdminUrl,
   updateSystemAdminUrl
 } from '../../../public/endpoins';
-
-import cookie from 'react-cookies';
-
 import validateEmail from '../../../public/emailValidator';
 
 const styles = {
@@ -68,7 +65,7 @@ function AddEditSystemAdmin(props) {
   const [systemAdminArray, setSystemAdminArray] = useState('');
 
   const [currentUser, setCurrentUser] = useState('');
-
+  const [staffTypeArray, setStaffTypesArray] = useState('');
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 
   const [errorMsg, setErrorMsg] = useState('');
@@ -79,6 +76,7 @@ function AddEditSystemAdmin(props) {
     setCurrentUser(cookie.load('current_user'));
     setcomingFor(props.history.location.state.comingFor);
     setSystemAdminArray(props.history.location.state.systemAdmin);
+    setStaffTypesArray(props.history.location.state.staffTypeArray);
 
     const selectedRec = props.history.location.state.selectedItem;
 
@@ -99,7 +97,7 @@ function AddEditSystemAdmin(props) {
 
   const handleAdd = () => {
     if (validateForm()) {
-      let params = {
+      const params = {
         username,
         password
       };
@@ -123,7 +121,7 @@ function AddEditSystemAdmin(props) {
   const handleEdit = () => {
     setIsFormSubmitted(true);
     if (validateForm()) {
-      let params = {
+      const params = {
         _id,
         username,
         password,
