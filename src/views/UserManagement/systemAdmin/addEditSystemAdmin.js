@@ -35,7 +35,8 @@ function AddEditSystemAdmin(props) {
   const initialState = {
     _id: '',
     username: '',
-    password: ''
+    password: '',
+    staffTypeId: '5ec138f621374a760fd0a23d'
   };
 
   function reducer(state, { field, value }) {
@@ -47,7 +48,7 @@ function AddEditSystemAdmin(props) {
 
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const { _id, username, password } = state;
+  const { _id, username, password, staffTypeId} = state;
 
   const onChangeValue = e => {
     dispatch({ field: e.target.name, value: e.target.value });
@@ -56,7 +57,7 @@ function AddEditSystemAdmin(props) {
   function validateForm() {
   
     return (
-      username.length > 0 && password.length >= 8 && validateEmail(username)
+      username.length > 0 && (password && password.length >= 6) && validateEmail(username)
     );
   }
 
@@ -99,7 +100,8 @@ function AddEditSystemAdmin(props) {
     if (validateForm()) {
       const params = {
         username,
-        password
+        password,
+        staffTypeId
       };
       axios
         .post(addSystemAdminUrl, params)
@@ -125,6 +127,7 @@ function AddEditSystemAdmin(props) {
         _id,
         username,
         password,
+        staffTypeId,
         updatedAt: new Date()
       };
       axios
@@ -158,28 +161,53 @@ function AddEditSystemAdmin(props) {
       </h1>
 
       <div className="row" style={styles.inputContainer}>
-        <div className="col-md-6" style={styles.inputContainer}>
+        <div className="col-md-4" style={styles.inputContainer}>
           <TextField
             fullWidth
             name="username"
             label="User Name"
-            type="text"
+            type="email"
             variant="outlined"
             value={username}
             onChange={onChangeValue}
           />
         </div>
 
-        <div className="col-md-6" style={styles.inputContainer}>
+        <div className="col-md-4" style={styles.inputContainer}>
           <TextField
             fullWidth
             name="password"
             label="Password"
-            type="text"
+            type="password"
             variant="outlined"
             value={password}
             onChange={onChangeValue}
           />
+        </div>
+
+        <div className="col-md-4" style={styles.inputContainer}>
+            <InputLabel id="staff_type_label">Staff Type</InputLabel>
+            <Select
+              fullWidth
+              id="staffTypeId"
+              name="staffTypeId"
+              value={staffTypeId}
+              onChange={onChangeValue}
+              label="Staff Type"
+              disabled={true}
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              {staffTypeArray &&
+                staffTypeArray.map(val => {
+                  return (
+                    <MenuItem key={val._id} value={val._id}>
+                      {val.type}
+                    </MenuItem>
+                  );
+                })}
+            </Select>
         </div>
       </div>
 
