@@ -19,7 +19,6 @@ const tableHeading = [
   'Bu Name',
   'Item Name',
   'Quantity',
-  'Time Stamp',
   'Return Reason',
   'Batch Number',
   'Staff Name',
@@ -29,7 +28,6 @@ const tableDataKeys = [
     ['buId', 'buName'],
     ['itemId', 'name'],
     'qty',
-    'timeStamp',
     'returnReason',
     'batchNo',
     ['staffId', 'firstName']

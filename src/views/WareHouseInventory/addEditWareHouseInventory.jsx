@@ -171,6 +171,7 @@ function AddEditWareHouseInventory(props) {
             label="Quantity"
             variant="outlined"
             value={qty}
+            type="number"
             onChange={onChangeValue}
           />
         </div>
@@ -181,9 +182,8 @@ function AddEditWareHouseInventory(props) {
           <InputLabel id="itemName-label">Item Name</InputLabel>
           <Select
             fullWidth
-            labelId="itemName-label"
             id="itemName"
-            name="itemName"
+            name="itemId"
             value={itemId}
             onChange={onChangeValue}
             label="Item Name"

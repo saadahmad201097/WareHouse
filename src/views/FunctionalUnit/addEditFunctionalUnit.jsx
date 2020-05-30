@@ -87,7 +87,7 @@ function AddEditBuReturn(props) {
   };
 
   function validateForm() {
-    return fuHead.length> 0 && fuName.length> 0 && status.length> 0 && description.length > 0;
+    return ( (fuHead && fuHead.length> 0) && (fuName && fuName.length> 0) && (status && status.length> 0) && (description && description.length > 0) );
   }
 
   function getFunctionalUnitLogs(id){
