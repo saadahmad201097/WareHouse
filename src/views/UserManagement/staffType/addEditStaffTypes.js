@@ -1,11 +1,10 @@
+/* eslint-disable no-plusplus */
 /* eslint-disable react/jsx-wrap-multilines */
 /* eslint-disable array-callback-return */
 /* eslint-disable react/jsx-indent */
 import React, { useEffect, useState, useReducer } from 'react';
 import TextField from '@material-ui/core/TextField';
-import Select from '@material-ui/core/Select';
 import { makeStyles } from '@material-ui/core/styles';
-import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import tableStyles from 'assets/jss/material-dashboard-react/components/tableStyle.js';
 import axios from 'axios';
@@ -13,9 +12,7 @@ import Notification from 'components/Snackbar/Notification.js';
 import DateFnsUtils from '@date-io/date-fns';
 import {
   DateTimePicker,
-  MuiPickersUtilsProvider,
-  TimePicker,
-  DatePicker
+  MuiPickersUtilsProvider
 } from '@material-ui/pickers';
 import cookie from 'react-cookies';
 import { addStaffTypeUrl, updateStaffTypeUrl } from '../../../public/endpoins';
@@ -67,8 +64,8 @@ function AddEditStaffTypes(props) {
     dispatch({ field: e.target.name, value: e.target.value });
   };
 
-  function onChangeDate(value, type) {
-    dispatch({ field: type, value });
+  function onChangeDate(value, t) {
+    dispatch({ field: t, value });
   }
 
   function validateForm() {
@@ -84,11 +81,6 @@ function AddEditStaffTypes(props) {
   const [comingFor, setcomingFor] = useState('');
 
   const [systemAdminArray, setSystemAdminArray] = useState('');
-
-  const [generatedArray, setGeneratedArray] = useState('');
-
-  const [paymentTermsArray, setPaymentTermsArray] = useState('');
-
   const [currentUser, setCurrentUser] = useState('');
 
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
@@ -101,8 +93,6 @@ function AddEditStaffTypes(props) {
     setcomingFor(props.history.location.state.comingFor);
 
     setSystemAdminArray(props.history.location.state.systemAdminArray);
-    // setGeneratedArray(props.history.location.state.generatedArray);
-    // setPaymentTermsArray(props.history.location.state.paymentTerms);
 
     for (let i = 0; i < systemAdminArray.length; i++) {
       if (systemAdminArray[i]._id === currentUser._id) {
@@ -160,7 +150,7 @@ function AddEditStaffTypes(props) {
   const handleEdit = () => {
     setIsFormSubmitted(true);
     if (validateForm()) {
-      let params = {
+      const params = {
         _id,
         type,
         accessLevel,
