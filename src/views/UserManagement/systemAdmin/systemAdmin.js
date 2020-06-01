@@ -39,7 +39,8 @@ export default function SystemAdmin(props) {
       .get(getSystemAdminUrl)
       .then(res => {
         if (res.data.success) {
-          setSystemAdminArray(res.data.data.systemAdmin);
+          console.log(res.data.data.systemAdmin)
+          setSystemAdminArray(res.data.data);
           setStaffTypesArray(res.data.data.staffType);
         } else if (!res.data.success) {
           setErrorMsg(res.data.error);
